@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { useRouter } from "next/navigation";
-import Experience from "../../Experience/Experience";
+import Experience from "../Experience/Experience";
 
 declare global {
   interface Window {

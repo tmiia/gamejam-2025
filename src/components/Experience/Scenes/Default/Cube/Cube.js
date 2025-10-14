@@ -1,7 +1,7 @@
 import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 import Experience from "../../../Experience.js";
-import fragmentShader from "./fragmentShader.js";
-import vertexShader from "./vertexShader.js";
+import fragmentShader from "./fragmentShader.glsl";
+import vertexShader from "./vertexShader.glsl";
 
 export default class Cube {
   constructor(position = new Vector3(0, 0, 0)) {

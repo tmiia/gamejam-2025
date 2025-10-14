@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import Scene from "../Scene.js";
 import Cube from "./Cube/Cube.js";
-import Environement from "./Environement.js";
+import Environement from "./Environment.js";
 
 export default class DefaultScene extends Scene {
   init() {

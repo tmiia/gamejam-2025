@@ -1,11 +1,12 @@
 import Camera from "./Camera";
 import Renderer from "./Renderer";
+import DefaultScene from "./Scenes/Default/DefaultScene";
 import SceneManager from "./Scenes/SceneManager.js";
-import WorldScene from "./Scenes/World/WorldScene.js";
+
 import sources from "./sources.js";
 import Debug from "./Utils/Debug.js";
 import Resources from "./Utils/Resources.js";
-import Sizes from "./Utils/Size";
+import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
 
 export default class Experience {
@@ -28,7 +29,7 @@ export default class Experience {
 
     this.camera = new Camera();
     this.sceneManager = new SceneManager(this);
-    this.sceneManager.setScene(WorldScene);
+    this.sceneManager.setScene(DefaultScene);
     console.log(this.sceneManager);
     this.renderer = new Renderer();
 
