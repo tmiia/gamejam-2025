@@ -10,6 +10,7 @@ export default class Cube {
     this.scene = this.experience.sceneManager.currentScene.scene;
     this.debug = this.experience.debug;
     this.physicsWorld = this.experience.physicsWorld;
+    this.inputManager = this.experience.inputManager;
 
     this.position = position;
     this.isDynamic = isDynamic;
@@ -17,10 +18,16 @@ export default class Cube {
     this.rigidbody = null;
     this.collider = null;
 
+    this.moveSpeed = 8;
+    this.jumpForce = 5;
+    this.canJump = true;
+    this.isGrounded = false;
+
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
     this.setPhysics();
+    this.setupInputListeners();
   }
 
   setGeometry() {
@@ -64,8 +71,65 @@ export default class Cube {
       .getWorld()
       .createCollider(colliderDesc, this.rigidbody);
 
-    this.rigidbody.setLinearDamping(0.1);
-    this.rigidbody.setAngularDamping(0.1);
+    this.rigidbody.setLinearDamping(0.5);
+    this.rigidbody.setAngularDamping(1.0);
+
+    this.rigidbody.setEnabledRotations(false, true, false, true);
+  }
+
+  setupInputListeners() {
+    if (!this.inputManager) return;
+
+    this.inputManager.on("jump", () => this.jump());
+  }
+
+  jump() {
+    if (this.rigidbody && this.isDynamic && this.isGrounded) {
+      const currentVel = this.rigidbody.linvel();
+      this.rigidbody.setLinvel(
+        new RAPIER.Vector3(currentVel.x, this.jumpForce, currentVel.z),
+        true
+      );
+      this.isGrounded = false;
+    }
+  }
+
+  checkGrounded() {
+    if (this.rigidbody) {
+      const vel = this.rigidbody.linvel();
+      const pos = this.rigidbody.translation();
+
+      if (Math.abs(vel.y) < 0.1 && pos.y < 1.0) {
+        this.isGrounded = true;
+      } else {
+        this.isGrounded = false;
+      }
+    }
+  }
+
+  handleMovement() {
+    if (!this.inputManager || !this.rigidbody || !this.isDynamic) return;
+
+    const horizontalAxis = this.inputManager.getHorizontalAxis();
+
+    if (Math.abs(horizontalAxis) > 0.01) {
+      const currentVel = this.rigidbody.linvel();
+
+      this.rigidbody.setLinvel(
+        new RAPIER.Vector3(
+          horizontalAxis * this.moveSpeed,
+          currentVel.y,
+          currentVel.z,
+        ),
+        true
+      );
+    } else {
+      const currentVel = this.rigidbody.linvel();
+      this.rigidbody.setLinvel(
+        new RAPIER.Vector3(currentVel.x * 0.8, currentVel.y, currentVel.z),
+        true
+      );
+    }
   }
 
   update() {
@@ -75,6 +139,9 @@ export default class Cube {
 
       this.mesh.position.set(translation.x, translation.y, translation.z);
       this.mesh.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
+
+      this.checkGrounded();
+      this.handleMovement();
     }
   }
 

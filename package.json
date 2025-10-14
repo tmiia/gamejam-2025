@@ -12,6 +12,7 @@
     "@dimforge/rapier3d": "^0.19.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/three": "latest",
+    "axis-api": "github:gobelins-axis/axis-api",
     "lil-gui": "^0.21.0",
     "next": "latest",
     "react": "latest",

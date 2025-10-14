@@ -8,6 +8,7 @@ import Debug from "./Utils/Debug.js";
 import Resources from "./Utils/Resources.js";
 import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
+import InputManager from "./Inputs/InputsManager.js";
 
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
 
@@ -23,11 +24,13 @@ export default class Experience {
     this.canvas = canvas;
 
     // Setup
-
     this.debug = new Debug();
     this.sizes = new Sizes();
     this.time = new Time();
     this.resources = new Resources(sources, this.data);
+
+    // Input Manager pour gérer les contrôles
+    this.inputManager = new InputManager();
 
     this.physicsWorld = new PhysicsWorld();
 
@@ -63,6 +66,10 @@ export default class Experience {
   }
 
   update() {
+    if (this.inputManager) {
+      this.inputManager.update();
+    }
+
     this.sceneManager.update();
     this.camera.update();
     this.renderer.update(this.sceneManager.currentScene.scene);
@@ -75,6 +82,10 @@ export default class Experience {
   destroy() {
     this.sizes.off("resize");
     this.time.off("tick");
+
+    if (this.inputManager) {
+      this.inputManager.destroy();
+    }
 
     if (this.sceneManager.currentScene) {
       this.sceneManager.currentScene.destroy();
