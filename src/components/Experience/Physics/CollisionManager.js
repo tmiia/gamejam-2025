@@ -5,17 +5,24 @@ import Experience from "../Experience.js";
 export default class CollisionManager {
   constructor() {
     this.experience = new Experience();
+    this.physicsWorld = this.experience.physicsWorld;
   }
 
   createColliderFromMesh(mesh) {
-    if (!this.physicsWorld?.getWorld()) return;
+    if (!this.physicsWorld?.getWorld()) {
+      console.warn("PhysicsWorld n'est pas initialisé");
+      return null;
+    }
 
     const world = this.physicsWorld.getWorld();
 
     mesh.geometry.computeBoundingBox();
     const box = mesh.geometry.boundingBox;
-    const size = new THREE.Vector3();
-    box.getSize(size);
+    const localSize = new THREE.Vector3();
+    box.getSize(localSize);
+    console.log(box.getSize(localSize));
+
+    const worldSize = localSize.clone().multiply(mesh.scale);
 
     const position = new THREE.Vector3();
     mesh.getWorldPosition(position);
@@ -34,11 +41,33 @@ export default class CollisionManager {
 
     const body = world.createRigidBody(bodyDesc);
 
-    const hx = size.x / 2;
-    const hy = size.y / 2;
-    const hz = size.z / 2;
+    const hx = worldSize.x / 2;
+    const hy = worldSize.y / 2;
+    const hz = worldSize.z / 2;
     const colliderDesc = RAPIER.ColliderDesc.cuboid(hx, hy, hz);
+    colliderDesc.setFriction(0.7);
 
     world.createCollider(colliderDesc, body);
+
+    console.log(
+      `Collider créé - Size: (${hx.toFixed(2)}, ${hy.toFixed(2)}, ${hz.toFixed(
+        2
+      )})`
+    );
+
+    return body;
+  }
+
+  createColliderFromModel(model) {
+    const bodies = [];
+
+    model.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.geometry) {
+        const body = this.createColliderFromMesh(child);
+        if (body) bodies.push(body);
+      }
+    });
+
+    return bodies;
   }
 }

@@ -20,16 +20,14 @@ export default class Camera {
       20,
       this.sizes.width / this.sizes.height,
       0.1,
-      100
+      1000
     );
-    this.instance.position.set(18, 0, 0);
+    this.instance.position.set(-80, 0, 0);
     // this.scene.add(this.instance);
   }
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
-    this.controls.enableDamping = true;
-    this.controls.enableZoom = false;
   }
 
   resize() {

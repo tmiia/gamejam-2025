@@ -2,7 +2,6 @@ import * as THREE from "three";
 import Scene from "../Scene.js";
 import Cube from "./Cube/Cube.js";
 import Environement from "./Environment.js";
-import Plane from "./Plane.js";
 import Terrain from "./World/Terrain.js";
 
 export default class DefaultScene extends Scene {
@@ -43,8 +42,8 @@ export default class DefaultScene extends Scene {
   onAllReady() {
     this.environement = new Environement();
     this.terrain = new Terrain();
-    this.cube = new Cube(new THREE.Vector3(0, 0.5, 0));
-    this.plane = new Plane();
+    this.cube = new Cube(new THREE.Vector3(-0.8, 0.5, -19));
+    // this.plane = new Plane();
 
     this.experience.eventEmitter?.trigger("scene.ready");
   }

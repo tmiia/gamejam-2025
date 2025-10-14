@@ -21,6 +21,6 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/Map.glb",
+    path: "/models/Map/test.glb",
   },
 ];
