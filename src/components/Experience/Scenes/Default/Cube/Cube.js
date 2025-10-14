@@ -11,6 +11,7 @@ export default class Cube {
     this.debug = this.experience.debug;
     this.physicsWorld = this.experience.physicsWorld;
     this.inputManager = this.experience.inputManager;
+    this.camera = this.experience.camera.instance;
 
     this.position = position;
     this.isDynamic = isDynamic;
@@ -119,7 +120,7 @@ export default class Cube {
         new RAPIER.Vector3(
           horizontalAxis * this.moveSpeed,
           currentVel.y,
-          currentVel.z,
+          currentVel.z
         ),
         true
       );
@@ -142,6 +143,16 @@ export default class Cube {
 
       this.checkGrounded();
       this.handleMovement();
+    }
+    if (this.camera) {
+      this.camera.position.lerp(
+        new Vector3(
+          this.camera.position.x,
+          this.mesh.position.y + 2,
+          this.mesh.position.z
+        ),
+        0.1
+      );
     }
   }
 

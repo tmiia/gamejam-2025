@@ -42,7 +42,7 @@ export default class DefaultScene extends Scene {
   onAllReady() {
     this.environement = new Environement();
     this.terrain = new Terrain();
-    this.cube = new Cube(new THREE.Vector3(-0.8, 0.5, -19));
+    this.cube = new Cube(new THREE.Vector3(0, 20, -19));
     // this.plane = new Plane();
 
     this.experience.eventEmitter?.trigger("scene.ready");
