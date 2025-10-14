@@ -2,25 +2,53 @@ import * as THREE from "three";
 import Scene from "../Scene.js";
 import Cube from "./Cube/Cube.js";
 import Environement from "./Environment.js";
+import Plane from "./Plane.js";
 
 export default class DefaultScene extends Scene {
+  constructor() {
+    super();
+    this.objectsToCreate = [];
+  }
+
   init() {
     this.resources = this.experience.resources;
+    this.physicsWorld = this.experience.physicsWorld;
 
-    this.cube = new Cube(new THREE.Vector3(2, 0.5, 0));
+    const resourcesReady = this.resources.toLoad === this.resources.loaded;
+    const physicsReady = this.physicsWorld.world !== null;
 
-    if (this.resources.toLoad === this.resources.loaded) {
-      this.onResourcesLoaded();
+    if (resourcesReady && physicsReady) {
+      this.onAllReady();
     } else {
-      this.resources.on("loaded", () => this.onResourcesLoaded());
+      if (!resourcesReady) {
+        this.resources.on("loaded", () => this.checkAllReady());
+      }
+
+      if (!physicsReady) {
+        this.physicsWorld.on("ready", () => this.checkAllReady());
+      }
     }
   }
 
-  onResourcesLoaded() {
+  checkAllReady() {
+    const resourcesReady = this.resources.toLoad === this.resources.loaded;
+    const physicsReady = this.physicsWorld.world !== null;
+
+    if (resourcesReady && physicsReady) {
+      this.onAllReady();
+    }
+  }
+
+  onAllReady() {
     this.environement = new Environement();
+    this.cube = new Cube(new THREE.Vector3(0, 0.5, 0));
+    this.plane = new Plane();
+
+    this.experience.eventEmitter?.trigger("scene.ready");
   }
 
   update() {
     if (this.cube) this.cube.update();
+    if (this.environement) this.environement.update?.();
   }
 }

@@ -1,6 +1,5 @@
-
-import * as THREE from "three/webgpu";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import * as THREE from "three/webgpu";
 import EventEmitter from "./EventEmitter";
 
 export default class Resources extends EventEmitter {

@@ -9,6 +9,8 @@ import Resources from "./Utils/Resources.js";
 import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
 
+import PhysicsWorld from "./Physics/PhysicsWorld.js";
+
 export default class Experience {
   constructor(canvas, routerReplace) {
     if (Experience.instance) return Experience.instance;
@@ -27,10 +29,11 @@ export default class Experience {
     this.time = new Time();
     this.resources = new Resources(sources, this.data);
 
+    this.physicsWorld = new PhysicsWorld();
+
     this.camera = new Camera();
     this.sceneManager = new SceneManager(this);
     this.sceneManager.setScene(DefaultScene);
-    console.log(this.sceneManager);
     this.renderer = new Renderer();
 
     // Shared props
@@ -63,6 +66,10 @@ export default class Experience {
     this.sceneManager.update();
     this.camera.update();
     this.renderer.update(this.sceneManager.currentScene.scene);
+
+    if (this.physicsWorld) {
+      this.physicsWorld.update();
+    }
   }
 
   destroy() {
