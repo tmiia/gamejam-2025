@@ -10,6 +10,7 @@ import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
 import InputManager from "./Inputs/InputsManager.js";
 
+import CollisionManager from "./Physics/CollisionManager.js";
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
 
 export default class Experience {
@@ -33,6 +34,7 @@ export default class Experience {
     this.inputManager = new InputManager();
 
     this.physicsWorld = new PhysicsWorld();
+    this.collisionManager = new CollisionManager();
 
     this.camera = new Camera();
     this.sceneManager = new SceneManager(this);

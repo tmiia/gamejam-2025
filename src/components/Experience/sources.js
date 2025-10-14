@@ -18,9 +18,9 @@ export default [
   //   type: "texture",
   //   path: "/textures/dirt/normal.jpg",
   // },
-  // {
-  //   name: "foxModel",
-  //   type: "gltf",
-  //   path: "/models/Fox/glTF/Fox.gltf",
-  // },
+  {
+    name: "mapModel",
+    type: "gltf",
+    path: "/models/Map/Map.glb",
+  },
 ];
