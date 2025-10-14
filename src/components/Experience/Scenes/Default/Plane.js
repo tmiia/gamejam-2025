@@ -57,7 +57,7 @@ export default class Plane {
     const colliderDesc = RAPIER.ColliderDesc.cuboid(hx, hy, hz);
 
     colliderDesc.setFriction(0.7);
-    colliderDesc.setRestitution();
+    colliderDesc.setRestitution(0.2);
 
     this.collider = this.physicsWorld
       .getWorld()
