@@ -19,6 +19,8 @@ export default class Terrain {
   setModel() {
     this.model = this.resource.scene;
     this.model.position.set(0, -3.5, 0);
+
+    this.model.rotation.y = Math.PI / 2;
     this.scene.add(this.model);
 
     this.model.traverse((child) => {
@@ -31,7 +33,6 @@ export default class Terrain {
 
   execCollider() {
     this.bodies = this.collisionManager.createColliderFromModel(this.model);
-
     console.log(`${this.bodies.length} collider(s) créé(s) pour le terrain`);
   }
 

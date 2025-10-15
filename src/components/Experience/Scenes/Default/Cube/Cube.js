@@ -20,7 +20,7 @@ export default class Cube {
     this.collider = null;
 
     this.moveSpeed = 8;
-    this.jumpForce = 5;
+    this.jumpForce = 15;
     this.canJump = true;
     this.isGrounded = false;
 
@@ -75,7 +75,9 @@ export default class Cube {
     this.rigidbody.setLinearDamping(0.5);
     this.rigidbody.setAngularDamping(1.0);
 
-    this.rigidbody.setEnabledRotations(false, true, false, true);
+    this.rigidbody.lockRotations(true, true);
+
+    this.rigidbody.lockTranslations(false, false, true, true);
   }
 
   setupInputListeners() {
@@ -147,9 +149,9 @@ export default class Cube {
     if (this.camera) {
       this.camera.position.lerp(
         new Vector3(
-          this.camera.position.x,
+          this.mesh.position.x,
           this.mesh.position.y + 2,
-          this.mesh.position.z
+          this.camera.position.z
         ),
         0.1
       );
