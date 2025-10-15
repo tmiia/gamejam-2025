@@ -45,9 +45,8 @@ export default class CharacterController extends EventEmitter {
       this._isMoving = true;
       this.trigger("startMoving");
     } else if (!isCurrentlyMoving && this.wasMoving) {
-      // this._isMoving = false;
-      // this.trigger("stopMoving");
-      // TODO: Implement idle animation instead of stopMoving
+      this.trigger("stopMoving");
+      this.trigger("idle");
     }
 
     this.wasMoving = isCurrentlyMoving;

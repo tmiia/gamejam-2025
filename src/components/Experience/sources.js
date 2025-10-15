@@ -24,4 +24,9 @@ export default [
     type: "fbx",
     path: "/models/Character/fast_run_anim.fbx",
   },
+  {
+    name: "idleAnim",
+    type: "fbx",
+    path: "/models/Character/idle_anim.fbx",
+  },
 ];
