@@ -2,7 +2,7 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/jeu.glb",
+    path: "/models/Map/Map.glb",
   },
   {
     name: "characterModel",

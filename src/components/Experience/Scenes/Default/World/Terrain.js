@@ -19,7 +19,7 @@ export default class Terrain {
   setModel() {
     this.model = this.resource.scene;
     this.model.position.set(0, -3.5, 0);
-    this.model.scale.set(5, 5, 5);
+    // this.model.scale.set(5, 5, 5);
     this.model.rotation.y = Math.PI / 2;
     this.scene.add(this.model);
 
