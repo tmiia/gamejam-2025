@@ -30,14 +30,14 @@ export default class Particles {
   }
 
   update() {
-    this.mesh.rotation.x += 0.01;
-    this.mesh.rotation.y += 0.02;
+    // this.mesh.rotation.x += 0.01;
+    // this.mesh.rotation.y += 0.02;
 
-    const defaultMesh = this.experience.sceneManager.currentScene.cube.mesh;
+    // const defaultMesh = this.experience.sceneManager.currentScene.cube.mesh;
 
-    if (defaultMesh && !this.isDeleted) {
-      this.checkCollision(defaultMesh);
-    }
+    // if (defaultMesh && !this.isDeleted) {
+    //   this.checkCollision(defaultMesh);
+    // }
   }
 
   deleteGeometry() {

@@ -4,6 +4,7 @@ import Particles from "./CompsGameplay/Particles.js";
 import Cube from "./Cube/Cube.js";
 import Environement from "./Environment.js";
 import Terrain from "./World/Terrain.js";
+import Character from "../../Character/Character.js";
 
 export default class DefaultScene extends Scene {
   constructor() {
@@ -47,7 +48,8 @@ export default class DefaultScene extends Scene {
   onAllReady() {
     this.environement = new Environement();
     this.terrain = new Terrain();
-    this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
+    // this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
+    this.character = new Character(new THREE.Vector3(0, 2, 0));
     this.particles = new Particles(this.fuckmia);
     // this.plane = new Plane();
 
@@ -55,7 +57,8 @@ export default class DefaultScene extends Scene {
   }
 
   update() {
-    if (this.cube) this.cube.update();
+    // if (this.cube) this.cube.update();
+    if (this.character) this.character.update();
     if (this.environement) this.environement.update?.();
     if (this.particles) this.particles.update();
   }
