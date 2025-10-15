@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import IdleAnimation from "./Animations/idle.js";
+import RunAnimation from "./Animations/Run.js";
+import WalkAnimation from "./Animations/Walk.js";
 
 export default class AnimationController {
   constructor(character) {
@@ -8,6 +11,7 @@ export default class AnimationController {
 
     this.mixer = null;
     this.animations = {};
+    this.animationClasses = {};
     this.currentAction = null;
     this.previousAnimation = null;
 
@@ -23,16 +27,23 @@ export default class AnimationController {
 
     this.mixer = new THREE.AnimationMixer(this.model);
 
-    const idleAnim = this.resources.items.idleAnim;
-    if (idleAnim && idleAnim.animations && idleAnim.animations.length > 0) {
-      this.animations.idle = this.mixer.clipAction(idleAnim.animations[0]);
+    // Initialize animation classes
+    this.animationClasses.idle = new IdleAnimation(this);
+    this.animationClasses.run = new RunAnimation(this);
+    this.animationClasses.walk = new WalkAnimation(this);
+
+    // Register actions from animation classes
+    if (this.animationClasses.idle.isLoaded) {
+      this.animations.idle = this.animationClasses.idle.getAction();
+    }
+    if (this.animationClasses.run.isLoaded) {
+      this.animations.run = this.animationClasses.run.getAction();
+    }
+    if (this.animationClasses.walk.isLoaded) {
+      this.animations.walk = this.animationClasses.walk.getAction();
     }
 
-    const fastRunAnim = this.resources.items.fastRunAnim;
-    if (fastRunAnim && fastRunAnim.animations && fastRunAnim.animations.length > 0) {
-      this.animations.run = this.mixer.clipAction(fastRunAnim.animations[0]);
-    }
-
+    // Start with idle animation
     if (this.animations.idle) {
       this.playAnimation("idle");
     }
@@ -40,7 +51,11 @@ export default class AnimationController {
 
   setupEventListeners() {
     if (this.character.characterController) {
-      this.character.characterController.on("startMoving", () => {
+      this.character.characterController.on("startWalking", () => {
+        this.playAnimation("walk");
+      });
+
+      this.character.characterController.on("startRunning", () => {
         this.playAnimation("run");
       });
 
@@ -121,12 +136,20 @@ export default class AnimationController {
   }
 
   destroy() {
+    // Destroy animation classes
+    Object.values(this.animationClasses).forEach(animClass => {
+      if (animClass && animClass.destroy) {
+        animClass.destroy();
+      }
+    });
+
     if (this.mixer) {
       this.mixer.stopAllAction();
       this.mixer.uncacheRoot(this.model);
     }
 
     this.animations = {};
+    this.animationClasses = {};
     this.currentAction = null;
     this.previousAnimation = null;
   }

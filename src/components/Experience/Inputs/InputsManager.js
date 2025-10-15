@@ -9,6 +9,7 @@ export default class InputManager extends EventEmitter {
       left: false,
       right: false,
       jump: false,
+      run: false,
     };
 
     this.joystickValues = {
@@ -21,13 +22,13 @@ export default class InputManager extends EventEmitter {
     this.setupEventListeners();
   }
 
-  setupKeyboardEmulation() {
-    Axis.registerKeys("q", "a", 1);
-    Axis.registerKeys("d", "x", 1);
-    Axis.registerKeys("z", "i", 1);
-    Axis.registerKeys("s", "s", 1);
-    Axis.registerKeys(" ", "w", 1);
-
+  setupKeyboardEmulation() {   
+    Axis.registerKeys("q", "a", 1);      
+    Axis.registerKeys("d", "x", 1);      
+    Axis.registerKeys("z", "i", 1);      
+    Axis.registerKeys("s", "s", 1);      
+    Axis.registerKeys(" ", "w", 1);      
+      
     Axis.registerKeys("ArrowLeft", "a", 2);
     Axis.registerKeys("ArrowRight", "x", 2);
     Axis.registerKeys("ArrowUp", "i", 2);
@@ -43,6 +44,7 @@ export default class InputManager extends EventEmitter {
         Axis.joystick1.setGamepadEmulatorJoystick(this.gamepadEmulator1, 0);
 
         Axis.registerGamepadEmulatorKeys(this.gamepadEmulator1, 0, "w", 1);
+        Axis.registerGamepadEmulatorKeys(this.gamepadEmulator1, 1, "u", 1); 
       }
 
       if (gamepads[1]) {
@@ -89,6 +91,11 @@ export default class InputManager extends EventEmitter {
       this.keys.jump = true;
       this.trigger("jump");
     }
+
+    if (e.key === "i") {
+      this.keys.run = true;
+      this.trigger("run:start");
+    }
   }
 
   handleKeyUp(e) {
@@ -104,6 +111,11 @@ export default class InputManager extends EventEmitter {
 
     if (e.key === "w") {
       this.keys.jump = false;
+    }
+
+    if (e.key === "i") {
+      this.keys.run = false;
+      this.trigger("run:end");
     }
   }
 
@@ -139,6 +151,10 @@ export default class InputManager extends EventEmitter {
 
   isJumping() {
     return this.keys.jump;
+  }
+
+  isRunning() {
+    return this.keys.run;
   }
 
   update() {

@@ -27,6 +27,22 @@ export default class CharacterController extends EventEmitter {
     }
 
     this.inputManager.on("jump", () => this.handleJump());
+    this.inputManager.on("run:start", () => this.handleRunStart());
+    this.inputManager.on("run:end", () => this.handleRunEnd());
+  }
+
+  handleRunStart() {
+    this._isRunning = true;
+    if (this._isMoving) {
+      this.trigger("startRunning");
+    }
+  }
+
+  handleRunEnd() {
+    this._isRunning = false;
+    if (this._isMoving) {
+      this.trigger("startWalking");
+    }
   }
 
   handleJump() {
@@ -40,13 +56,28 @@ export default class CharacterController extends EventEmitter {
 
     const horizontalAxis = this.inputManager.getHorizontalAxis();
     const isCurrentlyMoving = Math.abs(horizontalAxis) > 0.01;
+    const isRunning = this.inputManager.isRunning();
+
+    const wasRunning = this._isRunning;
+    this._isRunning = isRunning;
 
     if (isCurrentlyMoving && !this.wasMoving) {
       this._isMoving = true;
-      this.trigger("startMoving");
+      if (isRunning) {
+        this.trigger("startRunning");
+      } else {
+        this.trigger("startWalking");
+      }
     } else if (!isCurrentlyMoving && this.wasMoving) {
+      this._isMoving = false;
       this.trigger("stopMoving");
       this.trigger("idle");
+    } else if (isCurrentlyMoving && this._isMoving) {
+      if (isRunning && !wasRunning) {
+        this.trigger("startRunning");
+      } else if (!isRunning && wasRunning) {
+        this.trigger("startWalking");
+      }
     }
 
     this.wasMoving = isCurrentlyMoving;

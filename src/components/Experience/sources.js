@@ -34,4 +34,9 @@ export default [
     type: "fbx",
     path: "/models/Character/idle_anim.fbx",
   },
+  {
+    name: "walkAnim",
+    type: "fbx",
+    path: "/models/Character/walk_anim.fbx",
+  },
 ];
