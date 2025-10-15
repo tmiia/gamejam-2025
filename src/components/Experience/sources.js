@@ -1,23 +1,4 @@
 export default [
-  // Put the files in the Public folder
-  // {
-  //   name: "environmentMapTexture",
-  //   type: "cubeTexture",
-  //   path: [
-  //     "/textures/environmentMap/px.jpg",
-  //     "/textures/environmentMap/nx.jpg",
-  //   ],
-  // },
-  // {
-  //   name: "grassColorTexture",
-  //   type: "texture",
-  //   path: "/textures/dirt/color.jpg",
-  // },
-  // {
-  //   name: "grassNormalTexture",
-  //   type: "texture",
-  //   path: "/textures/dirt/normal.jpg",
-  // },
   {
     name: "mapModel",
     type: "gltf",
@@ -32,5 +13,15 @@ export default [
     name: "fastRunAnim",
     type: "fbx",
     path: "/models/character/fast_run.fbx",
+  },
+  {
+    name: "characterModel",
+    type: "fbx",
+    path: "/models/Character/character.fbx",
+  },
+  {
+    name: "fastRunAnim",
+    type: "fbx",
+    path: "/models/Character/fast_run_anim.fbx",
   },
 ];
