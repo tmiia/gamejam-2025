@@ -2,10 +2,11 @@ import * as THREE from "three";
 import Experience from "../../../Experience.js";
 
 export default class Particles {
-  constructor() {
+  constructor(functionDistance) {
     this.experience = new Experience();
     this.scene = this.experience.sceneManager.currentScene.scene;
 
+    this.functionDistance = functionDistance;
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
@@ -48,15 +49,18 @@ export default class Particles {
 
   checkCollision(targetMesh) {
     const dx = this.mesh.position.x - targetMesh.position.x;
-    const dz = this.mesh.position.z - targetMesh.position.z;
-    const distance = Math.sqrt(dx * dx + dz * dz);
+    const dy = this.mesh.position.y - targetMesh.position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-    const minDistance = 0.1;
+    const minDistance = 1;
 
     if (distance == 0) return;
 
     if (distance < minDistance) {
+      console.log(distance, minDistance);
+
       this.deleteGeometry();
+      this.functionDistance();
     }
   }
 }
