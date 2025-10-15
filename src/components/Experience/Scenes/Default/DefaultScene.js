@@ -43,7 +43,7 @@ export default class DefaultScene extends Scene {
   onAllReady() {
     this.environement = new Environement();
     this.terrain = new Terrain();
-    this.cube = new Cube(new THREE.Vector3(0, 20, -2));
+    this.cube = new Cube(new THREE.Vector3(-5, 2, -2));
     this.particles = new Particles();
     // this.plane = new Plane();
 
@@ -53,5 +53,6 @@ export default class DefaultScene extends Scene {
   update() {
     if (this.cube) this.cube.update();
     if (this.environement) this.environement.update?.();
+    if (this.particles) this.particles.update();
   }
 }
