@@ -1,4 +1,6 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+
+import { FBXLoader } from "three/examples/jsm/Addons.js";
 import * as THREE from "three/webgpu";
 import EventEmitter from "./EventEmitter";
 
@@ -21,6 +23,7 @@ export default class Resources extends EventEmitter {
   setLoaders() {
     this.loaders = {};
     this.loaders.gltfLoader = new GLTFLoader();
+    this.loaders.FBXLoader = new FBXLoader();
     this.loaders.textureLoader = new THREE.TextureLoader();
     this.loaders.cubeTextureLoader = new THREE.CubeTextureLoader();
   }
@@ -38,6 +41,10 @@ export default class Resources extends EventEmitter {
       } else if (source.type === "cubeTexture") {
         this.loaders.cubeTextureLoader.load(source.path, (cubeTexture) => {
           this.sourceLoaded(source, cubeTexture);
+        });
+      } else if (source.type === "fbx") {
+        this.loaders.FBXLoader.load(source.path, (fbx) => {
+          this.sourceLoaded(source, fbx);
         });
       }
     }

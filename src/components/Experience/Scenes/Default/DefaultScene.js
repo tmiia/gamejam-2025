@@ -49,6 +49,7 @@ export default class DefaultScene extends Scene {
     this.terrain = new Terrain();
     this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
     this.particles = new Particles(this.fuckmia);
+    // this.character = new Character();
     // this.plane = new Plane();
 
     this.experience.eventEmitter?.trigger("scene.ready");

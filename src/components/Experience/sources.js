@@ -21,6 +21,16 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/test.glb",
+    path: "/models/Map/jeu.glb",
+  },
+  {
+    name: "characterModel",
+    type: "fbx",
+    path: "/models/character/character.fbx",
+  },
+  {
+    name: "fastRunAnim",
+    type: "fbx",
+    path: "/models/character/fast_run.fbx",
   },
 ];
