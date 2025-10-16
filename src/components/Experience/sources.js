@@ -2,12 +2,12 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/aa/map.glb",
+    path: "/models/Map/Map_4.glb",
   },
   {
     name: "mapModelPhysics",
     type: "gltf",
-    path: "/models/Map/aa/mapCube.glb",
+    path: "/models/Map/Map_4.glb",
   },
   {
     name: "characterModel",
