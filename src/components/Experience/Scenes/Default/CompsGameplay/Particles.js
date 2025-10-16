@@ -2,11 +2,12 @@ import * as THREE from "three";
 import Experience from "../../../Experience.js";
 
 export default class Particles {
-  constructor(functionDistance) {
+  constructor(functionDistance, position = new THREE.Vector3(0, 0, 0)) {
     this.experience = new Experience();
     this.scene = this.experience.sceneManager.currentScene.scene;
 
     this.functionDistance = functionDistance;
+    this.position = position;
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
@@ -25,19 +26,18 @@ export default class Particles {
 
   setMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(0, 2, -2);
+    this.mesh.position.copy(this.position);
     this.scene.add(this.mesh);
   }
 
   update() {
-    // this.mesh.rotation.x += 0.01;
-    // this.mesh.rotation.y += 0.02;
+    this.mesh.rotation.x += 0.01;
+    this.mesh.rotation.y += 0.02;
+    const character = this.experience.sceneManager.currentScene.character.model;
 
-    // const defaultMesh = this.experience.sceneManager.currentScene.cube.mesh;
-
-    // if (defaultMesh && !this.isDeleted) {
-    //   this.checkCollision(defaultMesh);
-    // }
+    if (character && !this.isDeleted) {
+      this.checkCollision(character);
+    }
   }
 
   deleteGeometry() {
@@ -49,7 +49,7 @@ export default class Particles {
 
   checkCollision(targetMesh) {
     const dx = this.mesh.position.x - targetMesh.position.x;
-    const dy = this.mesh.position.y - targetMesh.position.y;
+    const dy = this.mesh.position.y - targetMesh.position.y - 0.5;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     const minDistance = 1;

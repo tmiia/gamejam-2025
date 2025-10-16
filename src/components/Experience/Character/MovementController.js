@@ -11,7 +11,7 @@ export default class MovementController {
     this.walkSpeed = 4;
     this.runSpeed = 8;
     this.jumpForce = 12;
-    this.doubleJumpForce = 30;
+    this.doubleJumpForce = 50;
 
     this.groundFriction = 0.8;
     this.airFriction = 0.95;
@@ -35,7 +35,7 @@ export default class MovementController {
   checkGrounded() {
     if (!this.rigidbody || !this.character) return;
 
-    const isGrounded = this.character.checkGroundedWithRaycaster();
+    const isGrounded = Math.abs(vel.y) < 0.1 && pos.y <= 0.01;
 
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);
@@ -112,11 +112,6 @@ export default class MovementController {
     );
 
     this.characterController.jumpsRemaining--;
-    console.log(
-      this.characterController.jumpsRemaining,
-      jumpForceToUse,
-      this.characterController._isGrounded
-    );
 
     this.rigidbody.applyImpulse({ x: 0.0, y: jumpForceToUse, z: 0.0 }, true);
   }
