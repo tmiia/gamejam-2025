@@ -10,6 +10,11 @@ export default [
     path: "/models/Map/aa/mapCube.glb",
   },
   {
+    name: "background",
+    type: "gltf",
+    path: "/models/Map/background.glb",
+  },
+  {
     name: "characterModel",
     type: "fbx",
     path: "/models/character/character.fbx",
