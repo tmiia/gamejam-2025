@@ -63,6 +63,8 @@ export default class CollisionManager {
 
     model.traverse((child) => {
       if (child instanceof THREE.Mesh && child.geometry) {
+        console.log("Création de collider pour le mesh:", child.name);
+
         const body = this.createColliderFromMesh(child);
         if (body) bodies.push(body);
       }

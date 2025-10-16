@@ -26,7 +26,6 @@ export default class Character {
 
     this.raycaster = new THREE.Raycaster();
     this.isGrounded = false;
-    this.raycastDistance = 2;
 
     this.setModel();
     this.setPhysics();
@@ -105,24 +104,28 @@ export default class Character {
     }
   }
 
-  checkGroundedWithRaycaster() {
+  checkGroundedWithRaycaster(raycastDistance, isLanding) {
+    this.raycastDistance = raycastDistance || 0.75;
     if (!this.rigidbody || !this.mapModel) {
       return false;
     }
 
     const charPos = this.rigidbody.translation();
     const rayOrigin = new THREE.Vector3(charPos.x, charPos.y, charPos.z);
-    
-    const rayDirection = new THREE.Vector3(0, -1, 0);
-    this.raycaster.set(rayOrigin, rayDirection); 
+
+    const rayDirection = new THREE.Vector3(0, -2, 0);
+    this.raycaster.set(rayOrigin, rayDirection);
 
     const intersects = this.raycaster.intersectObject(this.mapModel, true);
 
     if (intersects.length > 0) {
       const distance = intersects[0].distance;
       const vel = this.rigidbody.linvel();
-      const isGrounded = distance <= this.raycastDistance && Math.abs(vel.y) < 0.5;
-      
+      const isGrounded =
+        distance <= this.raycastDistance && isLanding
+          ? Math.abs(vel.y) < 0.5
+          : true;
+
       return isGrounded;
     }
 

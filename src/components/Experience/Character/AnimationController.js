@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import FallingIntoLanding from "./Animations/FallingIntoLanding.js";
 import IdleAnimation from "./Animations/idle.js";
 import JumpAnimation from "./Animations/jump.js";
 import RunAnimation from "./Animations/Run.js";
@@ -32,6 +33,7 @@ export default class AnimationController {
     this.animationClasses.run = new RunAnimation(this);
     this.animationClasses.walk = new WalkAnimation(this);
     this.animationClasses.jump = new JumpAnimation(this);
+    this.animationClasses.fallingIntoLanding = new FallingIntoLanding(this);
 
     if (this.animationClasses.idle.isLoaded) {
       this.animations.idle = this.animationClasses.idle.getAction();
@@ -44,6 +46,10 @@ export default class AnimationController {
     }
     if (this.animationClasses.jump.isLoaded) {
       this.animations.jump = this.animationClasses.jump.getAction();
+    }
+    if (this.animationClasses.fallingIntoLanding.isLoaded) {
+      this.animations.fallingIntoLanding =
+        this.animationClasses.fallingIntoLanding.getAction();
     }
 
     if (this.animations.idle) {
@@ -64,9 +70,45 @@ export default class AnimationController {
       this.character.characterController.on("stopMoving", () => {
         this.playAnimation("idle");
       });
+
       this.character.characterController.on("jump", () => {
         this.playAnimation("jump", { loop: THREE.LoopOnce });
       });
+    }
+
+    if (this.character.movementController) {
+      this.character.movementController.on("fallingIntoLanding", () => {
+        this.playAnimation("fallingIntoLanding", { loop: THREE.LoopOnce });
+
+        // Écouter la fin de l'animation
+        const action = this.animations.fallingIntoLanding;
+        if (action) {
+          const onFinished = () => {
+            this.checkInputAndPlayAnimation();
+            this.mixer.removeEventListener("finished", onFinished);
+          };
+          this.mixer.addEventListener("finished", onFinished);
+        }
+      });
+    }
+  }
+
+  checkInputAndPlayAnimation() {
+    if (!this.character.characterController) return;
+
+    const horizontalInput =
+      this.character.characterController.getHorizontalInput();
+    const isRunning = this.character.characterController._isRunning;
+
+    if (Math.abs(horizontalInput) > 0.01) {
+      if (isRunning) {
+        this.playAnimation("run");
+      } else {
+        this.playAnimation("walk");
+      }
+    } else {
+      // Pas d'input
+      this.playAnimation("idle");
     }
   }
 

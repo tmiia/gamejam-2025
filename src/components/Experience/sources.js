@@ -2,12 +2,12 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/Map_8.glb",
+    path: "/models/Map/Map_9.glb",
   },
   {
     name: "mapModelPhysics",
     type: "gltf",
-    path: "/models/Map/Map_8.glb",
+    path: "/models/Map/Map_9.glb",
   },
   {
     name: "background",
@@ -53,5 +53,10 @@ export default [
     name: "fall",
     type: "fbx",
     path: "/models/Character/animations/falling.fbx",
+  },
+  {
+    name: "fallingIntoLanding",
+    type: "fbx",
+    path: "models/character/animations/fallingIntoLanding.fbx",
   },
 ];
