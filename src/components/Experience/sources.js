@@ -2,12 +2,12 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/Map_4.glb",
+    path: "/models/Map/Map_8.glb",
   },
   {
     name: "mapModelPhysics",
     type: "gltf",
-    path: "/models/Map/Map_4.glb",
+    path: "/models/Map/Map_8.glb",
   },
   {
     name: "background",

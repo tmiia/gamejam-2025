@@ -32,16 +32,16 @@ export default class Terrain {
       }
     });
 
-    this.cube = this.resourceCube.scene;
-    this.cube.position.set(0, -0.5, 0);
-    this.cube.rotation.y = -Math.PI / 2;
+    this.physicalMap = this.resourceCube.scene;
+    this.physicalMap.position.set(0, -0.75, 0);
+    this.physicalMap.rotation.y = -Math.PI / 2;
 
-    this.cube.visible = false;
-    this.scene.add(this.cube);
+    this.physicalMap.visible = false;
+    this.scene.add(this.physicalMap);
   }
 
   execCollider() {
-    this.bodies = this.collisionManager.createColliderFromModel(this.cube);
+    this.bodies = this.collisionManager.createColliderFromModel(this.physicalMap);
     console.log(`${this.bodies.length} collider(s) créé(s) pour le terrain`);
   }
 

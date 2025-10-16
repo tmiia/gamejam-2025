@@ -10,8 +10,8 @@ export default class MovementController {
 
     this.walkSpeed = 4;
     this.runSpeed = 8;
-    this.jumpForce = 12;
-    this.doubleJumpForce = 50;
+    this.jumpForce = 6;
+    this.doubleJumpForce = 10;
 
     this.groundFriction = 0.8;
     this.airFriction = 0.95;
