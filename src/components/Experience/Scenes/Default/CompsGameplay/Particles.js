@@ -2,11 +2,12 @@ import * as THREE from "three";
 import Experience from "../../../Experience.js";
 
 export default class Particles {
-  constructor(functionDistance) {
+  constructor(functionDistance, position = new THREE.Vector3(0, 0, 0)) {
     this.experience = new Experience();
     this.scene = this.experience.sceneManager.currentScene.scene;
 
     this.functionDistance = functionDistance;
+    this.position = position;
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
@@ -25,7 +26,7 @@ export default class Particles {
 
   setMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.position.set(3, 2, 0);
+    this.mesh.position.copy(this.position);
     this.scene.add(this.mesh);
   }
 

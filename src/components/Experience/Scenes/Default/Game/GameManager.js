@@ -1,4 +1,5 @@
 import gsap from "gsap";
+import * as THREE from "three";
 import Experience from "../../../Experience.js";
 import Particles from "../CompsGameplay/Particles.js";
 
@@ -8,7 +9,7 @@ export default class GameManager {
 
     this.isLoadeDiv = document.getElementById("isLoaded");
     this.startGame();
-    this.particles = new Particles(this.endGame);
+    this.particles = new Particles(this.endGame, new THREE.Vector3(15, 15, 0));
   }
   startGame() {
     gsap.to(this.isLoadeDiv, {

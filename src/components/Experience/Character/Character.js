@@ -115,13 +115,13 @@ export default class Character {
     if (this.camera && this.model) {
       this.camera.lookAt(
         this.model.position.x,
-        this.model.position.y + 1,
+        this.model.position.y - 0.5,
         this.model.position.z
       );
       this.camera.position.lerp(
         new Vector3(
           this.model.position.x,
-          this.model.position.y + 4,
+          this.model.position.y - 0.5,
           this.model.position.z + 30
         ),
         0.05
