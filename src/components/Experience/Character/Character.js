@@ -22,6 +22,11 @@ export default class Character {
     this.rigidbody = null;
     this.collider = null;
     this.model = null;
+    this.mapModel = null;
+
+    this.raycaster = new THREE.Raycaster();
+    this.isGrounded = false;
+    this.raycastDistance = 2;
 
     this.setModel();
     this.setPhysics();
@@ -36,6 +41,8 @@ export default class Character {
         this.movementController.jump(force);
       }
     });
+
+    this.setMapReference();
   }
 
   setModel() {
@@ -89,6 +96,37 @@ export default class Character {
 
     this.pointLight.position.set(0, 2, 0);
     this.scene.add(this.pointLight);
+  }
+
+  setMapReference() {
+    const mapResource = this.resources.items.mapModel;
+    if (mapResource && mapResource.scene) {
+      this.mapModel = mapResource.scene;
+    }
+  }
+
+  checkGroundedWithRaycaster() {
+    if (!this.rigidbody || !this.mapModel) {
+      return false;
+    }
+
+    const charPos = this.rigidbody.translation();
+    const rayOrigin = new THREE.Vector3(charPos.x, charPos.y, charPos.z);
+    
+    const rayDirection = new THREE.Vector3(0, -1, 0);
+    this.raycaster.set(rayOrigin, rayDirection); 
+
+    const intersects = this.raycaster.intersectObject(this.mapModel, true);
+
+    if (intersects.length > 0) {
+      const distance = intersects[0].distance;
+      const vel = this.rigidbody.linvel();
+      const isGrounded = distance <= this.raycastDistance && Math.abs(vel.y) < 0.5;
+      
+      return isGrounded;
+    }
+
+    return false;
   }
 
   update() {
