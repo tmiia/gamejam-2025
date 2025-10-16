@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import Experience from "../../../Experience.js";
 
 export default class Background {
@@ -11,6 +12,7 @@ export default class Background {
     this.debugObjects = [];
 
     this.setModel();
+    this.initFog();
   }
 
   setModel() {
@@ -18,6 +20,10 @@ export default class Background {
     this.model.position.set(0, 0, -2);
     this.model.rotation.y = -Math.PI / 2;
     this.scene.add(this.model);
+  }
+
+  initFog() {
+    this.scene.fog = new THREE.Fog(0x34353e, 10, 50);
   }
   destroy() {
     if (this.model) this.scene.remove(this.model);
