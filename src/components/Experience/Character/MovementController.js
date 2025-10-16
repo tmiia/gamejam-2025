@@ -33,10 +33,7 @@ export default class MovementController {
   }
 
   checkGrounded() {
-    if (!this.rigidbody) return;
-
-    const vel = this.rigidbody.linvel();
-    const pos = this.rigidbody.translation();
+    if (!this.rigidbody || !this.character) return;
 
     const isGrounded = Math.abs(vel.y) < 0.1 && pos.y <= 0.01;
 
