@@ -50,8 +50,6 @@ export default class CharacterController extends EventEmitter {
   handleJump() {
     if (this.jumpsRemaining > 0) {
       const jumpsBeforeJump = this.jumpsRemaining;
-      this.jumpsRemaining--;
-      console.log("Jumping with force:", this.jumpsRemaining);
       this.trigger("jump", [{ jumpsRemaining: jumpsBeforeJump }]);
     }
   }

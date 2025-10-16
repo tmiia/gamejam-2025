@@ -11,12 +11,15 @@ export default class MovementController {
     this.walkSpeed = 4;
     this.runSpeed = 8;
     this.jumpForce = 12;
-    this.doubleJumpForce = 16;
+    this.doubleJumpForce = 30;
 
     this.groundFriction = 0.8;
     this.airFriction = 0.95;
 
     this.modelYOffset = -1.0;
+
+    this.lastJumpTime = 0;
+    this.minJumpInterval = 100;
 
     this.setupJumpListener();
   }
@@ -35,7 +38,16 @@ export default class MovementController {
     const vel = this.rigidbody.linvel();
     const pos = this.rigidbody.translation();
 
-    const isGrounded = Math.abs(vel.y) < 0.1 && pos.y < 1.0;
+    const isGrounded = Math.abs(vel.y) < 0.1 && pos.y <= 0.01;
+    console.log(
+      "Grounded:",
+      isGrounded,
+      "Y Velocity:",
+      Math.abs(vel.y) < 0.1,
+      "Y Position:",
+      pos.y <= 0.01,
+      pos.y
+    );
 
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);
@@ -93,24 +105,32 @@ export default class MovementController {
   jump(jumpsRemainingBeforeJump) {
     if (!this.rigidbody || !this.characterController) return;
 
+    const now = performance.now();
+    if (now - this.lastJumpTime < this.minJumpInterval) {
+      return;
+    }
+    this.lastJumpTime = now;
+
     const currentVel = this.rigidbody.linvel();
 
     const jumpForceToUse =
-      jumpsRemainingBeforeJump === 1 ? this.doubleJumpForce : this.jumpForce;
+      this.characterController.jumpsRemaining === 1
+        ? this.doubleJumpForce
+        : this.jumpForce;
 
     this.rigidbody.setLinvel(
       new RAPIER.Vector3(currentVel.x, 0, currentVel.z),
       true
     );
 
-    this.rigidbody.applyImpulse({ x: 0.0, y: jumpForceToUse, z: 0.0 }, true);
-
+    this.characterController.jumpsRemaining--;
     console.log(
-      "Jump applied! Force:",
+      this.characterController.jumpsRemaining,
       jumpForceToUse,
-      "Jumps remaining before:",
-      jumpsRemainingBeforeJump
+      this.characterController._isGrounded
     );
+
+    this.rigidbody.applyImpulse({ x: 0.0, y: jumpForceToUse, z: 0.0 }, true);
   }
 
   syncModelPosition() {
@@ -127,9 +147,7 @@ export default class MovementController {
 
   update() {
     this.checkGrounded();
-
     this.handleMovement();
-
     this.syncModelPosition();
   }
 

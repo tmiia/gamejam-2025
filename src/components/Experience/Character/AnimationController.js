@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import IdleAnimation from "./Animations/idle.js";
+import JumpAnimation from "./Animations/jump.js";
 import RunAnimation from "./Animations/Run.js";
 import WalkAnimation from "./Animations/Walk.js";
 
@@ -27,12 +28,11 @@ export default class AnimationController {
 
     this.mixer = new THREE.AnimationMixer(this.model);
 
-    // Initialize animation classes
     this.animationClasses.idle = new IdleAnimation(this);
     this.animationClasses.run = new RunAnimation(this);
     this.animationClasses.walk = new WalkAnimation(this);
+    this.animationClasses.jump = new JumpAnimation(this);
 
-    // Register actions from animation classes
     if (this.animationClasses.idle.isLoaded) {
       this.animations.idle = this.animationClasses.idle.getAction();
     }
@@ -42,8 +42,10 @@ export default class AnimationController {
     if (this.animationClasses.walk.isLoaded) {
       this.animations.walk = this.animationClasses.walk.getAction();
     }
+    if (this.animationClasses.jump.isLoaded) {
+      this.animations.jump = this.animationClasses.jump.getAction();
+    }
 
-    // Start with idle animation
     if (this.animations.idle) {
       this.playAnimation("idle");
     }
