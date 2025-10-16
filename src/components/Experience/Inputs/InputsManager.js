@@ -1,4 +1,3 @@
-import Axis from "axis-api";
 import EventEmitter from "../Utils/EventEmitter.js";
 
 export default class InputManager extends EventEmitter {
@@ -17,40 +16,62 @@ export default class InputManager extends EventEmitter {
       joystick2: { x: 0, y: 0 },
     };
 
-    this.setupKeyboardEmulation();
-    this.setupGamepadEmulation();
-    this.setupEventListeners();
+    this.Axis = null;
+    this.gamepadEmulator1 = null;
+    this.gamepadEmulator2 = null;
+
+    // Only initialize Axis API on the client side
+    if (typeof window !== 'undefined') {
+      this.initAxisAPI();
+    }
   }
 
-  setupKeyboardEmulation() {   
-    Axis.registerKeys("q", "a", 1);      
-    Axis.registerKeys("d", "x", 1);      
-    Axis.registerKeys("z", "i", 1);      
-    Axis.registerKeys("s", "s", 1);      
-    Axis.registerKeys(" ", "w", 1);      
+  async initAxisAPI() {
+    try {
+      const AxisModule = await import("axis-api");
+      this.Axis = AxisModule.default;
       
-    Axis.registerKeys("ArrowLeft", "a", 2);
-    Axis.registerKeys("ArrowRight", "x", 2);
-    Axis.registerKeys("ArrowUp", "i", 2);
-    Axis.registerKeys("ArrowDown", "s", 2);
-    Axis.registerKeys("Enter", "w", 2);
+      this.setupKeyboardEmulation();
+      this.setupGamepadEmulation();
+      this.setupEventListeners();
+    } catch (error) {
+      console.error("Error loading Axis API:", error);
+    }
+  }
+
+  setupKeyboardEmulation() {
+    if (!this.Axis) return;
+    
+    this.Axis.registerKeys("q", "a", 1);      
+    this.Axis.registerKeys("d", "x", 1);      
+    this.Axis.registerKeys("z", "i", 1);      
+    this.Axis.registerKeys("s", "s", 1);      
+    this.Axis.registerKeys(" ", "w", 1);      
+      
+    this.Axis.registerKeys("ArrowLeft", "a", 2);
+    this.Axis.registerKeys("ArrowRight", "x", 2);
+    this.Axis.registerKeys("ArrowUp", "i", 2);
+    this.Axis.registerKeys("ArrowDown", "s", 2);
+    this.Axis.registerKeys("Enter", "w", 2);
   }
 
   setupGamepadEmulation() {
+    if (!this.Axis) return;
+    
     const checkGamepad = () => {
       const gamepads = navigator.getGamepads();
       if (gamepads[0]) {
-        this.gamepadEmulator1 = Axis.createGamepadEmulator(0);
-        Axis.joystick1.setGamepadEmulatorJoystick(this.gamepadEmulator1, 0);
+        this.gamepadEmulator1 = this.Axis.createGamepadEmulator(0);
+        this.Axis.joystick1.setGamepadEmulatorJoystick(this.gamepadEmulator1, 0);
 
-        Axis.registerGamepadEmulatorKeys(this.gamepadEmulator1, 0, "w", 1);
-        Axis.registerGamepadEmulatorKeys(this.gamepadEmulator1, 1, "u", 1); 
+        this.Axis.registerGamepadEmulatorKeys(this.gamepadEmulator1, 0, "w", 1);
+        this.Axis.registerGamepadEmulatorKeys(this.gamepadEmulator1, 1, "u", 1); 
       }
 
       if (gamepads[1]) {
-        this.gamepadEmulator2 = Axis.createGamepadEmulator(1);
-        Axis.joystick2.setGamepadEmulatorJoystick(this.gamepadEmulator2, 0);
-        Axis.registerGamepadEmulatorKeys(this.gamepadEmulator2, 0, "w", 2);
+        this.gamepadEmulator2 = this.Axis.createGamepadEmulator(1);
+        this.Axis.joystick2.setGamepadEmulatorJoystick(this.gamepadEmulator2, 0);
+        this.Axis.registerGamepadEmulatorKeys(this.gamepadEmulator2, 0, "w", 2);
       }
     };
 
@@ -63,14 +84,16 @@ export default class InputManager extends EventEmitter {
   }
 
   setupEventListeners() {
-    Axis.addEventListener("keydown", this.handleKeyDown.bind(this));
-    Axis.addEventListener("keyup", this.handleKeyUp.bind(this));
+    if (!this.Axis) return;
+    
+    this.Axis.addEventListener("keydown", this.handleKeyDown.bind(this));
+    this.Axis.addEventListener("keyup", this.handleKeyUp.bind(this));
 
-    Axis.joystick1.addEventListener(
+    this.Axis.joystick1.addEventListener(
       "joystick:move",
       this.handleJoystick1Move.bind(this)
     );
-    Axis.joystick2.addEventListener(
+    this.Axis.joystick2.addEventListener(
       "joystick:move",
       this.handleJoystick2Move.bind(this)
     );
@@ -167,13 +190,15 @@ export default class InputManager extends EventEmitter {
   }
 
   destroy() {
-    Axis.removeEventListener("keydown", this.handleKeyDown.bind(this));
-    Axis.removeEventListener("keyup", this.handleKeyUp.bind(this));
-    Axis.joystick1.removeEventListener(
+    if (!this.Axis) return;
+    
+    this.Axis.removeEventListener("keydown", this.handleKeyDown.bind(this));
+    this.Axis.removeEventListener("keyup", this.handleKeyUp.bind(this));
+    this.Axis.joystick1.removeEventListener(
       "joystick:move",
       this.handleJoystick1Move.bind(this)
     );
-    Axis.joystick2.removeEventListener(
+    this.Axis.joystick2.removeEventListener(
       "joystick:move",
       this.handleJoystick2Move.bind(this)
     );
