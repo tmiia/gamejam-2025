@@ -4,7 +4,6 @@ import EventEmitter from "../Utils/EventEmitter.js";
 export default class PhysicsWorld extends EventEmitter {
   constructor() {
     super();
-
     this.world = null;
     this.ready = false;
     this.init();
@@ -49,6 +48,11 @@ export default class PhysicsWorld extends EventEmitter {
   addCube(hx, hy, hz, position, isDynamic = true) {
     const shape = RAPIER.ColliderDesc.cuboid(hx, hy, hz);
     return this.addRigidBody(shape, position, isDynamic);
+  }
+
+  castRay(ray, maxToi, solid = true) {
+    if (!this.world) return null;
+    return this.world.castRay(ray, maxToi, solid);
   }
 
   getWorld() {

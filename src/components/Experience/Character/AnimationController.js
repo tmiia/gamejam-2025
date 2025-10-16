@@ -29,9 +29,24 @@ export default class AnimationController {
     }
 
     const fastRunAnim = this.resources.items.fastRunAnim;
-    if (fastRunAnim && fastRunAnim.animations && fastRunAnim.animations.length > 0) {
+    if (
+      fastRunAnim &&
+      fastRunAnim.animations &&
+      fastRunAnim.animations.length > 0
+    ) {
       this.animations.run = this.mixer.clipAction(fastRunAnim.animations[0]);
     }
+
+    const jump = this.resources.items.jump;
+    if (jump && jump.animations && jump.animations.length > 0) {
+      this.animations.jump = this.mixer.clipAction(jump.animations[0]);
+      this.animations.loop = THREE.LoopOnce;
+    }
+
+    // const fastRunAnim = this.resources.items.fastRunAnim;
+    // if (fastRunAnim && fastRunAnim.animations && fastRunAnim.animations.length > 0) {
+    //   this.animations.run = this.mixer.clipAction(fastRunAnim.animations[0]);
+    // }
 
     if (this.animations.idle) {
       this.playAnimation("idle");
@@ -47,6 +62,9 @@ export default class AnimationController {
       this.character.characterController.on("stopMoving", () => {
         this.playAnimation("idle");
       });
+      this.character.characterController.on("jump", () => {
+        this.playAnimation("jump", { loop: THREE.LoopOnce });
+      });
     }
   }
 
@@ -54,7 +72,7 @@ export default class AnimationController {
     const {
       fadeInDuration = 0.2,
       loop = THREE.LoopRepeat,
-      timeScale = 1.0
+      timeScale = 1.0,
     } = options;
 
     const action = this.animations[name];
@@ -77,6 +95,10 @@ export default class AnimationController {
     action.timeScale = timeScale;
     action.fadeIn(fadeInDuration);
     action.play();
+
+    if (loop === THREE.LoopOnce) {
+      action.clampWhenFinished = true;
+    }
 
     this.previousAnimation = this.currentAction;
     this.currentAction = action;
@@ -131,4 +153,3 @@ export default class AnimationController {
     this.previousAnimation = null;
   }
 }
-
