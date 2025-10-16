@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import IdleAnimation from "./Animations/idle.js";
+import JumpAnimation from "./Animations/jump.js";
 import RunAnimation from "./Animations/Run.js";
 import WalkAnimation from "./Animations/Walk.js";
 
@@ -27,12 +28,11 @@ export default class AnimationController {
 
     this.mixer = new THREE.AnimationMixer(this.model);
 
-    // Initialize animation classes
     this.animationClasses.idle = new IdleAnimation(this);
     this.animationClasses.run = new RunAnimation(this);
     this.animationClasses.walk = new WalkAnimation(this);
+    this.animationClasses.jump = new JumpAnimation(this);
 
-    // Register actions from animation classes
     if (this.animationClasses.idle.isLoaded) {
       this.animations.idle = this.animationClasses.idle.getAction();
     }
@@ -42,8 +42,10 @@ export default class AnimationController {
     if (this.animationClasses.walk.isLoaded) {
       this.animations.walk = this.animationClasses.walk.getAction();
     }
+    if (this.animationClasses.jump.isLoaded) {
+      this.animations.jump = this.animationClasses.jump.getAction();
+    }
 
-    // Start with idle animation
     if (this.animations.idle) {
       this.playAnimation("idle");
     }
@@ -62,6 +64,9 @@ export default class AnimationController {
       this.character.characterController.on("stopMoving", () => {
         this.playAnimation("idle");
       });
+      this.character.characterController.on("jump", () => {
+        this.playAnimation("jump", { loop: THREE.LoopOnce });
+      });
     }
   }
 
@@ -69,7 +74,7 @@ export default class AnimationController {
     const {
       fadeInDuration = 0.2,
       loop = THREE.LoopRepeat,
-      timeScale = 1.0
+      timeScale = 1.0,
     } = options;
 
     const action = this.animations[name];
@@ -92,6 +97,10 @@ export default class AnimationController {
     action.timeScale = timeScale;
     action.fadeIn(fadeInDuration);
     action.play();
+
+    if (loop === THREE.LoopOnce) {
+      action.clampWhenFinished = true;
+    }
 
     this.previousAnimation = this.currentAction;
     this.currentAction = action;
@@ -137,7 +146,7 @@ export default class AnimationController {
 
   destroy() {
     // Destroy animation classes
-    Object.values(this.animationClasses).forEach(animClass => {
+    Object.values(this.animationClasses).forEach((animClass) => {
       if (animClass && animClass.destroy) {
         animClass.destroy();
       }
@@ -154,4 +163,3 @@ export default class AnimationController {
     this.previousAnimation = null;
   }
 }
-

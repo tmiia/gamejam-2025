@@ -2,12 +2,12 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/aa/map.glb",
+    path: "/models/Map/Map_4.glb",
   },
   {
     name: "mapModelPhysics",
     type: "gltf",
-    path: "/models/Map/aa/mapCube.glb",
+    path: "/models/Map/Map_4.glb",
   },
   {
     name: "background",
@@ -43,5 +43,15 @@ export default [
     name: "walkAnim",
     type: "fbx",
     path: "/models/Character/walk_anim.fbx",
+  },
+  {
+    name: "jump",
+    type: "fbx",
+    path: "/models/Character/animations/test.fbx",
+  },
+  {
+    name: "fall",
+    type: "fbx",
+    path: "/models/Character/animations/falling.fbx",
   },
 ];
