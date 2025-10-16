@@ -34,8 +34,7 @@ export default class MovementController {
 
   checkGrounded() {
     if (!this.rigidbody || !this.character) return;
-
-    const isGrounded = Math.abs(vel.y) < 0.1 && pos.y <= 0.01;
+    const isGrounded = this.character.checkGroundedWithRaycaster();
 
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);
