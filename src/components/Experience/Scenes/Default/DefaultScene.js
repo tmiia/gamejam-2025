@@ -1,10 +1,9 @@
 import * as THREE from "three";
+import Character from "../../Character/Character.js";
 import Scene from "../Scene.js";
 import Particles from "./CompsGameplay/Particles.js";
-import Cube from "./Cube/Cube.js";
 import Environement from "./Environment.js";
 import Terrain from "./World/Terrain.js";
-import Character from "../../Character/Character.js";
 
 export default class DefaultScene extends Scene {
   constructor() {

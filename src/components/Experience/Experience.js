@@ -1,14 +1,15 @@
 import Camera from "./Camera";
+import PostProcessingClass from "./PostProcessing/PostProcessingClass.js";
 import Renderer from "./Renderer";
 import DefaultScene from "./Scenes/Default/DefaultScene";
 import SceneManager from "./Scenes/SceneManager.js";
 
+import InputManager from "./Inputs/InputsManager.js";
 import sources from "./sources.js";
 import Debug from "./Utils/Debug.js";
 import Resources from "./Utils/Resources.js";
 import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
-import InputManager from "./Inputs/InputsManager.js";
 
 import CollisionManager from "./Physics/CollisionManager.js";
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
@@ -40,6 +41,7 @@ export default class Experience {
     this.sceneManager = new SceneManager(this);
     this.sceneManager.setScene(DefaultScene);
     this.renderer = new Renderer();
+    this.postProcessing = new PostProcessingClass();
 
     // Shared props
     this.isGalleryAnimated = true;
@@ -78,6 +80,9 @@ export default class Experience {
 
     if (this.physicsWorld) {
       this.physicsWorld.update();
+    }
+    if (this.postProcessing) {
+      this.postProcessing.update();
     }
   }
 
