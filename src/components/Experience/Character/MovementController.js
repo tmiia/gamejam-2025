@@ -39,15 +39,6 @@ export default class MovementController {
     const pos = this.rigidbody.translation();
 
     const isGrounded = Math.abs(vel.y) < 0.1 && pos.y <= 0.01;
-    console.log(
-      "Grounded:",
-      isGrounded,
-      "Y Velocity:",
-      Math.abs(vel.y) < 0.1,
-      "Y Position:",
-      pos.y <= 0.01,
-      pos.y
-    );
 
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);
@@ -124,11 +115,6 @@ export default class MovementController {
     );
 
     this.characterController.jumpsRemaining--;
-    console.log(
-      this.characterController.jumpsRemaining,
-      jumpForceToUse,
-      this.characterController._isGrounded
-    );
 
     this.rigidbody.applyImpulse({ x: 0.0, y: jumpForceToUse, z: 0.0 }, true);
   }

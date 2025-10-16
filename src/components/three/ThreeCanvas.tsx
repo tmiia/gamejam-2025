@@ -46,6 +46,10 @@ const ThreeJSExperience = () => {
   return (
     <>
       <div
+        id="isLoaded"
+        className="h-screen w-screen absolute top-0 left-0 bg-white z-[100]"
+      ></div>
+      <div
         id="scrollContainer"
         style={{
           width: "100%",
