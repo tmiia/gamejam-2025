@@ -42,6 +42,9 @@ export default class Terrain {
 
           return;
         }
+        if (child.name === "Plane") {
+          return;
+        }
         child.material = blackMaterial;
       }
     });

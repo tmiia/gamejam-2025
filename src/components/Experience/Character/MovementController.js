@@ -24,7 +24,7 @@ export default class MovementController extends EventEmitter {
     this.lastJumpTime = 0;
     this.isDoubleJumping = false;
     this.minJumpInterval = 100;
-    this.raycastDistance = 1.3;
+    this.raycastDistance = 1.2;
 
     this.setupJumpListener();
   }
@@ -56,7 +56,7 @@ export default class MovementController extends EventEmitter {
     const isNearGround = this.character.checkGroundedWithRaycaster(1, false);
 
     if (this.isDoubleJumping) {
-      if (isNearGround && vel.y < -3.5) {
+      if (isNearGround && vel.y < -1.5) {
         console.log("Double Jump ended");
         this.trigger("fallingIntoLanding");
         this.isDoubleJumping = false;

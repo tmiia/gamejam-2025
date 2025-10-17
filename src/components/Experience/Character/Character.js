@@ -81,7 +81,10 @@ export default class Character {
 
     this.rigidbody = this.physicsWorld.getWorld().createRigidBody(bodyDesc);
 
-    const colliderDesc = RAPIER.ColliderDesc.capsule(height / 2, radius);
+    const colliderDesc = RAPIER.ColliderDesc.capsule(height / 2, radius)
+      .setFriction(0.0)
+      .setRestitution(0.0);
+
     this.collider = this.physicsWorld
       .getWorld()
       .createCollider(colliderDesc, this.rigidbody);
@@ -91,7 +94,7 @@ export default class Character {
 
     this.rigidbody.lockRotations(true, true);
 
-    this.rigidbody.lockTranslations(false, false, true, true);
+    this.rigidbody.lockTranslations(false, false, true);
   }
   setSunLight() {
     // this.directionalLight = new THREE.DirectionalLight("#ffffff", 4);
@@ -133,10 +136,20 @@ export default class Character {
     if (intersects.length > 0) {
       const distance = intersects[0].distance;
       const vel = this.rigidbody.linvel();
-      const isGrounded =
-        distance <= this.raycastDistance && isLanding
-          ? Math.abs(vel.y) < 0.5
-          : true;
+      // const isGrounded =
+      //   distance <= this.raycastDistance && isLanding
+      //     ? Math.abs(vel.y) < 0.1
+      //     : true;
+      const isGrounded = distance <= this.raycastDistance;
+
+      console.log(isGrounded);
+
+      // console.log("Raycast Grounded Check:", {
+      //   distance: distance,
+      //   raycastDistance: this.raycastDistance,
+      //   velY: vel.y,
+      //   isGrounded: isGrounded,
+      // });
 
       return isGrounded;
     }

@@ -80,7 +80,6 @@ export default class AnimationController {
       this.character.movementController.on("fallingIntoLanding", () => {
         this.playAnimation("fallingIntoLanding", { loop: THREE.LoopOnce });
 
-        // Écouter la fin de l'animation
         const action = this.animations.fallingIntoLanding;
         if (action) {
           const onFinished = () => {

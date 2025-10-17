@@ -20,10 +20,8 @@ export default class CollisionManager {
     const box = mesh.geometry.boundingBox;
     const localSize = new THREE.Vector3();
     box.getSize(localSize);
-    console.log(box.getSize(localSize));
 
     const worldSize = localSize.clone().multiply(mesh.scale);
-
     const position = new THREE.Vector3();
     mesh.getWorldPosition(position);
 
@@ -45,15 +43,10 @@ export default class CollisionManager {
     const hy = worldSize.y / 2;
     const hz = worldSize.z / 2;
     const colliderDesc = RAPIER.ColliderDesc.cuboid(hx, hy, hz);
-    colliderDesc.setFriction(0.7);
+
+    colliderDesc.setFriction(0.0);
 
     world.createCollider(colliderDesc, body);
-
-    console.log(
-      `Collider créé - Size: (${hx.toFixed(2)}, ${hy.toFixed(2)}, ${hz.toFixed(
-        2
-      )})`
-    );
 
     return body;
   }
@@ -64,6 +57,35 @@ export default class CollisionManager {
     model.traverse((child) => {
       if (child instanceof THREE.Mesh && child.geometry) {
         console.log("Création de collider pour le mesh:", child.name);
+
+        const rotation = new THREE.Quaternion();
+        child.getWorldQuaternion(rotation);
+        const up = new THREE.Vector3(0, 1, 0).applyQuaternion(rotation);
+
+        if (child.name === "FRIX") {
+          const body = this.createColliderFromMesh(child);
+          if (body) bodies.push(body);
+        } else {
+          const body = this.createColliderFromMesh(child);
+          if (body) bodies.push(body);
+        }
+      }
+    });
+
+    return bodies;
+  }
+
+  createColliderFromModel(model) {
+    const bodies = [];
+
+    model.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.geometry) {
+        console.log("Création de collider pour le mesh:", child.name);
+
+        if (child.name === "FRIX") {
+          const body = this.createColliderFromMesh(child, { friction: 0.0 });
+          if (body) bodies.push(body);
+        }
 
         const body = this.createColliderFromMesh(child);
         if (body) bodies.push(body);
