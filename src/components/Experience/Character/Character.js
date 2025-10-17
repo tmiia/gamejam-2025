@@ -142,8 +142,6 @@ export default class Character {
       //     : true;
       const isGrounded = distance <= this.raycastDistance;
 
-      console.log(isGrounded);
-
       // console.log("Raycast Grounded Check:", {
       //   distance: distance,
       //   raycastDistance: this.raycastDistance,
