@@ -27,6 +27,7 @@ export default class Particles {
   setMesh() {
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.position.copy(this.position);
+    this.mesh.scale.set(0.3, 0.3, 0.3);
     this.scene.add(this.mesh);
   }
 

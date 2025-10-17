@@ -47,12 +47,12 @@ export default class DefaultScene extends Scene {
 
   onAllReady() {
     this.environement = new Environement();
+    this.gameManager = new GameManager();
     this.terrain = new Terrain();
     this.background = new Background();
     // this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
     this.character = new Character(new THREE.Vector3(0, 2, 0));
     // this.particles = new Particles(this.fuckmia);
-    this.gameManager = new GameManager();
     // this.character = new Character();
     // this.plane = new Plane();
 

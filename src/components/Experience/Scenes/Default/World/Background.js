@@ -17,7 +17,7 @@ export default class Background {
 
   setModel() {
     this.model = this.resource.scene;
-    this.model.position.set(0, 0, -2);
+    this.model.position.set(0, -10, -2);
     this.model.rotation.y = -Math.PI / 2;
     this.scene.add(this.model);
   }

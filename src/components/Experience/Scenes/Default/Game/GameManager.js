@@ -9,7 +9,14 @@ export default class GameManager {
 
     this.isLoadeDiv = document.getElementById("isLoaded");
     this.startGame();
-    this.particles = new Particles(this.endGame, new THREE.Vector3(15, 15, 0));
+    this.particles = null;
+    // this.initParticles();
+  }
+  initParticles(position) {
+    this.particles = new Particles(
+      this.endGame,
+      new THREE.Vector3(position.x, position.y, position.z)
+    );
   }
   startGame() {
     gsap.to(this.isLoadeDiv, {
@@ -56,6 +63,6 @@ export default class GameManager {
   }
 
   update() {
-    this.particles.update();
+    if (this.particles) this.particles.update();
   }
 }

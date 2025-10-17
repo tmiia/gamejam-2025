@@ -49,8 +49,20 @@ export default class Character {
 
     if (characterModel) {
       this.model = characterModel;
-      this.model.scale.set(0.01, 0.01, 0.01);
+      this.model.scale.set(0.0025, 0.0025, 0.0025);
       this.model.position.copy(this.position);
+
+      const blackMaterial = new THREE.MeshBasicMaterial({
+        color: new THREE.Color("#000000"),
+        roughness: 1,
+        metalness: 0,
+      });
+
+      this.model.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = blackMaterial;
+        }
+      });
       this.scene.add(this.model);
     }
   }
@@ -153,17 +165,22 @@ export default class Character {
     //   );
     // }
 
+    if (this.model.position.y < -30) {
+      this.model.position.set(0, 2, 0);
+      this.rigidbody.setTranslation({ x: 0, y: 5, z: 0 }, true);
+      this.rigidbody.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    }
     if (this.camera && this.model) {
       this.camera.lookAt(
         this.model.position.x,
-        this.model.position.y - 0.5,
+        this.model.position.y * 0.2 + 2,
         this.model.position.z
       );
       this.camera.position.lerp(
         new Vector3(
           this.model.position.x,
-          this.model.position.y - 0.5,
-          this.model.position.z + 30
+          this.model.position.y * 0.2,
+          this.model.position.z + 20
         ),
         0.05
       );

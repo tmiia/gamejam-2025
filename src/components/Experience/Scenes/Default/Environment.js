@@ -13,7 +13,7 @@ export default class Environment {
   }
 
   setSunLight() {
-    this.sunLight = new THREE.DirectionalLight("#ffffff", 4);
+    this.sunLight = new THREE.DirectionalLight("#ffffff", 10);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.camera.far = 15;
     this.sunLight.shadow.mapSize.set(1024, 1024);
@@ -21,9 +21,9 @@ export default class Environment {
     this.sunLight.position.set(3.5, 2, -1.25);
     this.scene.add(this.sunLight);
 
-    this.sunLightTwo = new THREE.DirectionalLight("#ffffff", 4);
+    this.sunLightTwo = new THREE.DirectionalLight("#ffffff", 10);
     this.sunLightTwo.shadow.mapSize.set(1024, 1024);
-    this.sunLightTwo.position.set(-3.5, 2, 1.25);
+    this.sunLightTwo.position.set(0, 0, 6.25);
     this.scene.add(this.sunLightTwo);
   }
 

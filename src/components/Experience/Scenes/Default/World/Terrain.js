@@ -25,10 +25,24 @@ export default class Terrain {
     this.model.rotation.y = -Math.PI / 2;
     this.scene.add(this.model);
 
+    const blackMaterial = new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#000000"),
+      roughness: 1,
+      metalness: 0,
+    });
+
     this.model.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
+        if (child.name === "END") {
+          child.visible = false;
+          // alert("Félicitations ! Vous avez atteint la fin du niveau.");
+          this.experience.sceneManager.currentScene.gameManager.initParticles(
+            child.getWorldPosition(new THREE.Vector3())
+          );
+
+          return;
+        }
+        child.material = blackMaterial;
       }
     });
 
@@ -41,7 +55,9 @@ export default class Terrain {
   }
 
   execCollider() {
-    this.bodies = this.collisionManager.createColliderFromModel(this.physicalMap);
+    this.bodies = this.collisionManager.createColliderFromModel(
+      this.physicalMap
+    );
     console.log(`${this.bodies.length} collider(s) créé(s) pour le terrain`);
   }
 
