@@ -56,8 +56,6 @@ export default class CollisionManager {
 
     model.traverse((child) => {
       if (child instanceof THREE.Mesh && child.geometry) {
-        console.log("Création de collider pour le mesh:", child.name);
-
         const rotation = new THREE.Quaternion();
         child.getWorldQuaternion(rotation);
         const up = new THREE.Vector3(0, 1, 0).applyQuaternion(rotation);
@@ -80,8 +78,6 @@ export default class CollisionManager {
 
     model.traverse((child) => {
       if (child instanceof THREE.Mesh && child.geometry) {
-        console.log("Création de collider pour le mesh:", child.name);
-
         if (child.name === "FRIX") {
           const body = this.createColliderFromMesh(child, { friction: 0.0 });
           if (body) bodies.push(body);
