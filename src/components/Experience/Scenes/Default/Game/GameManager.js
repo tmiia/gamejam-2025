@@ -8,8 +8,15 @@ export default class GameManager {
     this.experience = new Experience();
 
     this.isLoadeDiv = document.getElementById("isLoaded");
-    this.startGame();
     this.particles = null;
+    this.cameraSettings = {
+      yMultiplier: 0,
+      xOffset: 2,
+      yLookAt: 2,
+      zOffset: 0,
+    };
+
+    this.startGame();
     // this.initParticles();
   }
   initParticles(position) {
@@ -23,7 +30,56 @@ export default class GameManager {
       opacity: 0,
       duration: 1,
       delay: 1,
+      onComplete: () => {},
     });
+
+    // console.log(
+    //   this.experience.sceneManager.currentScene.GameManager.cameraSettings
+    // );
+
+    gsap.fromTo(
+      this.cameraSettings,
+      {
+        zOffset: 0,
+        yLookAt: 2,
+      },
+      // {
+      //   zOffset: 7.5,
+      //   xOffset: 1,
+      //   yLookAt: 0,
+      //   duration: 1,
+      //   ease: "power3.inOut",
+      //   // delay: 2,
+      // }
+      // Scene 3
+      // {
+      //   zOffset: 7.5,
+      //   xOffset: 1,
+      //   yLookAt: 0,
+      //   duration: 1,
+      //   ease: "power3.inOut",
+      //   // delay: 2,
+      // }
+      // Scene 2
+      // {
+      //   zOffset: 25,
+      //   xOffset: 1.5,
+      //    yLookAt: -0.35,
+      //   duration: 1,
+      //   ease: "power3.inOut",
+      //   // delay: 2,
+      // }
+
+      // Scene 1
+      {
+        zOffset: 25,
+        xOffset: 5,
+        yLookAt: 2.5,
+        duration: 1,
+        ease: "power3.inOut",
+        // delay: 2,
+      }
+    );
 
     try {
       fetch("TestZebi", {
