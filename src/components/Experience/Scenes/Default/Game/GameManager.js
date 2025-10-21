@@ -8,6 +8,10 @@ export default class GameManager {
     this.experience = new Experience();
 
     this.isLoadeDiv = document.getElementById("isLoaded");
+
+    this.isStarted = false;
+    this.isEnded = false;
+
     this.particles = null;
     this.cameraSettings = {
       yMultiplier: 0,
@@ -52,6 +56,7 @@ export default class GameManager {
       onComplete: () => {
         this.cameraSettings.lerpSpeed =
           this.cameraScenesValues.scene1.lerpSpeed;
+        this.isStarted = true;
       },
     });
 
@@ -111,6 +116,7 @@ export default class GameManager {
 
   endGame() {
     this.isLoadeDiv = document.getElementById("isLoaded");
+    this.isEnded = true;
     gsap.to(this.isLoadeDiv, {
       opacity: 1,
       duration: 1,
@@ -132,8 +138,6 @@ export default class GameManager {
   }
 
   update() {
-    console.log(this.cameraSettings.lerpSpeed);
-
     if (this.particles) this.particles.update();
     if (this.levelTwo) this.levelTwo.update();
     if (this.levelThree) this.levelThree.update();

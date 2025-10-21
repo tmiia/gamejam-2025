@@ -13,8 +13,8 @@ export default class MovementController extends EventEmitter {
 
     this.walkSpeed = 10;
     this.runSpeed = 4;
-    this.jumpForce = 7;
-    this.doubleJumpForce = 8;
+    this.jumpForce = 4;
+    this.doubleJumpForce = 5;
 
     this.groundFriction = 0.8;
     this.airFriction = 0.95;
