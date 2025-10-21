@@ -11,12 +11,21 @@ export default class GameManager {
     this.particles = null;
     this.cameraSettings = {
       yMultiplier: 0,
-      xOffset: 2,
-      yLookAt: 2,
+      xOffset: 0,
+      yLookAt: 0,
       zOffset: 0,
+      lerpSpeed: 0.5,
+    };
+
+    this.cameraScenesValues = {
+      scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025 },
+      scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025 },
+      scene3: { zOffset: 7.5, xOffset: 1, yLookAt: 0, lerpSpeed: 0.025 },
     };
 
     this.startGame();
+    this.level2();
+    this.level3();
     // this.initParticles();
   }
   initParticles(position) {
@@ -30,56 +39,21 @@ export default class GameManager {
       opacity: 0,
       duration: 1,
       delay: 1,
-      onComplete: () => {},
+      ease: "power3.inOut",
     });
 
-    // console.log(
-    //   this.experience.sceneManager.currentScene.GameManager.cameraSettings
-    // );
-
-    gsap.fromTo(
-      this.cameraSettings,
-      {
-        zOffset: 0,
-        yLookAt: 2,
+    gsap.to(this.cameraSettings, {
+      zOffset: this.cameraScenesValues.scene1.zOffset,
+      xOffset: this.cameraScenesValues.scene1.xOffset,
+      yLookAt: this.cameraScenesValues.scene1.yLookAt,
+      duration: 5,
+      ease: "power3.inOut",
+      delay: 1,
+      onComplete: () => {
+        this.cameraSettings.lerpSpeed =
+          this.cameraScenesValues.scene1.lerpSpeed;
       },
-      // {
-      //   zOffset: 7.5,
-      //   xOffset: 1,
-      //   yLookAt: 0,
-      //   duration: 1,
-      //   ease: "power3.inOut",
-      //   // delay: 2,
-      // }
-      // Scene 3
-      // {
-      //   zOffset: 7.5,
-      //   xOffset: 1,
-      //   yLookAt: 0,
-      //   duration: 1,
-      //   ease: "power3.inOut",
-      //   // delay: 2,
-      // }
-      // Scene 2
-      // {
-      //   zOffset: 25,
-      //   xOffset: 1.5,
-      //    yLookAt: -0.35,
-      //   duration: 1,
-      //   ease: "power3.inOut",
-      //   // delay: 2,
-      // }
-
-      // Scene 1
-      {
-        zOffset: 25,
-        xOffset: 5,
-        yLookAt: 2.5,
-        duration: 1,
-        ease: "power3.inOut",
-        // delay: 2,
-      }
-    );
+    });
 
     try {
       fetch("TestZebi", {
@@ -96,6 +70,45 @@ export default class GameManager {
       console.error("Error:", error);
     }
   }
+
+  mooveCamera(zOffset, xOffset, yLookAt, lerp, duration = 1) {
+    gsap.to(this.cameraSettings, {
+      zOffset: zOffset,
+      xOffset: xOffset,
+      yLookAt: yLookAt,
+      lerpSpeed: lerp,
+      duration: duration,
+      ease: "power3.inOut",
+    });
+  }
+  level2() {
+    this.levelTwo = new Particles(
+      () =>
+        this.mooveCamera(
+          this.cameraScenesValues.scene2.zOffset,
+          this.cameraScenesValues.scene2.xOffset,
+          this.cameraScenesValues.scene2.yLookAt,
+          this.cameraScenesValues.scene2.lerpSpeed,
+          4.5
+        ),
+      new THREE.Vector3(-3, 0, 0)
+    );
+  }
+
+  level3() {
+    this.levelThree = new Particles(
+      () =>
+        this.mooveCamera(
+          this.cameraScenesValues.scene3.zOffset,
+          this.cameraScenesValues.scene3.xOffset,
+          this.cameraScenesValues.scene3.yLookAt,
+          this.cameraScenesValues.scene3.lerpSpeed,
+          4.5
+        ),
+      new THREE.Vector3(-8, 0, 0)
+    );
+  }
+
   endGame() {
     this.isLoadeDiv = document.getElementById("isLoaded");
     gsap.to(this.isLoadeDiv, {
@@ -119,6 +132,10 @@ export default class GameManager {
   }
 
   update() {
+    console.log(this.cameraSettings.lerpSpeed);
+
     if (this.particles) this.particles.update();
+    if (this.levelTwo) this.levelTwo.update();
+    if (this.levelThree) this.levelThree.update();
   }
 }

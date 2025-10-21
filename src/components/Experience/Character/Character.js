@@ -188,7 +188,7 @@ export default class Character {
         this.model.position.z
       );
 
-      this.lookAtTarget.lerp(targetLookAt, 0.01);
+      this.lookAtTarget.lerp(targetLookAt, this.cameraSettings.lerpSpeed);
       this.camera.lookAt(this.lookAtTarget);
 
       this.camera.position.lerp(
@@ -197,7 +197,7 @@ export default class Character {
           this.model.position.y * this.cameraSettings.yMultiplier,
           this.model.position.z + this.cameraSettings.zOffset
         ),
-        0.01
+        this.cameraSettings.lerpSpeed
       );
     }
   }
