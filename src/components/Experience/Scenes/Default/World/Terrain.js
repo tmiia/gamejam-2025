@@ -50,7 +50,7 @@ export default class Terrain {
     });
 
     this.physicalMap = this.resourceCube.scene;
-    this.physicalMap.position.set(0, -0.75, 0);
+    this.physicalMap.position.set(0, -0.5, 0);
     this.physicalMap.rotation.y = -Math.PI / 2;
 
     this.physicalMap.visible = false;

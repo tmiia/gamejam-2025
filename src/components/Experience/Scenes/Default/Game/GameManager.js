@@ -57,6 +57,7 @@ export default class GameManager {
         this.cameraSettings.lerpSpeed =
           this.cameraScenesValues.scene1.lerpSpeed;
         this.isStarted = true;
+        this.isEnded = false;
       },
     });
 

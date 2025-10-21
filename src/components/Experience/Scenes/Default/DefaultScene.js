@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Character from "../../Character/Character.js";
 import Scene from "../Scene.js";
 import Environement from "./Environment.js";
+import BloodManager from "./Game/BloodManager.js";
 import GameManager from "./Game/GameManager.js";
 import Terrain from "./World/Terrain.js";
 
@@ -54,7 +55,7 @@ export default class DefaultScene extends Scene {
     // this.particles = new Particles(this.fuckmia);
     // this.character = new Character();
     // this.plane = new Plane();
-    // this.bloodManager = new BloodManager();
+    this.bloodManager = new BloodManager();
 
     this.experience.eventEmitter?.trigger("scene.ready");
   }
@@ -65,6 +66,6 @@ export default class DefaultScene extends Scene {
     if (this.environement) this.environement.update?.();
     if (this.particles) this.particles.update();
     if (this.gameManager) this.gameManager.update?.();
-    // if (this.bloodManager) this.bloodManager.update?.();
+    if (this.bloodManager) this.bloodManager.update?.();
   }
 }
