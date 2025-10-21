@@ -35,6 +35,8 @@ export default class Character {
     this.characterController = new CharacterController(this);
     this.movementController = new MovementController(this);
     this.animationController = new AnimationController(this);
+    this.cameraSettings =
+      this.experience.sceneManager.currentScene.gameManager.cameraSettings;
 
     this.setupAudioListeners();
 
@@ -187,13 +189,6 @@ export default class Character {
       const delta = this.experience.time.delta * 0.001;
       this.animationController.update(delta);
     }
-    // if (this.pointLight && this.model) {
-    //   this.pointLight.position.set(
-    //     this.model.position.x,
-    //     this.model.position.y + 3,
-    //     this.model.position.z
-    //   );
-    // }
 
     if (this.model.position.y < -30) {
       this.model.position.set(0, 2, 0);
@@ -201,18 +196,27 @@ export default class Character {
       this.rigidbody.setLinvel({ x: 0, y: 0, z: 0 }, true);
     }
     if (this.camera && this.model) {
-      this.camera.lookAt(
-        this.model.position.x,
-        this.model.position.y * 0.2 + 2,
+      if (!this.lookAtTarget) {
+        this.lookAtTarget = new Vector3();
+      }
+
+      const targetLookAt = new Vector3(
+        this.model.position.x + this.cameraSettings.xOffset,
+        this.model.position.y * this.cameraSettings.yMultiplier +
+          this.cameraSettings.yLookAt,
         this.model.position.z
       );
+
+      this.lookAtTarget.lerp(targetLookAt, this.cameraSettings.lerpSpeed);
+      this.camera.lookAt(this.lookAtTarget);
+
       this.camera.position.lerp(
         new Vector3(
-          this.model.position.x,
-          this.model.position.y * 0.2,
-          this.model.position.z + 20
+          this.model.position.x + this.cameraSettings.xOffset,
+          this.model.position.y * this.cameraSettings.yMultiplier,
+          this.model.position.z + this.cameraSettings.zOffset
         ),
-        0.05
+        this.cameraSettings.lerpSpeed
       );
     }
   }

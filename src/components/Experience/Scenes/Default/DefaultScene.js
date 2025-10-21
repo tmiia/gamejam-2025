@@ -54,6 +54,7 @@ export default class DefaultScene extends Scene {
     // this.particles = new Particles(this.fuckmia);
     // this.character = new Character();
     // this.plane = new Plane();
+    // this.bloodManager = new BloodManager();
 
     this.experience.eventEmitter?.trigger("scene.ready");
   }
@@ -64,5 +65,6 @@ export default class DefaultScene extends Scene {
     if (this.environement) this.environement.update?.();
     if (this.particles) this.particles.update();
     if (this.gameManager) this.gameManager.update?.();
+    // if (this.bloodManager) this.bloodManager.update?.();
   }
 }
