@@ -40,7 +40,7 @@ export default class JumpAnimation {
 
     this.animationController.playAnimation("jump", {
       fadeInDuration,
-      loop: THREE.LoopOnce,
+      // loop: THREE.LoopOnce,
       timeScale,
     });
   }

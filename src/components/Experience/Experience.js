@@ -13,6 +13,7 @@ import Time from "./Utils/Time";
 
 import CollisionManager from "./Physics/CollisionManager.js";
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
+import AudioManager from "./Audio/AudioManager.js";
 
 export default class Experience {
   constructor(canvas, routerReplace) {
@@ -33,6 +34,9 @@ export default class Experience {
 
     // Input Manager pour gérer les contrôles
     this.inputManager = new InputManager();
+
+    // Audio Manager
+    this.audioManager = new AudioManager();
 
     this.physicsWorld = new PhysicsWorld();
     this.collisionManager = new CollisionManager();
@@ -92,6 +96,10 @@ export default class Experience {
 
     if (this.inputManager) {
       this.inputManager.destroy();
+    }
+
+    if (this.audioManager) {
+      this.audioManager.destroy();
     }
 
     if (this.sceneManager.currentScene) {

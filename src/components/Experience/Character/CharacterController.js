@@ -15,8 +15,8 @@ export default class CharacterController extends EventEmitter {
     this.maxJumps = 2;
     this.jumpsRemaining = this.maxJumps;
 
-    this.walkSpeed = 1.5;
-    this.runSpeed = 2;
+    this.walkSpeed = 0.5;
+    this.runSpeed = 1;
     this.jumpForce = 0.001;
 
     this.setupInputListeners();
