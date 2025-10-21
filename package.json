@@ -14,6 +14,7 @@
     "@types/three": "latest",
     "axis-api": "github:gobelins-axis/axis-api",
     "gsap": "^3.13.0",
+    "howler": "^2.2.4",
     "lil-gui": "^0.21.0",
     "next": "latest",
     "postprocessing": "^6.37.8",

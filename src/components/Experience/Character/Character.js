@@ -14,6 +14,7 @@ export default class Character {
     this.debug = this.experience.debug;
     this.physicsWorld = this.experience.physicsWorld;
     this.inputManager = this.experience.inputManager;
+    this.audioManager = this.experience.audioManager;
     this.camera = this.experience.camera.instance;
     this.scene = this.experience.sceneManager.currentScene.scene;
 
@@ -36,6 +37,8 @@ export default class Character {
     this.animationController = new AnimationController(this);
     this.cameraSettings =
       this.experience.sceneManager.currentScene.gameManager.cameraSettings;
+
+    this.setupAudioListeners();
 
     this.characterController.on("jump", (force) => {
       if (this.movementController) {
@@ -119,6 +122,22 @@ export default class Character {
     if (mapResource && mapResource.scene) {
       this.mapModel = mapResource.scene;
     }
+  }
+
+  setupAudioListeners() {
+    if (!this.characterController || !this.audioManager) return;
+
+    this.characterController.on("startWalking", () => {
+      this.audioManager.startWalkSound();
+    });
+
+    this.characterController.on("startRunning", () => {
+      this.audioManager.startRunSound();
+    });
+
+    this.characterController.on("stopMoving", () => {
+      this.audioManager.stopWalkSound();
+    });
   }
 
   checkGroundedWithRaycaster(raycastDistance, isLanding) {
