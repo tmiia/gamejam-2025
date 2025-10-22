@@ -7,24 +7,27 @@ export default class MovementController extends EventEmitter {
 
     this.character = character;
     this.characterController = character.characterController;
+    this.animationController = character.animationController;
     this.rigidbody = character.rigidbody;
     this.model = character.model;
     this.physicsWorld = character.physicsWorld;
 
     this.walkSpeed = 10;
     this.runSpeed = 4;
-    this.jumpForce = 4;
-    this.doubleJumpForce = 5;
+    this.jumpForce = 0.7;
+    this.doubleJumpForce = 1;
 
     this.groundFriction = 0.8;
     this.airFriction = 0.95;
 
-    this.modelYOffset = -1.0;
+    this.modelYOffset = -0.25;
 
     this.lastJumpTime = 0;
     this.isDoubleJumping = false;
     this.minJumpInterval = 100;
-    this.raycastDistance = 1.2;
+    this.raycastDistance = 0.3;
+
+    this.isLanding = false;
 
     this.setupJumpListener();
   }
@@ -44,23 +47,19 @@ export default class MovementController extends EventEmitter {
       true
     );
 
+    if (!isGrounded && !this.isLanding) {
+      this.isLanding = true;
+    }
+    if (isGrounded && this.isLanding) {
+      this.isLanding = false;
+
+      if (this.characterController) {
+        this.characterController.trigger("landing");
+      }
+    }
+
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);
-    }
-  }
-
-  checkBeforeGrounded() {
-    if (!this.rigidbody || !this.character) return;
-
-    const vel = this.rigidbody.linvel();
-    const isNearGround = this.character.checkGroundedWithRaycaster(1, false);
-
-    if (this.isDoubleJumping) {
-      if (isNearGround && vel.y < -1.5) {
-        console.log("Double Jump ended");
-        this.trigger("fallingIntoLanding");
-        this.isDoubleJumping = false;
-      }
     }
   }
 
@@ -123,11 +122,6 @@ export default class MovementController extends EventEmitter {
 
     const currentVel = this.rigidbody.linvel();
 
-    const jumpForceToUse =
-      this.characterController.jumpsRemaining === 1
-        ? this.doubleJumpForce
-        : this.jumpForce;
-
     if (this.characterController.jumpsRemaining == 1) {
       console.log("Double Jump!");
       this.isDoubleJumping = true;
@@ -140,7 +134,7 @@ export default class MovementController extends EventEmitter {
 
     this.characterController.jumpsRemaining--;
 
-    this.rigidbody.applyImpulse({ x: 0.0, y: jumpForceToUse, z: 0.0 }, true);
+    this.rigidbody.applyImpulse({ x: 0.0, y: this.jumpForce, z: 0.0 }, true);
   }
 
   syncModelPosition() {
@@ -157,7 +151,6 @@ export default class MovementController extends EventEmitter {
 
   update() {
     this.checkGrounded();
-    this.checkBeforeGrounded();
     this.handleMovement();
     this.syncModelPosition();
   }

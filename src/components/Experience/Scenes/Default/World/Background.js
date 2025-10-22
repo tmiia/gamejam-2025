@@ -23,7 +23,7 @@ export default class Background {
   }
 
   initFog() {
-    this.scene.fog = new THREE.Fog(0x34353e, 10, 50);
+    this.scene.fog = new THREE.Fog(0x000000, 10, 50);
   }
   destroy() {
     if (this.model) this.scene.remove(this.model);

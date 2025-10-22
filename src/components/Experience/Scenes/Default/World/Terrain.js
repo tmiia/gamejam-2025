@@ -45,12 +45,21 @@ export default class Terrain {
         if (child.name === "Plane") {
           return;
         }
-        child.material = blackMaterial;
+
+        if (
+          child.name.includes("Plateform") ||
+          child.name.includes("Platform")
+        ) {
+          child.material = blackMaterial;
+        }
+        if (child.name.includes("Refect")) {
+          child.visible = false;
+        }
       }
     });
 
     this.physicalMap = this.resourceCube.scene;
-    this.physicalMap.position.set(0, -0.75, 0);
+    this.physicalMap.position.set(0, -0.5, 0);
     this.physicalMap.rotation.y = -Math.PI / 2;
 
     this.physicalMap.visible = false;
