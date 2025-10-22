@@ -12,6 +12,8 @@ export default class GameManager {
     this.isStarted = false;
     this.isEnded = false;
 
+    this.ghost = this.experience.sceneManager.currentScene.ghost.ghost;
+
     this.particles = null;
     this.cameraSettings = {
       yMultiplier: 0,
@@ -44,13 +46,9 @@ export default class GameManager {
     gsap.to(this.isLoadeDiv, {
       opacity: 0,
       duration: 1,
-      delay: 1,
+      delay: 2,
       ease: "power3.inOut",
     });
-
-    console.log("GameManager: Starting game at position", this.position);
-
-    console.log(character.rigidbody);
 
     character.rigidbody.setTranslation(
       {
@@ -60,12 +58,6 @@ export default class GameManager {
       },
       true
     );
-
-    console.log("Character position set to:", character.model.position);
-
-    setTimeout(() => {
-      console.log("Character position set to:", character.model.position);
-    }, 2000);
 
     gsap.to(this.cameraSettings, {
       zOffset: this.cameraScenesValues.start.zOffset,
@@ -92,7 +84,7 @@ export default class GameManager {
       ease: "power3.inOut",
     });
   }
-  level2(position) {
+  level1(position) {
     this.levelTwo = new Particles(
       () =>
         this.mooveCamera(
@@ -106,18 +98,44 @@ export default class GameManager {
     );
   }
 
-  level3() {
+  level2(position) {
     this.levelThree = new Particles(
       () =>
         this.mooveCamera(
-          this.cameraScenesValues.scene3.zOffset,
-          this.cameraScenesValues.scene3.xOffset,
-          this.cameraScenesValues.scene3.yLookAt,
-          this.cameraScenesValues.scene3.lerpSpeed,
+          this.cameraScenesValues.scene2.zOffset,
+          this.cameraScenesValues.scene2.xOffset,
+          this.cameraScenesValues.scene2.yLookAt,
+          this.cameraScenesValues.scene2.lerpSpeed,
           4.5
         ),
-      new THREE.Vector3(-8, 0, 0)
+      new THREE.Vector3(position.x, position.y, position.z)
     );
+  }
+
+  animateCrazyGhotst(position) {
+    this.crazyzy = new Particles(
+      () => this.crazyGhost(),
+      new THREE.Vector3(position.x, position.y, position.z)
+    );
+  }
+  crazyGhost() {
+    this.ghost.visible = true;
+    gsap.to(this.ghost.position, {
+      x: 30,
+      duration: 3.5,
+      ease: "power3.inOut",
+      onComplete: () => {
+        gsap.to(this.ghost.material, {
+          opacity: 0,
+          duration: 2,
+          onComplete: () => {
+            this.ghost.visible = false;
+            this.ghost.material.opacity = 1;
+          },
+        });
+      },
+    });
+    console.log(this.ghost);
   }
 
   endGame() {
@@ -147,5 +165,6 @@ export default class GameManager {
     if (this.particles) this.particles.update();
     if (this.levelTwo) this.levelTwo.update();
     if (this.levelThree) this.levelThree.update();
+    if (this.crazyzy) this.crazyzy.update();
   }
 }

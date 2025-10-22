@@ -105,4 +105,9 @@ export default [
     type: "texture",
     path: "layersTwo/8.png",
   },
+  {
+    name: "ghost",
+    type: "texture",
+    path: "layersTwo/ghost.png",
+  },
 ];

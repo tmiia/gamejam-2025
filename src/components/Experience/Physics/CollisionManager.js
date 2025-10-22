@@ -7,7 +7,14 @@ export default class CollisionManager {
     this.experience = new Experience();
     this.physicsWorld = this.experience.physicsWorld;
 
-    this.noPhysicsMeshes = ["START", "END", "CAM_1", "CAM_2", "GHOST"];
+    this.noPhysicsMeshes = [
+      "START",
+      "END",
+      "CAM_1",
+      "CAM_2",
+      "GHOST001",
+      "GHOST",
+    ];
   }
 
   createColliderFromMesh(mesh) {

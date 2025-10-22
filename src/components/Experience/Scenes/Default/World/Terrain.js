@@ -48,11 +48,19 @@ export default class Terrain {
             this.character
           );
           child.visible = false;
-
           return;
         }
 
         if (child.name === "CAM_1") {
+          this.experience.sceneManager.currentScene.gameManager.level1(
+            child.getWorldPosition(new THREE.Vector3())
+          );
+          child.visible = false;
+
+          return;
+        }
+
+        if (child.name === "CAM_2") {
           this.experience.sceneManager.currentScene.gameManager.level2(
             child.getWorldPosition(new THREE.Vector3())
           );
@@ -60,6 +68,17 @@ export default class Terrain {
 
           return;
         }
+
+        if (child.name === "GHOST001") {
+          this.experience.sceneManager.currentScene.gameManager.animateCrazyGhotst(
+            child.getWorldPosition(new THREE.Vector3())
+          );
+          child.visible = false;
+
+          return;
+        }
+
+        console.log(child.name);
 
         if (child.name === "Plane") {
           return;

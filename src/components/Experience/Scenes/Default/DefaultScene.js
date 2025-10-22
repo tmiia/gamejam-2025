@@ -3,8 +3,11 @@ import Scene from "../Scene.js";
 import Environement from "./Environment.js";
 import BloodManager from "./Game/BloodManager.js";
 import GameManager from "./Game/GameManager.js";
+import Ghost from "./World/Ghost.js";
 import Layers from "./World/Layers.js";
 import Terrain from "./World/Terrain.js";
+
+import * as THREE from "three";
 
 export default class DefaultScene extends Scene {
   constructor() {
@@ -47,8 +50,9 @@ export default class DefaultScene extends Scene {
 
   onAllReady() {
     this.environement = new Environement();
+    this.ghost = new Ghost();
     this.gameManager = new GameManager();
-    this.character = new Character();
+    this.character = new Character(new THREE.Vector3(-8.311140060424805, 1, 0));
     this.terrain = new Terrain();
     // this.background = new Background();
     // this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
