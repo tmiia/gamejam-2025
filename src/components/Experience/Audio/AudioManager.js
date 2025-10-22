@@ -14,7 +14,7 @@ export default class AudioManager extends EventEmitter {
 
   initializeSounds() {
     this.sounds.ambiance = new Howl({
-      src: ["/audio/ambiance.mp3"],
+      src: ["/audio/background.mp3"],
       loop: true,
       volume: 0.4,
       autoplay: true,
@@ -25,6 +25,18 @@ export default class AudioManager extends EventEmitter {
       loop: true,
       volume: 0.15,
       rate: 1.0,
+    });
+
+    this.sounds.jump = new Howl({
+      src: ["/audio/jump.mp3"],
+      loop: false,
+      volume: 0.05,
+    });
+
+    this.sounds.landing = new Howl({
+      src: ["/audio/landing.mp3"],
+      loop: false,
+      volume: 0.2,
     });
   }
 
@@ -68,6 +80,18 @@ export default class AudioManager extends EventEmitter {
     }
   }
 
+  playJump() {
+    if (this.sounds.jump) {
+      this.sounds.jump.play();
+    }
+  }
+
+  playLanding() {
+    if (this.sounds.landing) {
+      this.sounds.landing.play();
+    }
+  }
+
   setAmbianceVolume(volume) {
     if (this.sounds.ambiance) {
       this.sounds.ambiance.volume(volume);
@@ -77,6 +101,18 @@ export default class AudioManager extends EventEmitter {
   setWalkVolume(volume) {
     if (this.sounds.walk) {
       this.sounds.walk.volume(volume);
+    }
+  }
+
+  setJumpVolume(volume) {
+    if (this.sounds.jump) {
+      this.sounds.jump.volume(volume);
+    }
+  }
+
+  setLandingVolume(volume) {
+    if (this.sounds.landing) {
+      this.sounds.landing.volume(volume);
     }
   }
 

@@ -155,6 +155,14 @@ export default class Character {
     this.characterController.on("stopMoving", () => {
       this.audioManager.stopWalkSound();
     });
+
+    this.characterController.on("jump", () => {
+      this.audioManager.playJump();
+    });
+
+    this.characterController.on("landed", () => {
+      this.audioManager.playLanding();
+    });
   }
 
   checkGroundedWithRaycaster(raycastDistance, isLanding) {
