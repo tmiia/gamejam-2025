@@ -52,6 +52,9 @@ export default class Terrain {
         ) {
           child.material = blackMaterial;
         }
+        if (child.name.includes("Refect")) {
+          child.visible = false;
+        }
       }
     });
 
