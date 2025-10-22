@@ -58,7 +58,7 @@ export default [
   {
     name: "landingAnim",
     type: "fbx",
-    path: "models/character/animations/LandingTwo.fbx",
+    path: "models/Character/animations/Landing.fbx",
   },
   // {
   //   name: "bloodTexture",

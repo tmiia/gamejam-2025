@@ -28,14 +28,24 @@ export default class MovementController extends EventEmitter {
     this.raycastDistance = 0.3;
 
     this.isLanding = false;
+    this.isPlayingLandingAnimation = false;
 
     this.setupJumpListener();
+    this.setupLandingAnimationListener();
   }
 
   setupJumpListener() {
     if (this.characterController) {
       this.characterController.on("jump", (data) => {
         this.jump(data.jumpsRemaining);
+      });
+    }
+  }
+
+  setupLandingAnimationListener() {
+    if (this.characterController) {
+      this.characterController.on("landing", () => {
+        this.isPlayingLandingAnimation = true;
       });
     }
   }
@@ -65,6 +75,11 @@ export default class MovementController extends EventEmitter {
 
   handleMovement() {
     if (!this.rigidbody || !this.characterController) return;
+
+    if (this.isPlayingLandingAnimation) {
+      this.applyFriction();
+      return;
+    }
 
     const horizontalAxis = this.characterController.getHorizontalInput();
     const currentSpeed = this.characterController.getCurrentSpeed();

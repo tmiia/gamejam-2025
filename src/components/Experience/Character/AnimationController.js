@@ -86,6 +86,7 @@ export default class AnimationController {
         const action = this.animations.landing;
         if (action) {
           const onFinished = () => {
+            this.character.movementController.isPlayingLandingAnimation = false;
             this.checkInputAndPlayAnimation();
             this.mixer.removeEventListener("finished", onFinished);
           };
@@ -101,6 +102,9 @@ export default class AnimationController {
         const action = this.animations.fallingIntoLanding;
         if (action) {
           const onFinished = () => {
+            if (this.character.movementController) {
+              this.character.movementController.isPlayingLandingAnimation = false;
+            }
             this.checkInputAndPlayAnimation();
             this.mixer.removeEventListener("finished", onFinished);
           };
