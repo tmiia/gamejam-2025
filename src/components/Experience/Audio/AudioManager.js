@@ -80,6 +80,18 @@ export default class AudioManager extends EventEmitter {
     }
   }
 
+  muteSound(soundName) {
+    if (this.sounds[soundName]) {
+      this.sounds[soundName].mute(true);
+    }
+  }
+
+  unmuteSound(soundName) {
+    if (this.sounds[soundName]) {
+      this.sounds[soundName].mute(false);
+    }
+  }
+
   playJump() {
     if (this.sounds.jump) {
       this.sounds.jump.play();

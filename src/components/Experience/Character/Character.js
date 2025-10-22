@@ -157,11 +157,13 @@ export default class Character {
     });
 
     this.characterController.on("jump", () => {
+      this.audioManager.muteSound("walk");
       this.audioManager.playJump();
     });
 
     this.characterController.on("landed", () => {
       this.audioManager.playLanding();
+      this.audioManager.unmuteSound("walk");
     });
   }
 
