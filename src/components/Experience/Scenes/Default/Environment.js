@@ -9,11 +9,11 @@ export default class Environment {
     this.debug = this.experience.debug;
 
     // this.setSunLight();
-    this.setLighting();
+    // this.setLighting();
     // this.setEnvironmentMap();
   }
   setLighting() {
-    this.ambientLight = new THREE.AmbientLight("#ffffff", 10);
+    this.ambientLight = new THREE.AmbientLight("#ffffff", 0.4);
 
     this.scene.add(this.ambientLight);
 
