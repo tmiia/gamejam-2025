@@ -1,5 +1,4 @@
 import Camera from "./Camera";
-import PostProcessingClass from "./PostProcessing/PostProcessingClass.js";
 import Renderer from "./Renderer";
 import DefaultScene from "./Scenes/Default/DefaultScene";
 import SceneManager from "./Scenes/SceneManager.js";
@@ -11,9 +10,9 @@ import Resources from "./Utils/Resources.js";
 import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
 
+import AudioManager from "./Audio/AudioManager.js";
 import CollisionManager from "./Physics/CollisionManager.js";
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
-import AudioManager from "./Audio/AudioManager.js";
 
 export default class Experience {
   constructor(canvas, routerReplace) {
@@ -45,7 +44,11 @@ export default class Experience {
     this.sceneManager = new SceneManager(this);
     this.sceneManager.setScene(DefaultScene);
     this.renderer = new Renderer();
-    this.postProcessing = new PostProcessingClass();
+    // this.postProcessing = new PostProcessingClass();
+
+    // setTimeout(() => {
+    //   this.postProcessing.triggerDamageEffect(0.5, 2000);
+    // }, 2000);
 
     // Shared props
     this.isGalleryAnimated = true;

@@ -12,7 +12,7 @@ export default class CharacterController extends EventEmitter {
     this._isRunning = false;
     this.wasMoving = false;
 
-    this.maxJumps = 2;
+    this.maxJumps = 1;
     this.jumpsRemaining = this.maxJumps;
 
     this.walkSpeed = 0.5;

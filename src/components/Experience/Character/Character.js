@@ -77,16 +77,18 @@ export default class Character {
       console.warn("PhysicsWorld is not initialized");
       return;
     }
-
-    const radius = 0.5;
-    const height = 1.5;
+    const halfSize = { x: 0.25, y: 0.25, z: 0.5 };
 
     const bodyDesc = RAPIER.RigidBodyDesc.dynamic();
     bodyDesc.setTranslation(this.position.x, this.position.y, this.position.z);
 
     this.rigidbody = this.physicsWorld.getWorld().createRigidBody(bodyDesc);
 
-    const colliderDesc = RAPIER.ColliderDesc.capsule(height / 2, radius)
+    const colliderDesc = RAPIER.ColliderDesc.cuboid(
+      halfSize.x,
+      halfSize.y,
+      halfSize.z
+    )
       .setFriction(0.0)
       .setRestitution(0.0);
 
@@ -98,11 +100,26 @@ export default class Character {
     this.rigidbody.setAngularDamping(1.0);
 
     this.rigidbody.lockRotations(true, true);
-
     this.rigidbody.lockTranslations(false, false, true);
+
+    if (this.debug?.active) {
+      const geometry = new THREE.BoxGeometry(
+        halfSize.x * 2,
+        halfSize.y * 2,
+        halfSize.z * 2
+      );
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        wireframe: true,
+      });
+
+      this.debugCollider = new THREE.Mesh(geometry, material);
+      this.scene.add(this.debugCollider);
+    }
   }
+
   setSunLight() {
-    // this.directionalLight = new THREE.DirectionalLight("#ffffff", 4);
+    // this.directionalLight = new THR^EE.DirectionalLight("#ffffff", 4);
     // this.directionalLight.castShadow = true;
     // this.directionalLight.shadow.camera.far = 15;
     // this.directionalLight.shadow.mapSize.set(1024, 1024);
@@ -195,6 +212,12 @@ export default class Character {
       this.rigidbody.setTranslation({ x: 0, y: 5, z: 0 }, true);
       this.rigidbody.setLinvel({ x: 0, y: 0, z: 0 }, true);
     }
+
+    if (this.debugCollider && this.rigidbody) {
+      const pos = this.rigidbody.translation();
+      this.debugCollider.position.set(pos.x, pos.y, pos.z);
+    }
+
     if (this.camera && this.model) {
       if (!this.lookAtTarget) {
         this.lookAtTarget = new Vector3();

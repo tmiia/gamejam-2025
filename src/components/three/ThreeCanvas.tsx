@@ -50,6 +50,16 @@ const ThreeJSExperience = () => {
         className="h-screen w-screen absolute top-0 left-0 bg-white z-[100]"
       ></div>
       <div
+        id="bloodLevel"
+        className="h-5 w-64 absolute top-5 left-5 bg-red-200 z-[100]"
+      >
+        <span
+          id="bloodLevelSpan"
+          className="block h-full w-full bg-red-600"
+          style={{ width: "100%" }}
+        ></span>
+      </div>
+      <div
         id="scrollContainer"
         style={{
           width: "100%",

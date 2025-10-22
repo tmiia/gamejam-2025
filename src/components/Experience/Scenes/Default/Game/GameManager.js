@@ -24,7 +24,8 @@ export default class GameManager {
     this.cameraScenesValues = {
       scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025 },
       scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025 },
-      scene3: { zOffset: 7.5, xOffset: 1, yLookAt: 0, lerpSpeed: 0.025 },
+      scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025 },
+      // scene3: { zOffset: 7.5, xOffset: 1, yLookAt: 0, lerpSpeed: 0.025 },
     };
 
     this.startGame();
@@ -57,6 +58,7 @@ export default class GameManager {
         this.cameraSettings.lerpSpeed =
           this.cameraScenesValues.scene1.lerpSpeed;
         this.isStarted = true;
+        this.isEnded = false;
       },
     });
 

@@ -8,8 +8,16 @@ export default class Environment {
     this.resources = this.experience.resources;
     this.debug = this.experience.debug;
 
-    this.setSunLight();
+    // this.setSunLight();
+    this.setLighting();
     // this.setEnvironmentMap();
+  }
+  setLighting() {
+    this.ambientLight = new THREE.AmbientLight("#ffffff", 10);
+
+    this.scene.add(this.ambientLight);
+
+    // this.directionalLight = new THREE.Directio
   }
 
   setSunLight() {
@@ -25,41 +33,5 @@ export default class Environment {
     this.sunLightTwo.shadow.mapSize.set(1024, 1024);
     this.sunLightTwo.position.set(0, 0, 6.25);
     this.scene.add(this.sunLightTwo);
-  }
-
-  setEnvironmentMap() {
-    this.environmentMap = {};
-    this.environmentMap.intensity = 0.4;
-    this.environmentMap.texture = this.resources.items.environmentMapTexture;
-    this.environmentMap.texture.mapping =
-      THREE.EquirectangularReflectionMapping;
-
-    this.scene.environment = this.environmentMap.texture;
-
-    this.environmentMap.updateMaterials = () => {
-      this.scene.traverse((child) => {
-        if (
-          child instanceof THREE.Mesh &&
-          child.material instanceof THREE.MeshStandardMaterial
-        ) {
-          child.material.envMap = this.environmentMap.texture;
-          child.material.envMapIntensity = this.environmentMap.intensity;
-          child.material.needsUpdate = true;
-        }
-      });
-    };
-
-    this.environmentMap.updateMaterials();
-
-    // Debug
-    if (this.debug.active) {
-      this.debugFolder
-        .add(this.environmentMap, "intensity")
-        .name("envMapIntensity")
-        .min(0)
-        .max(4)
-        .step(0.001)
-        .onChange(this.environmentMap.updateMaterials);
-    }
   }
 }
