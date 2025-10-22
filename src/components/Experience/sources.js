@@ -2,12 +2,12 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/Map_30.glb",
+    path: "/models/Map/Map_32.glb",
   },
   {
     name: "mapModelPhysics",
     type: "gltf",
-    path: "/models/Map/Map_30.glb",
+    path: "/models/Map/Map_32.glb",
   },
   {
     name: "background",
@@ -58,7 +58,7 @@ export default [
   {
     name: "landingAnim",
     type: "fbx",
-    path: "models/character/animations/fallingIntoLanding.fbx",
+    path: "models/character/animations/LandingTwo.fbx",
   },
   // {
   //   name: "bloodTexture",
@@ -68,41 +68,41 @@ export default [
   {
     name: "layer1",
     type: "texture",
-    path: "layers/1.png",
+    path: "layersTwo/1.png",
   },
   {
     name: "layer2",
     type: "texture",
-    path: "layers/2.png",
+    path: "layersTwo/2.png",
   },
   {
     name: "layer3",
     type: "texture",
-    path: "layers/3.png",
+    path: "layersTwo/3.png",
   },
   {
     name: "layer4",
     type: "texture",
-    path: "layers/4.png",
+    path: "layersTwo/4.png",
   },
   {
     name: "layer5",
     type: "texture",
-    path: "layers/5.png",
+    path: "layersTwo/5.png",
   },
   {
     name: "layer6",
     type: "texture",
-    path: "layers/6.png",
+    path: "layersTwo/6.png",
   },
   {
     name: "layer7",
     type: "texture",
-    path: "layers/7.png",
+    path: "layersTwo/7.png",
   },
   {
     name: "layer8",
     type: "texture",
-    path: "layers/8.png",
+    path: "layersTwo/8.png",
   },
 ];

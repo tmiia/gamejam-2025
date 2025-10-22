@@ -26,7 +26,7 @@ export default class Terrain {
     this.scene.add(this.model);
 
     const blackMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("#ff0000"),
+      color: new THREE.Color("#000000"),
       roughness: 1,
       metalness: 0,
     });
@@ -52,7 +52,7 @@ export default class Terrain {
         ) {
           child.material = blackMaterial;
         }
-        if (child.name.includes("Refect")) {
+        if (child.name.includes("Reflect")) {
           child.visible = false;
         }
       }

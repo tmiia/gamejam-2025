@@ -6,14 +6,62 @@ export default class Layers {
     this.experience = new Experience();
 
     this.layers = {
-      1: { zPosition: -31, yPosition: 5, xPosition: 0 },
-      2: { zPosition: -32, yPosition: 5, xPosition: 0 },
-      3: { zPosition: -33, yPosition: 5, xPosition: 0 },
-      4: { zPosition: -34, yPosition: 5, xPosition: 0 },
-      5: { zPosition: -35, yPosition: 5, xPosition: 0 },
-      6: { zPosition: -36, yPosition: 5, xPosition: 0 },
-      7: { zPosition: -37, yPosition: 5, xPosition: 0 },
-      8: { zPosition: -38, yPosition: 5, xPosition: 0 },
+      1: {
+        zPosition: -31,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      2: {
+        zPosition: -32,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      3: {
+        zPosition: -33,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      4: {
+        zPosition: -34,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      5: {
+        zPosition: -35,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      6: {
+        zPosition: -36,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      7: {
+        zPosition: -37,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 0,
+        roughness: 1,
+      },
+      8: {
+        zPosition: -38,
+        yPosition: 5,
+        xPosition: 0,
+        metalness: 1,
+        roughness: 0,
+      },
     };
     this.ressource = this.experience.resources;
     this.debug = this.experience.debug;
@@ -36,20 +84,19 @@ export default class Layers {
     }
 
     const texture = this.ressource.items[`layer${number}`];
+    texture.colorSpace = THREE.SRGBColorSpace;
     const planeWidth = texture.image.width / 100;
     const planeHeight = texture.image.height / 100;
 
     const geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
-    const material = new THREE.MeshStandardMaterial({
+
+    const material = new THREE.MeshBasicMaterial({
       map: texture,
-      roughness: 1,
-      metalness: 0,
+
       transparent: true,
       depthWrite: false,
-      //   opacity: 0.5,
-      //   color: new THREE.Color("#000000"),
+      side: THREE.DoubleSide,
     });
-
     // this.model.position.set(0, -10, -2);
     // this.model.rotation.y = -Math.PI / 2;
     const mesh = new THREE.Mesh(geometry, material);

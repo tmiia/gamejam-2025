@@ -58,7 +58,7 @@ export default class Character {
       this.model.position.copy(this.position);
 
       const blackMaterial = new THREE.MeshBasicMaterial({
-        color: new THREE.Color("#ff0000"),
+        color: new THREE.Color("#000000"),
         roughness: 1,
         metalness: 0,
       });
