@@ -54,9 +54,7 @@ export default class DefaultScene extends Scene {
     this.character = new Character(new THREE.Vector3(0, 2, 0));
     // this.particles = new Particles(this.fuckmia);
     // this.character = new Character();
-    // this.plane = new Plane();
     this.bloodManager = new BloodManager();
-
     this.experience.eventEmitter?.trigger("scene.ready");
   }
 
@@ -67,5 +65,7 @@ export default class DefaultScene extends Scene {
     if (this.particles) this.particles.update();
     if (this.gameManager) this.gameManager.update?.();
     if (this.bloodManager) this.bloodManager.update?.();
+
+    if (this.batcher) this.batcher.update();
   }
 }

@@ -11,9 +11,9 @@ import Resources from "./Utils/Resources.js";
 import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
 
+import AudioManager from "./Audio/AudioManager.js";
 import CollisionManager from "./Physics/CollisionManager.js";
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
-import AudioManager from "./Audio/AudioManager.js";
 
 export default class Experience {
   constructor(canvas, routerReplace) {
@@ -46,6 +46,10 @@ export default class Experience {
     this.sceneManager.setScene(DefaultScene);
     this.renderer = new Renderer();
     this.postProcessing = new PostProcessingClass();
+
+    // setTimeout(() => {
+    //   this.postProcessing.triggerDamageEffect(0.5, 2000);
+    // }, 2000);
 
     // Shared props
     this.isGalleryAnimated = true;

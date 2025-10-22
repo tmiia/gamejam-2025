@@ -43,7 +43,6 @@ export default class MovementController extends EventEmitter {
       this.raycastDistance,
       true
     );
-    console.log(isGrounded);
 
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);

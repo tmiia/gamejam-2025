@@ -2,7 +2,7 @@ export default [
   {
     name: "mapModel",
     type: "gltf",
-    path: "/models/Map/Map_17.glb",
+    path: "/models/Map/Map_22.glb",
   },
   {
     name: "mapModelPhysics",
