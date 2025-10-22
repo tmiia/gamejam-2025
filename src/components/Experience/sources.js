@@ -59,4 +59,9 @@ export default [
     type: "fbx",
     path: "models/character/animations/fallingIntoLanding.fbx",
   },
+  {
+    name: "landingAnim",
+    type: "fbx",
+    path: "models/character/animations/fallingIntoLanding.fbx",
+  },
 ];

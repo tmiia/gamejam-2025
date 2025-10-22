@@ -2,6 +2,7 @@ import * as THREE from "three";
 import FallingIntoLanding from "./Animations/FallingIntoLanding.js";
 import IdleAnimation from "./Animations/idle.js";
 import JumpAnimation from "./Animations/jump.js";
+import LandingAnimation from "./Animations/Landing.js";
 import RunAnimation from "./Animations/Run.js";
 import WalkAnimation from "./Animations/Walk.js";
 
@@ -33,6 +34,7 @@ export default class AnimationController {
     this.animationClasses.run = new RunAnimation(this);
     this.animationClasses.walk = new WalkAnimation(this);
     this.animationClasses.jump = new JumpAnimation(this);
+    this.animationClasses.landing = new LandingAnimation(this);
     this.animationClasses.fallingIntoLanding = new FallingIntoLanding(this);
 
     if (this.animationClasses.idle.isLoaded) {
@@ -50,6 +52,9 @@ export default class AnimationController {
     if (this.animationClasses.fallingIntoLanding.isLoaded) {
       this.animations.fallingIntoLanding =
         this.animationClasses.fallingIntoLanding.getAction();
+    }
+    if (this.animationClasses.landing.isLoaded) {
+      this.animations.landing = this.animationClasses.landing.getAction();
     }
 
     if (this.animations.idle) {
@@ -74,6 +79,19 @@ export default class AnimationController {
       this.character.characterController.on("jump", () => {
         this.playAnimation("jump", { loop: THREE.LoopOnce });
       });
+
+      this.character.characterController.on("landing", () => {
+        this.playAnimation("landing", { loop: THREE.LoopOnce });
+
+        const action = this.animations.landing;
+        if (action) {
+          const onFinished = () => {
+            this.checkInputAndPlayAnimation();
+            this.mixer.removeEventListener("finished", onFinished);
+          };
+          this.mixer.addEventListener("finished", onFinished);
+        }
+      });
     }
 
     if (this.character.movementController) {
@@ -95,6 +113,8 @@ export default class AnimationController {
   checkInputAndPlayAnimation() {
     if (!this.character.characterController) return;
 
+    console.log("Checking input to determine animation");
+
     const horizontalInput =
       this.character.characterController.getHorizontalInput();
     const isRunning = this.character.characterController._isRunning;
@@ -106,7 +126,6 @@ export default class AnimationController {
         this.playAnimation("walk");
       }
     } else {
-      // Pas d'input
       this.playAnimation("idle");
     }
   }
@@ -186,7 +205,6 @@ export default class AnimationController {
   }
 
   destroy() {
-    // Destroy animation classes
     Object.values(this.animationClasses).forEach((animClass) => {
       if (animClass && animClass.destroy) {
         animClass.destroy();

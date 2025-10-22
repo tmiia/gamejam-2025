@@ -91,13 +91,12 @@ export class BloodVignetteEffect extends Effect {
 
     this.targetIntensity = intensity;
     this.currentIntensity = intensity;
-    this.lerpSpeed = 3.0; // Vitesse de transition
+    this.lerpSpeed = 3.0;
   }
 
   update(renderer, inputBuffer, deltaTime) {
     this.uniforms.get("time").value += deltaTime;
 
-    // Smooth lerp vers la target intensity
     this.currentIntensity +=
       (this.targetIntensity - this.currentIntensity) *
       this.lerpSpeed *

@@ -7,6 +7,7 @@ export default class MovementController extends EventEmitter {
 
     this.character = character;
     this.characterController = character.characterController;
+    this.animationController = character.animationController;
     this.rigidbody = character.rigidbody;
     this.model = character.model;
     this.physicsWorld = character.physicsWorld;
@@ -26,6 +27,8 @@ export default class MovementController extends EventEmitter {
     this.minJumpInterval = 100;
     this.raycastDistance = 0.3;
 
+    this.isLanding = false;
+
     this.setupJumpListener();
   }
 
@@ -43,6 +46,17 @@ export default class MovementController extends EventEmitter {
       this.raycastDistance,
       true
     );
+
+    if (!isGrounded && !this.isLanding) {
+      this.isLanding = true;
+    }
+    if (isGrounded && this.isLanding) {
+      this.isLanding = false;
+
+      if (this.characterController) {
+        this.characterController.trigger("landing");
+      }
+    }
 
     if (this.characterController) {
       this.characterController.setGrounded(isGrounded);
