@@ -124,8 +124,8 @@ export default class Layers {
         .step(0.1);
 
       debugFolder
-        .add(mesh.position, "w")
-        .name("Position W")
+        .add(mesh.position, "x")
+        .name("Position X")
         .min(-50)
         .max(50)
         .step(0.1);
