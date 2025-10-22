@@ -52,7 +52,7 @@ export default class Terrain {
         ) {
           child.material = blackMaterial;
         }
-        if (child.name.includes("Refect")) {
+        if (child.name.includes("Reflect")) {
           child.visible = false;
         }
       }
