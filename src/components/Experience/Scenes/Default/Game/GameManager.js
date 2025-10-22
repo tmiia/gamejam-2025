@@ -22,15 +22,15 @@ export default class GameManager {
     };
 
     this.cameraScenesValues = {
+      start: { zOffset: 10, xOffset: 0, yLookAt: 1, lerpSpeed: 0.025 },
       scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025 },
       scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025 },
       scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025 },
-      // scene3: { zOffset: 7.5, xOffset: 1, yLookAt: 0, lerpSpeed: 0.025 },
     };
 
-    this.startGame();
-    this.level2();
-    this.level3();
+    // this.startGame();
+    // this.level2();
+    // this.level3();
     // this.initParticles();
   }
   initParticles(position) {
@@ -39,7 +39,8 @@ export default class GameManager {
       new THREE.Vector3(position.x, position.y, position.z)
     );
   }
-  startGame() {
+  startGame(position, character) {
+    this.position = position || new THREE.Vector3(0, 0, 0);
     gsap.to(this.isLoadeDiv, {
       opacity: 0,
       duration: 1,
@@ -47,35 +48,38 @@ export default class GameManager {
       ease: "power3.inOut",
     });
 
+    console.log("GameManager: Starting game at position", this.position);
+
+    console.log(character.rigidbody);
+
+    character.rigidbody.setTranslation(
+      {
+        x: this.position.x,
+        y: this.position.y,
+        z: this.position.z,
+      },
+      true
+    );
+
+    console.log("Character position set to:", character.model.position);
+
+    setTimeout(() => {
+      console.log("Character position set to:", character.model.position);
+    }, 2000);
+
     gsap.to(this.cameraSettings, {
-      zOffset: this.cameraScenesValues.scene1.zOffset,
-      xOffset: this.cameraScenesValues.scene1.xOffset,
-      yLookAt: this.cameraScenesValues.scene1.yLookAt,
+      zOffset: this.cameraScenesValues.start.zOffset,
+      xOffset: this.cameraScenesValues.start.xOffset,
+      yLookAt: this.cameraScenesValues.start.yLookAt,
       duration: 5,
       ease: "power3.inOut",
       delay: 1,
       onComplete: () => {
-        this.cameraSettings.lerpSpeed =
-          this.cameraScenesValues.scene1.lerpSpeed;
+        this.cameraSettings.lerpSpeed = this.cameraScenesValues.start.lerpSpeed;
         this.isStarted = true;
         this.isEnded = false;
       },
     });
-
-    try {
-      fetch("TestZebi", {
-        method: "POST",
-        body: JSON.stringify({
-          game: "Zebi",
-          status: "started",
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    }
   }
 
   mooveCamera(zOffset, xOffset, yLookAt, lerp, duration = 1) {
@@ -88,17 +92,17 @@ export default class GameManager {
       ease: "power3.inOut",
     });
   }
-  level2() {
+  level2(position) {
     this.levelTwo = new Particles(
       () =>
         this.mooveCamera(
-          this.cameraScenesValues.scene2.zOffset,
-          this.cameraScenesValues.scene2.xOffset,
-          this.cameraScenesValues.scene2.yLookAt,
-          this.cameraScenesValues.scene2.lerpSpeed,
+          this.cameraScenesValues.scene1.zOffset,
+          this.cameraScenesValues.scene1.xOffset,
+          this.cameraScenesValues.scene1.yLookAt,
+          this.cameraScenesValues.scene1.lerpSpeed,
           4.5
         ),
-      new THREE.Vector3(-3, 0, 0)
+      new THREE.Vector3(position.x, position.y, position.z)
     );
   }
 

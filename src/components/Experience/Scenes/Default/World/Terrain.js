@@ -35,13 +35,32 @@ export default class Terrain {
       if (child instanceof THREE.Mesh) {
         if (child.name === "END") {
           child.visible = false;
-          // alert("Félicitations ! Vous avez atteint la fin du niveau.");
           this.experience.sceneManager.currentScene.gameManager.initParticles(
             child.getWorldPosition(new THREE.Vector3())
           );
 
           return;
         }
+        if (child.name === "START") {
+          this.character = this.experience.sceneManager.currentScene.character;
+          this.experience.sceneManager.currentScene.gameManager.startGame(
+            child.getWorldPosition(new THREE.Vector3()),
+            this.character
+          );
+          child.visible = false;
+
+          return;
+        }
+
+        if (child.name === "CAM_1") {
+          this.experience.sceneManager.currentScene.gameManager.level2(
+            child.getWorldPosition(new THREE.Vector3())
+          );
+          child.visible = false;
+
+          return;
+        }
+
         if (child.name === "Plane") {
           return;
         }

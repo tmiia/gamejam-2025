@@ -6,6 +6,8 @@ export default class CollisionManager {
   constructor() {
     this.experience = new Experience();
     this.physicsWorld = this.experience.physicsWorld;
+
+    this.noPhysicsMeshes = ["START", "END", "CAM_1", "CAM_2", "GHOST"];
   }
 
   createColliderFromMesh(mesh) {
@@ -56,31 +58,8 @@ export default class CollisionManager {
 
     model.traverse((child) => {
       if (child instanceof THREE.Mesh && child.geometry) {
-        const rotation = new THREE.Quaternion();
-        child.getWorldQuaternion(rotation);
-        const up = new THREE.Vector3(0, 1, 0).applyQuaternion(rotation);
-
-        if (child.name === "FRIX") {
-          const body = this.createColliderFromMesh(child);
-          if (body) bodies.push(body);
-        } else {
-          const body = this.createColliderFromMesh(child);
-          if (body) bodies.push(body);
-        }
-      }
-    });
-
-    return bodies;
-  }
-
-  createColliderFromModel(model) {
-    const bodies = [];
-
-    model.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.geometry) {
-        if (child.name === "FRIX") {
-          const body = this.createColliderFromMesh(child, { friction: 0.0 });
-          if (body) bodies.push(body);
+        if (this.noPhysicsMeshes.includes(child.name)) {
+          return;
         }
 
         const body = this.createColliderFromMesh(child);

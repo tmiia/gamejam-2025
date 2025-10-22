@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import Character from "../../Character/Character.js";
 import Scene from "../Scene.js";
 import Environement from "./Environment.js";
@@ -49,10 +48,10 @@ export default class DefaultScene extends Scene {
   onAllReady() {
     this.environement = new Environement();
     this.gameManager = new GameManager();
+    this.character = new Character();
     this.terrain = new Terrain();
     // this.background = new Background();
     // this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
-    this.character = new Character(new THREE.Vector3(0, 2, 0));
     this.layers = new Layers();
     // this.particles = new Particles(this.fuckmia);
     // this.character = new Character();
