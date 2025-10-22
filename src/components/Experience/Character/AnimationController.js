@@ -65,14 +65,23 @@ export default class AnimationController {
   setupEventListeners() {
     if (this.character.characterController) {
       this.character.characterController.on("startWalking", () => {
+        if (this.character.movementController?.isPlayingLandingAnimation) {
+          return;
+        }
         this.playAnimation("walk");
       });
 
       this.character.characterController.on("startRunning", () => {
+        if (this.character.movementController?.isPlayingLandingAnimation) {
+          return;
+        }
         this.playAnimation("run");
       });
 
       this.character.characterController.on("stopMoving", () => {
+        if (this.character.movementController?.isPlayingLandingAnimation) {
+          return;
+        }
         this.playAnimation("idle");
       });
 
