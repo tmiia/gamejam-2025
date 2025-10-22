@@ -5,10 +5,16 @@ export default class BloodManager {
     this.experience = new Experience();
 
     this.scene = this.experience.sceneManager.currentScene;
-    this.maxDuration = 200000;
+    this.maxDuration = 500;
     this.actualDuration = 0;
     this.bloodMultiplier = 1;
     this.bloodLevel = document.getElementById("bloodLevelSpan");
+
+    console.log(
+      "this.bloodLevel",
+      this.experience.sceneManager.currentScene.bloodParticles.creationInterva
+    );
+
     // this.postProcessing = this.experience.postProcessing;
     // console.log("this.bloodLevel", this.postProcessing);
   }
@@ -34,6 +40,10 @@ export default class BloodManager {
       const bloodPercentage =
         100 - (this.actualDuration / this.maxDuration) * 100;
       this.bloodLevel.style.width = bloodPercentage + "%";
+      this.scene.bloodParticles.creationInterval = Math.max(
+        100,
+        50 - (this.actualDuration / this.maxDuration) * 1000
+      );
     } else if (this.scene.gameManager.isEnded === false) {
       console.log("BloodManager: Max blood loss duration reached, ending game");
 

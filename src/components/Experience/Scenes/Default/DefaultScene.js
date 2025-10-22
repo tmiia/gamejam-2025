@@ -1,5 +1,6 @@
 import Character from "../../Character/Character.js";
 import Scene from "../Scene.js";
+import BloodParticles from "./CompsGameplay/BloodShaders/BloodParticles.js";
 import Environement from "./Environment.js";
 import BloodManager from "./Game/BloodManager.js";
 import GameManager from "./Game/GameManager.js";
@@ -59,8 +60,8 @@ export default class DefaultScene extends Scene {
     this.layers = new Layers();
     // this.particles = new Particles(this.fuckmia);
     // this.character = new Character();
+    this.bloodParticles = new BloodParticles();
     this.bloodManager = new BloodManager();
-    // this.bloodParticles = new BloodParticles();
     this.experience.eventEmitter?.trigger("scene.ready");
   }
 

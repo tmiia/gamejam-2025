@@ -121,8 +121,8 @@ export default class GameManager {
   crazyGhost() {
     this.ghost.visible = true;
     gsap.to(this.ghost.position, {
-      x: 30,
-      duration: 3.5,
+      x: 50,
+      duration: 10,
       ease: "power3.inOut",
       onComplete: () => {
         gsap.to(this.ghost.material, {

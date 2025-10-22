@@ -11,15 +11,22 @@ export default class BloodParticles {
     this.scene = this.experience.sceneManager.currentScene.scene;
     this.sizes = this.experience.sizes;
     this.texture = this.experience.resources.items.bloodTexture;
+    this.characterControllerIsMoving =
+      this.experience.sceneManager.currentScene.character.characterController._isMoving;
 
     this.bloodParts = [];
-
-    window.addEventListener("click", () => {
-      this.createBloodParticle(5, 200, new THREE.Color(0xff0000));
-    });
+    this.direction = 0;
+    this.quantity = 1;
 
     this.timeSinceLastCreation = 0;
-    this.creationInterval = 1.0;
+    this.creationInterval = 1000.0;
+
+    this.head = null;
+    this.character.model.traverse((child) => {
+      if (child.isBone && child.name === "mixamorig9Head") {
+        this.head = child;
+      }
+    });
   }
 
   createBloodParticle(count, size, color) {
@@ -28,10 +35,9 @@ export default class BloodParticles {
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      positionArray[i3 + 0] = (Math.random() - 0.5) * 0.1;
-      positionArray[i3 + 1] = 0.38;
-      positionArray[i3 + 2] = (Math.random() - 0.5) * 0.1;
-
+      positionArray[i3 + 0] = (Math.random() - 0.5) * 0.025;
+      positionArray[i3 + 1] = 0;
+      positionArray[i3 + 2] = 0;
       sizeArray[i] = Math.random() * 1 + 1;
     }
 
@@ -42,12 +48,17 @@ export default class BloodParticles {
     );
     geometry.setAttribute("aSize", new THREE.BufferAttribute(sizeArray, 1));
 
+    const directionX = (Math.random() - 0.5) * 1 + this.direction;
+    const directionY = Math.random() * 1 + 1;
+
     const materialShader = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
       transparent: true,
       depthWrite: false,
+      depthTest: false,
       blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
       uniforms: {
         uTime: { value: 0 },
         uSize: { value: size },
@@ -57,10 +68,13 @@ export default class BloodParticles {
         uTexture: { value: this.texture },
         uColor: { value: color },
         uProgress: { value: 0 },
+        uDirection: { value: new THREE.Vector2(directionX, directionY) },
       },
     });
 
     const bloodPart = new THREE.Points(geometry, materialShader);
+    bloodPart.renderOrder = 999;
+
     this.scene.add(bloodPart);
     this.bloodParts.push(bloodPart);
 
@@ -75,31 +89,37 @@ export default class BloodParticles {
 
   dispose(bloodPart) {
     if (!bloodPart) return;
-
-    console.log("Disposing blood particle");
-
     bloodPart.geometry.dispose();
     bloodPart.material.dispose();
     this.scene.remove(bloodPart);
-
     this.bloodParts = this.bloodParts.filter((b) => b !== bloodPart);
   }
 
   update() {
-    if (this.character && this.bloodParts.length > 0) {
-      const charPos = this.character.model.position;
+    const velocity = this.character.rigidbody.linvel().x;
 
+    const targetDirection = this.experience.sceneManager.currentScene.character
+      .characterController._isMoving
+      ? velocity * -1.5
+      : 0;
+
+    const smoothingFactor = 0.07;
+    this.direction = THREE.MathUtils.lerp(
+      this.direction,
+      targetDirection,
+      smoothingFactor
+    );
+
+    if (this.head && this.bloodParts.length > 0) {
+      const charPos = this.head.getWorldPosition(new THREE.Vector3());
       this.bloodParts.forEach((bloodPart) => {
         bloodPart.position.copy(charPos);
-        // bloodPart.material.uniforms.uTime.value += deltaTime * 0.5;
       });
     }
 
     this.timeSinceLastCreation += performance.now() / 1000;
-    // console.log(this.creationInterval);
-
     if (this.timeSinceLastCreation >= this.creationInterval) {
-      this.createBloodParticle(5, 200, new THREE.Color(0xff0000));
+      this.createBloodParticle(this.quantity, 300, new THREE.Color(0xff0000));
       this.timeSinceLastCreation = 0;
     }
   }

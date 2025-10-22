@@ -78,8 +78,6 @@ export default class Terrain {
           return;
         }
 
-        console.log(child.name);
-
         if (child.name === "Plane") {
           return;
         }
