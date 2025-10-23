@@ -1,8 +1,7 @@
 "use client";
-import { useCallback, useEffect, useRef } from "react";
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef } from "react";
 import imageLoading from "../../../public/loaded2.png";
 import Experience from "../Experience/Experience";
 
@@ -13,8 +12,6 @@ declare global {
 }
 
 const ThreeJSExperience = () => {
-  console.log(imageLoading);
-
   const canvasRef = useRef(null);
   const router = useRouter();
 
@@ -49,84 +46,169 @@ const ThreeJSExperience = () => {
 
   return (
     <>
+      {/* Écran de chargement */}
       <div
         id="isLoaded"
-        className="h-screen w-screen absolute top-0 left-0 bg-white z-[100] flex flex-col gap-4 items-center justify-center"
+        style={{
+          height: "100vh",
+          width: "100vw",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          backgroundColor: "white",
+          zIndex: 100,
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         <Image
           src={imageLoading}
           alt="Loading..."
           width={500}
           height={500}
-          className="h-auto w-[28vw] "
+          style={{
+            height: "auto",
+            width: "28vw",
+          }}
         />
-        <div className="h-4 w-[28vw] bg-[#D9D9D9] flex items-center">
+        <div
+          style={{
+            height: "1rem",
+            width: "28vw",
+            backgroundColor: "#D9D9D9",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
           <div
             id="loadingBar"
-            className="h-full bg-black w-0 duration-200 ease-in-out"
+            style={{
+              height: "100%",
+              backgroundColor: "black",
+              width: "0%",
+              transitionDuration: "200ms",
+              transitionTimingFunction: "ease-in-out",
+            }}
           ></div>
         </div>
       </div>
+
+      {/* Tutoriel */}
       <div
         id="tutorial"
-        className="h-screen w-screen absolute top-0 left-0 z-[98] pointer-events-none flex flex-row gap-4 items-start justify-center text-black text-[14px]"
+        style={{
+          height: "100vh",
+          width: "100vw",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 98,
+          pointerEvents: "none",
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          color: "black",
+          fontSize: "14px",
+        }}
       >
-        <div className="flex gap-4 items-center pt-2">
-          <Image
-            src={imageLoading}
-            alt="Loading..."
-            width={500}
-            height={500}
-            className="h-auto w-8 aspect-square  object-cover bg-red-400"
-          />
-          <p>Marcher</p>
-        </div>
-        <div className="flex gap-4 items-center pt-2">
-          <Image
-            src={imageLoading}
-            alt="Loading..."
-            width={500}
-            height={500}
-            className="h-auto w-8 aspect-square  object-cover bg-red-400"
-          />
-          <p>Marcher</p>
-        </div>
-        <div className="flex gap-4 items-center pt-2">
-          <Image
-            src={imageLoading}
-            alt="Loading..."
-            width={500}
-            height={500}
-            className="h-auto w-8 aspect-square  object-cover bg-red-400"
-          />
-          <p>Marcher</p>
-        </div>
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+              paddingTop: "0.5rem",
+            }}
+          >
+            <Image
+              src={imageLoading}
+              alt="Loading..."
+              width={500}
+              height={500}
+              style={{
+                height: "auto",
+                width: "2rem",
+                aspectRatio: "1 / 1",
+                objectFit: "cover",
+                backgroundColor: "red",
+              }}
+            />
+            <p>Marcher</p>
+          </div>
+        ))}
       </div>
 
+      {/* Score */}
       <div
         id="score"
-        className="h-screen w-screen absolute top-0 left-0 z-[150]  pointer-events-none flex flex-row gap-4 items-center justify-center text-black bg-red-500 text-[50px]"
+        style={{
+          height: "100vh",
+          width: "100vw",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 150,
+          pointerEvents: "none",
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          alignItems: "start",
+          justifyContent: "end",
+          color: "black",
+          fontSize: "20px",
+        }}
       >
-        <p id="scoreNumber">AHAHAHAHs</p>
+        <p id="scoreNumber">300000</p>
       </div>
+
+      {/* Game Over */}
       <div
         id="gameOver"
-        className="h-screen w-screen absolute top-0 left-0 z-[101] pointer-events-none opacity-0  "
         style={{
+          height: "100vh",
+          width: "100vw",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: 101,
+          pointerEvents: "none",
+          opacity: 0,
           background:
             "radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 0%)",
         }}
       ></div>
+
+      {/* Niveau de sang */}
       <div
         id="bloodLevel"
-        className="h-5 w-64 absolute top-5 left-5 bg-red-200 z-[99]"
+        style={{
+          height: "1.25rem",
+          width: "16rem",
+          position: "absolute",
+          top: "1.25rem",
+          left: "1.25rem",
+          backgroundColor: "#fecaca", // équivalent bg-red-200
+          zIndex: 99,
+        }}
       >
         <span
           id="bloodLevelSpan"
-          className="block h-full w-full bg-red-600"
-          style={{ width: "100%" }}
+          style={{
+            display: "block",
+            height: "100%",
+            width: "100%",
+            backgroundColor: "#dc2626", // équivalent bg-red-600
+          }}
         ></span>
       </div>
+
+      {/* Canvas */}
       <div
         id="scrollContainer"
         style={{
@@ -135,7 +217,14 @@ const ThreeJSExperience = () => {
           position: "relative",
         }}
       >
-        <canvas ref={canvasRef} className="sticky top-0 left-0" />
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: "sticky",
+            top: 0,
+            left: 0,
+          }}
+        />
       </div>
     </>
   );
