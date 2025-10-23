@@ -217,10 +217,11 @@ export default class Character {
       this.animationController.update(delta);
     }
 
-    if (this.model.position.y < -30) {
-      this.model.position.set(0, 2, 0);
-      this.rigidbody.setTranslation({ x: 0, y: 5, z: 0 }, true);
-      this.rigidbody.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    if (
+      this.model.position.y < -10 &&
+      !this.experience.sceneManager.currentScene.gameManager.isEnded
+    ) {
+      this.experience.sceneManager.currentScene.gameManager.endGame();
     }
 
     if (this.debugCollider && this.rigidbody) {

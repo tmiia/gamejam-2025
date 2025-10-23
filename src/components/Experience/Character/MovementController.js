@@ -165,9 +165,16 @@ export default class MovementController extends EventEmitter {
   }
 
   update() {
+    this.syncModelPosition();
+
+    if (
+      this.character.experience.sceneManager.currentScene.gameManager
+        .isStarted === false
+    )
+      return;
+
     this.checkGrounded();
     this.handleMovement();
-    this.syncModelPosition();
   }
 
   destroy() {

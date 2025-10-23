@@ -55,11 +55,7 @@ export default class DefaultScene extends Scene {
     this.gameManager = new GameManager();
     this.character = new Character(new THREE.Vector3(-8.311140060424805, 1, 0));
     this.terrain = new Terrain();
-    // this.background = new Background();
-    // this.cube = new Cube(new THREE.Vector3(-10, 2, -2));
     this.layers = new Layers();
-    // this.particles = new Particles(this.fuckmia);
-    // this.character = new Character();
     this.bloodParticles = new BloodParticles();
     this.bloodManager = new BloodManager();
     this.experience.eventEmitter?.trigger("scene.ready");

@@ -5,7 +5,8 @@ export default class Particles {
   constructor(
     functionDistance,
     position = new THREE.Vector3(0, 0, 0),
-    isVisible = true
+    isVisible = true,
+    onDestroy = null
   ) {
     this.experience = new Experience();
     this.scene = this.experience.sceneManager.currentScene.scene;
@@ -13,6 +14,7 @@ export default class Particles {
     this.functionDistance = functionDistance;
     this.position = position;
     this.isVisible = isVisible;
+    this.onDestroy = onDestroy;
 
     this.setGeometry();
     this.setMaterial();
@@ -53,6 +55,10 @@ export default class Particles {
     this.geometry.dispose();
     this.material.dispose();
     this.scene.remove(this.mesh);
+
+    if (this.onDestroy) {
+      this.onDestroy();
+    }
   }
 
   checkCollision(targetMesh) {

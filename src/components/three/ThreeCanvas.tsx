@@ -50,8 +50,16 @@ const ThreeJSExperience = () => {
         className="h-screen w-screen absolute top-0 left-0 bg-white z-[100]"
       ></div>
       <div
+        id="gameOver"
+        className="h-screen w-screen absolute top-0 left-0 z-[101] pointer-events-none opacity-0  "
+        style={{
+          background:
+            "radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 0%)",
+        }}
+      ></div>
+      <div
         id="bloodLevel"
-        className="h-5 w-64 absolute top-5 left-5 bg-red-200 z-[100]"
+        className="h-5 w-64 absolute top-5 left-5 bg-red-200 z-[99]"
       >
         <span
           id="bloodLevelSpan"

@@ -126,6 +126,12 @@ export default class AnimationController {
   checkInputAndPlayAnimation() {
     if (!this.character.characterController) return;
 
+    if (
+      this.character.experience.sceneManager.currentScene.gameManager
+        .isStarted === false
+    )
+      return;
+
     console.log("Checking input to determine animation");
 
     const horizontalInput =

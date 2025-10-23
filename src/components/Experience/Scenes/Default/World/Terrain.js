@@ -41,15 +41,6 @@ export default class Terrain {
 
           return;
         }
-        if (child.name === "START") {
-          this.character = this.experience.sceneManager.currentScene.character;
-          this.experience.sceneManager.currentScene.gameManager.startGame(
-            child.getWorldPosition(new THREE.Vector3()),
-            this.character
-          );
-          child.visible = false;
-          return;
-        }
 
         if (child.name === "CAM_1") {
           this.experience.sceneManager.currentScene.gameManager.level1(
@@ -75,6 +66,16 @@ export default class Terrain {
           );
           child.visible = false;
 
+          return;
+        }
+
+        if (child.name === "START") {
+          this.character = this.experience.sceneManager.currentScene.character;
+          this.experience.sceneManager.currentScene.gameManager.startGame(
+            child.getWorldPosition(new THREE.Vector3()),
+            this.character
+          );
+          child.visible = false;
           return;
         }
 

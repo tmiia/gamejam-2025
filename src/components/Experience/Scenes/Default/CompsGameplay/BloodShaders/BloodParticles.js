@@ -103,7 +103,7 @@ export default class BloodParticles {
       ? velocity * -1.5
       : 0;
 
-    const smoothingFactor = 0.07;
+    const smoothingFactor = 0.1;
     this.direction = THREE.MathUtils.lerp(
       this.direction,
       targetDirection,

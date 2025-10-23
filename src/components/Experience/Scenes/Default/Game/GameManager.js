@@ -14,6 +14,9 @@ export default class GameManager {
 
     this.ghost = this.experience.sceneManager.currentScene.ghost.ghost;
 
+    this.stockPosition = new THREE.Vector3(0, 0, 0);
+    this.character = null;
+
     this.particles = null;
     this.cameraSettings = {
       yMultiplier: 0,
@@ -30,19 +33,64 @@ export default class GameManager {
       scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025 },
     };
 
+    this.gameOver = document.getElementById("gameOver");
+
+    this.storedPositions = {
+      end: null,
+      cam1: null,
+      cam2: null,
+      ghost: null,
+    };
+
+    this.levelTwo = null;
+    this.levelThree = null;
+    this.crazyzy = null;
+
     // this.startGame();
     // this.level2();
     // this.level3();
     // this.initParticles();
   }
+
   initParticles(position) {
+    if (!this.storedPositions.end) {
+      this.storedPositions.end = position.clone();
+    }
+
     this.particles = new Particles(
-      this.endGame,
-      new THREE.Vector3(position.x, position.y, position.z)
+      () => this.endGame(),
+      new THREE.Vector3(-position.x, -position.y, -position.z),
+      true,
+      () => {
+        this.particles = null;
+      }
     );
   }
+
+  resetAllTimers() {
+    const scene = this.experience.sceneManager.currentScene;
+    if (scene.bloodParticles) {
+      scene.bloodParticles.timeSinceLastCreation = 0;
+    }
+    if (scene.bloodManager) {
+      scene.bloodManager.actualDuration = 0;
+    }
+  }
+
   startGame(position, character) {
-    this.position = position || new THREE.Vector3(0, 0, 0);
+    this.position = position;
+    if (position) {
+      this.stockPosition = position.clone();
+    } else {
+      this.position = this.stockPosition;
+    }
+
+    if (character) {
+      this.character = character;
+    } else {
+      character = this.character;
+    }
+
     gsap.to(this.isLoadeDiv, {
       opacity: 0,
       duration: 1,
@@ -70,6 +118,20 @@ export default class GameManager {
         this.cameraSettings.lerpSpeed = this.cameraScenesValues.start.lerpSpeed;
         this.isStarted = true;
         this.isEnded = false;
+        this.resetAllTimers();
+
+        if (!this.particles && this.storedPositions.end) {
+          this.initParticles(this.storedPositions.end);
+        }
+        if (!this.levelTwo && this.storedPositions.cam1) {
+          this.level1(this.storedPositions.cam1);
+        }
+        if (!this.levelThree && this.storedPositions.cam2) {
+          this.level2(this.storedPositions.cam2);
+        }
+        if (!this.crazyzy && this.storedPositions.ghost) {
+          this.animateCrazyGhotst(this.storedPositions.ghost);
+        }
       },
     });
   }
@@ -84,7 +146,12 @@ export default class GameManager {
       ease: "power3.inOut",
     });
   }
+
   level1(position) {
+    if (!this.storedPositions.cam1) {
+      this.storedPositions.cam1 = position.clone();
+    }
+
     this.levelTwo = new Particles(
       () =>
         this.mooveCamera(
@@ -94,11 +161,19 @@ export default class GameManager {
           this.cameraScenesValues.scene1.lerpSpeed,
           4.5
         ),
-      new THREE.Vector3(position.x, position.y, position.z)
+      new THREE.Vector3(position.x, position.y, position.z),
+      true,
+      () => {
+        this.levelTwo = null;
+      }
     );
   }
 
   level2(position) {
+    if (!this.storedPositions.cam2) {
+      this.storedPositions.cam2 = position.clone();
+    }
+
     this.levelThree = new Particles(
       () =>
         this.mooveCamera(
@@ -108,16 +183,29 @@ export default class GameManager {
           this.cameraScenesValues.scene2.lerpSpeed,
           4.5
         ),
-      new THREE.Vector3(position.x, position.y, position.z)
+      new THREE.Vector3(position.x, position.y, position.z),
+      true,
+      () => {
+        this.levelThree = null;
+      } //
     );
   }
 
   animateCrazyGhotst(position) {
+    if (!this.storedPositions.ghost) {
+      this.storedPositions.ghost = position.clone();
+    }
+
     this.crazyzy = new Particles(
       () => this.crazyGhost(),
-      new THREE.Vector3(position.x, position.y, position.z)
+      new THREE.Vector3(position.x, position.y, position.z),
+      true,
+      () => {
+        this.crazyzy = null;
+      }
     );
   }
+
   crazyGhost() {
     this.ghost.visible = true;
     gsap.to(this.ghost.position, {
@@ -139,12 +227,39 @@ export default class GameManager {
   }
 
   endGame() {
-    this.isLoadeDiv = document.getElementById("isLoaded");
+    if (this.isEnded) return;
+    if (!this.isStarted) return;
     this.isEnded = true;
-    gsap.to(this.isLoadeDiv, {
+    this.isStarted = false;
+
+    const gradientObj = { percent: 0 };
+
+    gsap.to(this.gameOver, {
       opacity: 1,
-      duration: 1,
+      duration: 0.4,
+      ease: "power3.inOut",
     });
+
+    gsap.to(gradientObj, {
+      percent: 100,
+      duration: 2,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        this.gameOver.style.background = `radial-gradient(circle, rgba(0,0,0,${
+          gradientObj.percent / 100
+        }) 0%, rgba(0,0,0,${gradientObj.percent / 90}) 100%)`;
+      },
+
+      onComplete: () => {
+        gsap.to(this.gameOver, {
+          opacity: 0,
+          duration: 5,
+          ease: "power3.inOut",
+        });
+        this.startGame(null, null);
+      },
+    });
+
     try {
       fetch("TestZebi", {
         method: "POST",
