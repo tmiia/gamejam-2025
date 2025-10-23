@@ -2,7 +2,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
+import fog from "../../../public/fog.png";
 import imageLoading from "../../../public/loaded2.png";
+import tombe from "../../../public/tombe.png";
 import Experience from "../Experience/Experience";
 
 declare global {
@@ -14,6 +16,8 @@ declare global {
 const ThreeJSExperience = () => {
   const canvasRef = useRef(null);
   const router = useRouter();
+
+  console.log(tombe, fog);
 
   const routerReplace = useCallback(
     (path: string) => {
@@ -169,6 +173,39 @@ const ThreeJSExperience = () => {
 
       {/* Game Over */}
       <div
+        className="absolute top-0 left-0 h-screen w-screen z-[101] bg-[#0E0E0E] pointer-events-none opacity-0"
+        id="gameOver"
+      >
+        <Image
+          src={fog}
+          id="fogGameOver"
+          alt="Game Over"
+          style={{
+            position: "absolute",
+            top: "0",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "50%",
+            objectFit: "cover",
+            animation: "fog 3s ease-in-out infinite",
+          }}
+        />
+        <Image
+          src={tombe}
+          id="tombeGameOver"
+          alt="Game Over"
+          style={{
+            position: "absolute",
+            bottom: "0",
+            left: "50%",
+            transform: "translate(-50%, 10%)",
+            width: "50%",
+            objectFit: "cover",
+            opacity: 0,
+          }}
+        />
+      </div>
+      <div
         id="gameOver"
         style={{
           height: "100vh",
@@ -186,7 +223,7 @@ const ThreeJSExperience = () => {
 
       {/* Niveau de sang */}
       <div
-        id="bloodLevel"
+        // id="bloodLevel"
         style={{
           height: "1.25rem",
           width: "16rem",

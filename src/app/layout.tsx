@@ -23,7 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className="antialiased">
+      <body
+        style={{
+          maxHeight: "100vh",
+          overflow: "hidden",
+        }}
+        suppressHydrationWarning
+        className="antialiased"
+      >
         {children}
       </body>
     </html>

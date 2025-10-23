@@ -280,6 +280,35 @@ export default class GameManager {
       ease: "power3.inOut",
     });
 
+    const tomb = this.gameOver.querySelector("#tombeGameOver");
+    const fog = this.gameOver.querySelector("#fogGameOver");
+
+    gsap.fromTo(
+      fog,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 2,
+        ease: "power3.out",
+        delay: 2,
+      }
+    );
+    gsap.fromTo(
+      tomb,
+      {
+        opacity: 0,
+        y: 50,
+      },
+      {
+        y: 20,
+        opacity: 1,
+        duration: 2,
+        ease: "power3.out",
+        delay: 2,
+      }
+    );
     gsap.to(gradientObj, {
       percent: 100,
       duration: 2,
@@ -290,13 +319,32 @@ export default class GameManager {
         }) 0%, rgba(0,0,0,${gradientObj.percent / 90}) 100%)`;
       },
 
+      // onStart: () => {
+      //   setTimeout(() => {}, 2500);
+      // },
+
       onComplete: () => {
+        this.startGame(null, null);
+        gsap.to(tomb, {
+          opacity: 0,
+          duration: 2,
+          ease: "power3.out",
+          delay: 4,
+        });
+
+        gsap.to(fog, {
+          opacity: 0,
+          duration: 2,
+          ease: "power3.out",
+          delay: 4,
+        });
+
         gsap.to(this.gameOver, {
           opacity: 0,
-          duration: 5,
-          ease: "power3.inOut",
+          duration: 3,
+          delay: 6,
+          ease: "power3.out",
         });
-        this.startGame(null, null);
       },
     });
 
