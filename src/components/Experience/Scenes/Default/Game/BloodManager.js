@@ -5,7 +5,7 @@ export default class BloodManager {
     this.experience = new Experience();
 
     this.scene = this.experience.sceneManager.currentScene;
-    this.maxDuration = 12000;
+    this.maxDuration = 300;
     this.actualDuration = 0;
     this.bloodMultiplier = 1;
     this.bloodLevel = document.getElementById("bloodLevelSpan");
@@ -27,9 +27,12 @@ export default class BloodManager {
         ._isMoving
     ) {
       this.bloodMultiplier = 3;
+    } else if (this.experience.sceneManager.currentScene.character.characterController._isJumping) {
+      this.bloodMultiplier = 12;
     } else {
       this.bloodMultiplier = 1;
     }
+    
     if (
       this.actualDuration < this.maxDuration &&
       this.scene.gameManager.isStarted
@@ -47,7 +50,7 @@ export default class BloodManager {
 
       if (bloodPercentage <= 45 && !this.isCriticalState) {
         this.isCriticalState = true;
-        if (this.postProcessing) {
+        if (this.postProcessing) {          
           this.postProcessing.playGlitchEffect();
         }
       }

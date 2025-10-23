@@ -200,7 +200,7 @@ export default class AudioManager extends EventEmitter {
     filter.frequency.value = 20000;
   }
 
-  startProgressiveMuffle(duration = 3000, targetFrequency = 100) {
+  startProgressiveMuffle(duration = 900, targetFrequency = 100) {
     if (!this.globalFilter) {
       const filter = Howler.ctx.createBiquadFilter();
       filter.type = 'lowpass';

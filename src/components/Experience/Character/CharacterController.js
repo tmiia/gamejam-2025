@@ -10,6 +10,7 @@ export default class CharacterController extends EventEmitter {
     this._isGrounded = false;
     this._isMoving = false;
     this._isRunning = false;
+    this._isJumping = false;
     this.wasMoving = false;
 
     this.maxJumps = 1;
@@ -50,6 +51,7 @@ export default class CharacterController extends EventEmitter {
   handleJump() {
     if (this.jumpsRemaining > 0) {
       const jumpsBeforeJump = this.jumpsRemaining;
+      this._isJumping = true;
       this.trigger("jump", [{ jumpsRemaining: jumpsBeforeJump }]);
     }
   }
@@ -119,6 +121,7 @@ export default class CharacterController extends EventEmitter {
 
     if (!wasGrounded && value) {
       this.jumpsRemaining = this.maxJumps;
+      this._isJumping = false;
       this.trigger("landed");
     } else if (wasGrounded && !value) {
       this.trigger("airborne");
