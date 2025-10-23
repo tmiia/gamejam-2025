@@ -10,12 +10,17 @@ export default class AnimationController {
   constructor(character) {
     this.character = character;
     this.model = character.model;
+    this.reflectionModel = character.reflectionModel;
     this.resources = character.resources;
 
     this.mixer = null;
+    this.reflectionMixer = null;
     this.animations = {};
+    this.reflectionAnimations = {};
     this.animationClasses = {};
+    this.reflectionAnimationClasses = {};
     this.currentAction = null;
+    this.currentReflectionAction = null;
     this.previousAnimation = null;
 
     this.init();
@@ -55,6 +60,45 @@ export default class AnimationController {
     }
     if (this.animationClasses.landing.isLoaded) {
       this.animations.landing = this.animationClasses.landing.getAction();
+    }
+
+    if (this.reflectionModel) {
+      this.reflectionMixer = new THREE.AnimationMixer(this.reflectionModel);
+      
+      const tempModel = this.model;
+      const tempMixer = this.mixer;
+      this.model = this.reflectionModel;
+      this.mixer = this.reflectionMixer;
+      
+      this.reflectionAnimationClasses.idle = new IdleAnimation(this);
+      this.reflectionAnimationClasses.run = new RunAnimation(this);
+      this.reflectionAnimationClasses.walk = new WalkAnimation(this);
+      this.reflectionAnimationClasses.jump = new JumpAnimation(this);
+      this.reflectionAnimationClasses.landing = new LandingAnimation(this);
+      this.reflectionAnimationClasses.fallingIntoLanding = new FallingIntoLanding(this);
+      
+      this.model = tempModel;
+      this.mixer = tempMixer;
+
+      if (this.reflectionAnimationClasses.idle.isLoaded) {
+        this.reflectionAnimations.idle = this.reflectionAnimationClasses.idle.getAction();
+      }
+      if (this.reflectionAnimationClasses.run.isLoaded) {
+        this.reflectionAnimations.run = this.reflectionAnimationClasses.run.getAction();
+      }
+      if (this.reflectionAnimationClasses.walk.isLoaded) {
+        this.reflectionAnimations.walk = this.reflectionAnimationClasses.walk.getAction();
+      }
+      if (this.reflectionAnimationClasses.jump.isLoaded) {
+        this.reflectionAnimations.jump = this.reflectionAnimationClasses.jump.getAction();
+      }
+      if (this.reflectionAnimationClasses.fallingIntoLanding.isLoaded) {
+        this.reflectionAnimations.fallingIntoLanding =
+          this.reflectionAnimationClasses.fallingIntoLanding.getAction();
+      }
+      if (this.reflectionAnimationClasses.landing.isLoaded) {
+        this.reflectionAnimations.landing = this.reflectionAnimationClasses.landing.getAction();
+      }
     }
 
     if (this.animations.idle) {
@@ -183,6 +227,26 @@ export default class AnimationController {
 
     this.previousAnimation = this.currentAction;
     this.currentAction = action;
+
+    if (this.reflectionAnimations[name]) {
+      const reflectionAction = this.reflectionAnimations[name];
+      
+      if (this.currentReflectionAction && this.currentReflectionAction !== reflectionAction) {
+        this.currentReflectionAction.fadeOut(fadeInDuration);
+      }
+
+      reflectionAction.reset();
+      reflectionAction.setLoop(loop);
+      reflectionAction.timeScale = timeScale;
+      reflectionAction.fadeIn(fadeInDuration);
+      reflectionAction.play();
+
+      if (loop === THREE.LoopOnce) {
+        reflectionAction.clampWhenFinished = true;
+      }
+
+      this.currentReflectionAction = reflectionAction;
+    }
   }
 
   stopAnimation(name, fadeOutDuration = 0.2) {
@@ -221,10 +285,19 @@ export default class AnimationController {
     if (this.mixer) {
       this.mixer.update(delta);
     }
+    if (this.reflectionMixer) {
+      this.reflectionMixer.update(delta);
+    }
   }
 
   destroy() {
     Object.values(this.animationClasses).forEach((animClass) => {
+      if (animClass && animClass.destroy) {
+        animClass.destroy();
+      }
+    });
+
+    Object.values(this.reflectionAnimationClasses).forEach((animClass) => {
       if (animClass && animClass.destroy) {
         animClass.destroy();
       }
@@ -235,9 +308,17 @@ export default class AnimationController {
       this.mixer.uncacheRoot(this.model);
     }
 
+    if (this.reflectionMixer) {
+      this.reflectionMixer.stopAllAction();
+      this.reflectionMixer.uncacheRoot(this.reflectionModel);
+    }
+
     this.animations = {};
+    this.reflectionAnimations = {};
     this.animationClasses = {};
+    this.reflectionAnimationClasses = {};
     this.currentAction = null;
+    this.currentReflectionAction = null;
     this.previousAnimation = null;
   }
 }

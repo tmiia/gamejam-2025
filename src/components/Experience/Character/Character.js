@@ -5,6 +5,7 @@ import Experience from "../Experience.js";
 import AnimationController from "./AnimationController.js";
 import CharacterController from "./CharacterController.js";
 import MovementController from "./MovementController.js";
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 
 export default class Character {
   constructor(position = new Vector3(0, 0, 0)) {
@@ -23,8 +24,9 @@ export default class Character {
     this.rigidbody = null;
     this.collider = null;
     this.model = null;
-    this.modelReflect = null;
+    this.reflectionModel = null;
     this.mapModel = null;
+    this.reflectionOffset = 1.55;
 
     this.raycaster = new THREE.Raycaster();
     this.isGrounded = false;
@@ -52,28 +54,28 @@ export default class Character {
 
   setModel() {
     const characterModel = this.resources.items.characterModel;
-
-    if (characterModel) {
-      this.model = characterModel;
-      this.model.scale.set(0.0025, 0.0025, 0.0025);
-      this.model.position.copy(this.position);
-
-      const blackMaterial = new THREE.MeshBasicMaterial({
-        color: new THREE.Color("#000000"),
-        roughness: 1,
-        metalness: 0,
-      });
-
-      this.model.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.material = blackMaterial;
-        }
-      });
-      this.scene.add(this.model);
+    if (!characterModel) {
+      console.warn("Character model not found in resources");
+      return;
     }
-  }
-  setModelReflect() {
-    const characterModel = this.resources.items.characterModel;
+  
+    this.model = clone(characterModel);
+    this.model.scale.set(0.0025, 0.0025, 0.0025);
+    this.model.position.copy(this.position);
+  
+    const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    this.model.traverse((child) => {
+      if (child.isMesh) child.material = blackMaterial;
+    });
+    this.scene.add(this.model);
+  
+    this.reflectionModel = clone(this.model);
+    this.reflectionModel.scale.copy(this.model.scale);
+    this.reflectionModel.scale.y = -0.0025;
+    this.reflectionModel.position.copy(this.model.position);
+    this.reflectionModel.position.x -= this.reflectionOffset;
+    this.scene.add(this.reflectionModel);
+  
   }
 
   setPhysics() {
@@ -279,6 +281,14 @@ export default class Character {
       const pos = this.rigidbody.translation();
       this.debugCollider.position.set(pos.x, pos.y, pos.z);
     }
+
+    if (this.reflectionModel && this.model) {
+      this.reflectionModel.position.x = this.model.position.x;
+      this.reflectionModel.position.y = -this.model.position.y - this.reflectionOffset;
+      this.reflectionModel.position.z = this.model.position.z;
+
+      this.reflectionModel.rotation.copy(this.model.rotation);
+    }
   }
 
   destroy() {
@@ -296,6 +306,10 @@ export default class Character {
 
     if (this.model) {
       this.scene.remove(this.model);
+    }
+
+    if (this.reflectionModel) {
+      this.scene.remove(this.reflectionModel);
     }
 
     if (this.rigidbody && this.physicsWorld?.getWorld()) {
