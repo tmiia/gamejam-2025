@@ -68,6 +68,41 @@ const ThreeJSExperience = () => {
         </div>
       </div>
       <div
+        id="tutorial"
+        className="h-screen w-screen absolute top-0 left-0 z-[98] pointer-events-none flex flex-row gap-4 items-start justify-center text-black text-[14px]"
+      >
+        <div className="flex gap-4 items-center pt-2">
+          <Image
+            src={imageLoading}
+            alt="Loading..."
+            width={500}
+            height={500}
+            className="h-auto w-8 aspect-square  object-cover bg-red-400"
+          />
+          <p>Marcher</p>
+        </div>
+        <div className="flex gap-4 items-center pt-2">
+          <Image
+            src={imageLoading}
+            alt="Loading..."
+            width={500}
+            height={500}
+            className="h-auto w-8 aspect-square  object-cover bg-red-400"
+          />
+          <p>Marcher</p>
+        </div>
+        <div className="flex gap-4 items-center pt-2">
+          <Image
+            src={imageLoading}
+            alt="Loading..."
+            width={500}
+            height={500}
+            className="h-auto w-8 aspect-square  object-cover bg-red-400"
+          />
+          <p>Marcher</p>
+        </div>
+      </div>
+      <div
         id="gameOver"
         className="h-screen w-screen absolute top-0 left-0 z-[101] pointer-events-none opacity-0  "
         style={{

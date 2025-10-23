@@ -91,6 +91,14 @@ export default class GameManager {
       character = this.character;
     }
 
+    this.tutorial = document.getElementById("tutorial");
+
+    gsap.to(this.tutorial, {
+      opacity: 1,
+      duration: 1,
+      ease: "power3.inOut",
+    });
+
     gsap.to(this.isLoadeDiv, {
       opacity: 0,
       duration: 1,
@@ -147,20 +155,31 @@ export default class GameManager {
     });
   }
 
+  mooveCameraLevel1() {
+    this.tutorial = document.getElementById("tutorial");
+
+    gsap.to(this.tutorial, {
+      opacity: 0,
+      duration: 2,
+      ease: "power3.inOut",
+    });
+
+    this.mooveCamera(
+      this.cameraScenesValues.scene1.zOffset,
+      this.cameraScenesValues.scene1.xOffset,
+      this.cameraScenesValues.scene1.yLookAt,
+      this.cameraScenesValues.scene1.lerpSpeed,
+      4.5
+    );
+  }
+
   level1(position) {
     if (!this.storedPositions.cam1) {
       this.storedPositions.cam1 = position.clone();
     }
 
     this.levelTwo = new Particles(
-      () =>
-        this.mooveCamera(
-          this.cameraScenesValues.scene1.zOffset,
-          this.cameraScenesValues.scene1.xOffset,
-          this.cameraScenesValues.scene1.yLookAt,
-          this.cameraScenesValues.scene1.lerpSpeed,
-          4.5
-        ),
+      () => this.mooveCameraLevel1(),
       new THREE.Vector3(position.x, position.y, position.z),
       true,
       () => {
