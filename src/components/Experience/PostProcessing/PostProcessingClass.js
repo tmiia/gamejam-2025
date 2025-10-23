@@ -146,12 +146,17 @@ export default class PostProcessingClass {
     this.composer.addPass(new EffectPass(this.camera, vignetteEffect));
 
     this.glitchEffect = new GlitchEffect({
-      delay: new Vector2(1.0, 2.0),
-      duration: new Vector2(0.4, 0.6),
-      strength: new Vector2(0.3, 0.6),
+      minDelay: 1.5,
+      maxDelay: 3.0,
+      minDuration: 0.05,
+      maxDuration: 0.15,
+      minStrength: 0.05,
+      maxStrength: 0.15,
     });
 
-    // this.composer.addPass(new EffectPass(this.camera, this.glitchEffect));
+    this.glitchEffectPass = new EffectPass(this.camera, this.glitchEffect);
+    this.glitchEffectPass.enabled = false;
+    this.composer.addPass(this.glitchEffectPass);
 
     this.bloodVignetteEffect = new BloodVignetteEffect({
       intensity: 0.5,
@@ -190,5 +195,17 @@ export default class PostProcessingClass {
     setTimeout(() => {
       this.bloodVignetteEffect.setIntensity(this._bloodIntensity || 0);
     }, 100);
+  }
+
+  playGlitchEffect() {
+    if (this.glitchEffectPass) {
+      this.glitchEffectPass.enabled = true;
+    }
+  }
+
+  stopGlitchEffect() {
+    if (this.glitchEffectPass) {
+      this.glitchEffectPass.enabled = false;
+    }
   }
 }
