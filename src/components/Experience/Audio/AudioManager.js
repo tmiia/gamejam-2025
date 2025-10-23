@@ -8,11 +8,12 @@ export default class AudioManager extends EventEmitter {
     this.sounds = {};
     this.currentWalkSound = null;
     this.isWalkSoundPlaying = false;
+    this.filters = {};
 
     this.initializeSounds();
   }
 
-  initializeSounds() {
+  initializeSounds() {    
     this.sounds.ambiance = new Howl({
       src: ["/audio/background.mp3"],
       loop: true,
@@ -140,12 +141,72 @@ export default class AudioManager extends EventEmitter {
     });
   }
 
+  async applyMuffledEffect(soundName, targetFrequency) {
+    const sound = this.sounds[soundName];
+    if (!sound) {
+      console.warn(`Sound "${soundName}" not found`);
+      return;
+    }
+  
+    if (!this.filters[soundName]) {
+      try {
+        const howlerCtx = Howler.ctx;
+        
+        const filter = howlerCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 20000;
+        filter.Q.value = 1;
+  
+        const masterGain = Howler.masterGain;
+        
+        if (masterGain) {
+          try {
+            masterGain.disconnect();
+          } catch (e) {
+            console.warn("Could not disconnect master gain:", e);
+          }
+          
+          masterGain.connect(filter);
+          filter.connect(howlerCtx.destination);
+        }
+  
+        this.filters[soundName] = filter;
+      } catch (error) {
+        console.error("Error creating filter:", error);
+        return;
+      }
+    }
+  
+    this.filters[soundName].frequency.value = targetFrequency;
+  }
+
+  removeMuffledEffect(soundName) {
+    const filter = this.filters[soundName];
+    if (!filter) {
+      console.warn(`No filter found for sound "${soundName}"`);
+      return;
+    }
+  
+    filter.frequency.value = 20000;
+  }
+
   destroy() {
+    Object.values(this.filters).forEach((filter) => {
+      try {
+        filter.disconnect();
+      } catch (e) {
+        console.warn("Error disconnecting filter:", e);
+      }
+    });
+
+    // Clean up sounds
     Object.values(this.sounds).forEach((sound) => {
       sound.stop();
       sound.unload();
     });
+    
     this.sounds = {};
+    this.filters = {};
   }
 }
 

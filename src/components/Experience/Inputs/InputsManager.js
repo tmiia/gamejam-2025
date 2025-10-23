@@ -92,6 +92,20 @@ export default class InputManager extends EventEmitter {
     if (e.key === "ArrowRight") {
       this.keys.right = true;
     }
+    
+    if (e.key === "m" || e.key === "M") {
+      console.log("🔊 Applying muffle effect to ambiance...");
+      if (typeof window !== 'undefined' && window.experience) {
+        window.experience.audioManager.applyMuffledEffect('ambiance', 200);
+      }
+    }
+    
+    if (e.key === "u" || e.key === "U") {
+      console.log("🔊 Removing muffle effect from ambiance...");
+      if (typeof window !== 'undefined' && window.experience) {
+        window.experience.audioManager.removeMuffledEffect('ambiance');
+      }
+    }
   }
 
   handleDirectKeyUp(e) {
