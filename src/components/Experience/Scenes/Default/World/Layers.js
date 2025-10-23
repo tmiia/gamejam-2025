@@ -104,6 +104,7 @@ export default class Layers {
     mesh.position.y = layerData.yPosition;
     mesh.position.x = layerData.xPosition;
     mesh.rotationY = Math.PI / 2;
+    mesh.scale.set(1, 1, 1);
     // mesh.renderOrder = -10 - number;
     this.experience.sceneManager.currentScene.scene.add(mesh);
 
@@ -129,6 +130,18 @@ export default class Layers {
         .min(-50)
         .max(50)
         .step(0.1);
+
+      const scaleParams = { uniformScale: mesh.scale.x };
+
+      debugFolder
+        .add(scaleParams, "uniformScale")
+        .name("Scale")
+        .min(0.1)
+        .max(10)
+        .step(0.1)
+        .onChange((value) => {
+          mesh.scale.set(value, value, 1);
+        });
 
       debugFolder.open();
     }
