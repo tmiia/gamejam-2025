@@ -74,6 +74,16 @@ export default class Character {
     this.reflectionModel.scale.y = -0.0025;
     this.reflectionModel.position.copy(this.model.position);
     this.reflectionModel.position.x -= this.reflectionOffset;
+    
+    const reflectionMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0x000000,
+      transparent: true,
+      opacity: 0.6
+    });
+    this.reflectionModel.traverse((child) => {
+      if (child.isMesh) child.material = reflectionMaterial;
+    });
+    
     this.scene.add(this.reflectionModel);
   
   }
@@ -288,6 +298,13 @@ export default class Character {
       this.reflectionModel.position.z = this.model.position.z;
 
       this.reflectionModel.rotation.copy(this.model.rotation);
+      
+      const targetOpacity = this.model.position.y < -1 ? 0 : 0.6;
+      this.reflectionModel.traverse((child) => {
+        if (child.isMesh && child.material) {
+          child.material.opacity = targetOpacity;
+        }
+      });
     }
   }
 
