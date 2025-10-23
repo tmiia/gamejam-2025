@@ -23,6 +23,7 @@ export default class Character {
     this.rigidbody = null;
     this.collider = null;
     this.model = null;
+    this.modelReflect = null;
     this.mapModel = null;
 
     this.raycaster = new THREE.Raycaster();
@@ -70,6 +71,9 @@ export default class Character {
       });
       this.scene.add(this.model);
     }
+  }
+  setModelReflect() {
+    const characterModel = this.resources.items.characterModel;
   }
 
   setPhysics() {
