@@ -203,32 +203,21 @@ export default class Character {
     return false;
   }
 
+  syncModelPosition() {
+    if (!this.rigidbody || !this.model) return;
+
+    console.log("Syncing model position with rigidbody");
+
+    const translation = this.rigidbody.translation();
+
+    this.model.position.set(
+      translation.x,
+      translation.y + this.modelYOffset,
+      translation.z
+    );
+  }
+
   update() {
-    if (this.characterController) {
-      this.characterController.update();
-    }
-
-    if (this.movementController) {
-      this.movementController.update();
-    }
-
-    if (this.animationController) {
-      const delta = this.experience.time.delta * 0.001;
-      this.animationController.update(delta);
-    }
-
-    if (
-      this.model.position.y < -10 &&
-      !this.experience.sceneManager.currentScene.gameManager.isEnded
-    ) {
-      this.experience.sceneManager.currentScene.gameManager.endGame();
-    }
-
-    if (this.debugCollider && this.rigidbody) {
-      const pos = this.rigidbody.translation();
-      this.debugCollider.position.set(pos.x, pos.y, pos.z);
-    }
-
     if (this.camera && this.model) {
       if (!this.lookAtTarget) {
         this.lookAtTarget = new Vector3();
@@ -252,6 +241,39 @@ export default class Character {
         ),
         this.cameraSettings.lerpSpeed
       );
+    }
+    // this.syncModelPosition();
+
+    if (
+      this.experience.sceneManager.currentScene.gameManager.isStarted === false
+    ) {
+      this.movementController.syncModelPosition();
+      return;
+    }
+
+    if (this.characterController) {
+      this.characterController.update();
+    }
+
+    if (this.movementController) {
+      this.movementController.update();
+    }
+
+    if (this.animationController) {
+      const delta = this.experience.time.delta * 0.001;
+      this.animationController.update(delta);
+    }
+
+    if (
+      this.model.position.y < -10 &&
+      !this.experience.sceneManager.currentScene.gameManager.isEnded
+    ) {
+      this.experience.sceneManager.currentScene.gameManager.endGame();
+    }
+
+    if (this.debugCollider && this.rigidbody) {
+      const pos = this.rigidbody.translation();
+      this.debugCollider.position.set(pos.x, pos.y, pos.z);
     }
   }
 

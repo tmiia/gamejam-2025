@@ -127,8 +127,8 @@ export default class Layers {
       debugFolder
         .add(mesh.position, "x")
         .name("Position X")
-        .min(-50)
-        .max(50)
+        .min(-500)
+        .max(500)
         .step(0.1);
 
       const scaleParams = { uniformScale: mesh.scale.x };
