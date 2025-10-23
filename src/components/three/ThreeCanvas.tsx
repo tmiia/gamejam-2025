@@ -102,6 +102,13 @@ const ThreeJSExperience = () => {
           <p>Marcher</p>
         </div>
       </div>
+
+      <div
+        id="score"
+        className="h-screen w-screen absolute top-0 left-0 z-[150]  pointer-events-none flex flex-row gap-4 items-center justify-center text-black bg-red-500 text-[50px]"
+      >
+        <p id="scoreNumber">AHAHAHAHs</p>
+      </div>
       <div
         id="gameOver"
         className="h-screen w-screen absolute top-0 left-0 z-[101] pointer-events-none opacity-0  "

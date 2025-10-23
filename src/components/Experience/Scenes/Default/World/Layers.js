@@ -7,58 +7,66 @@ export default class Layers {
 
     this.layers = {
       1: {
-        zPosition: -31,
+        zPosition: 2,
         yPosition: 5,
-        xPosition: 0,
+        xPosition: 19,
+        scale: 0.7,
         metalness: 0,
         roughness: 1,
       },
       2: {
-        zPosition: -32,
-        yPosition: 5,
-        xPosition: 0,
+        zPosition: -1,
+        yPosition: 2,
+        xPosition: 17,
+        scale: 0.6,
         metalness: 0,
         roughness: 1,
       },
       3: {
-        zPosition: -33,
-        yPosition: 5,
-        xPosition: 0,
+        zPosition: 0,
+        yPosition: 1.4,
+        xPosition: 14.5,
+        scale: 0.8,
         metalness: 0,
         roughness: 1,
       },
       4: {
-        zPosition: -34,
-        yPosition: 5,
-        xPosition: 0,
+        zPosition: -5,
+        yPosition: 4.5,
+        xPosition: 13.5,
+        scale: 0.7,
         metalness: 0,
         roughness: 1,
       },
       5: {
-        zPosition: -35,
-        yPosition: 5,
-        xPosition: 0,
+        zPosition: -20,
+        yPosition: 8.5,
+        xPosition: 23.5,
+        scale: 1,
         metalness: 0,
         roughness: 1,
       },
       6: {
-        zPosition: -36,
-        yPosition: 5,
-        xPosition: 0,
+        zPosition: -26,
+        yPosition: 3,
+        xPosition: 26,
+        scale: 1,
         metalness: 0,
         roughness: 1,
       },
       7: {
-        zPosition: -37,
-        yPosition: 5,
-        xPosition: 0,
+        zPosition: -27,
+        yPosition: 4,
+        xPosition: 16,
+        scale: 1,
         metalness: 0,
         roughness: 1,
       },
       8: {
-        zPosition: -38,
+        zPosition: -30,
         yPosition: 5,
-        xPosition: 0,
+        xPosition: 16,
+        scale: 1,
         metalness: 1,
         roughness: 0,
       },
@@ -104,7 +112,7 @@ export default class Layers {
     mesh.position.y = layerData.yPosition;
     mesh.position.x = layerData.xPosition;
     mesh.rotationY = Math.PI / 2;
-    mesh.scale.set(1, 1, 1);
+    mesh.scale.set(layerData.scale, layerData.scale, 1);
     // mesh.renderOrder = -10 - number;
     this.experience.sceneManager.currentScene.scene.add(mesh);
 
@@ -115,21 +123,21 @@ export default class Layers {
         .name("Position Z")
         .min(layerData.zPosition - 100)
         .max(layerData.zPosition + 100)
-        .step(0.1);
+        .step(0.001);
 
       debugFolder
         .add(mesh.position, "y")
         .name("Position Y")
         .min(-50)
         .max(50)
-        .step(0.1);
+        .step(0.001);
 
       debugFolder
         .add(mesh.position, "x")
         .name("Position X")
-        .min(-500)
-        .max(500)
-        .step(0.1);
+        .min(-100)
+        .max(100)
+        .step(0.001);
 
       const scaleParams = { uniformScale: mesh.scale.x };
 
@@ -138,7 +146,7 @@ export default class Layers {
         .name("Scale")
         .min(0.1)
         .max(10)
-        .step(0.1)
+        .step(0.001)
         .onChange((value) => {
           mesh.scale.set(value, value, 1);
         });
