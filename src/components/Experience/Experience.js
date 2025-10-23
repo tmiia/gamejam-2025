@@ -36,6 +36,7 @@ export default class Experience {
 
     // Audio Manager
     this.audioManager = new AudioManager();
+    this.audioManager.startProgressiveMuffle(120000, 100);
 
     this.physicsWorld = new PhysicsWorld();
     this.collisionManager = new CollisionManager();
@@ -79,6 +80,10 @@ export default class Experience {
   update() {
     if (this.inputManager) {
       this.inputManager.update();
+    }
+
+    if (this.audioManager) {
+      this.audioManager.update();
     }
 
     this.sceneManager.update();

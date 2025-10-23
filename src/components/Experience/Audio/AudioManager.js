@@ -1,4 +1,4 @@
-import { Howl } from "howler";
+import { Howl, Howler } from "howler";
 import EventEmitter from "../Utils/EventEmitter.js";
 
 export default class AudioManager extends EventEmitter {
@@ -9,6 +9,16 @@ export default class AudioManager extends EventEmitter {
     this.currentWalkSound = null;
     this.isWalkSoundPlaying = false;
     this.filters = {};
+
+    this.progressiveMuffle = {
+      enabled: false,
+      soundName: null,
+      startTime: null,
+      duration: null,
+      startFrequency: 20000,
+      targetFrequency: 300,
+      currentFrequency: 20000
+    };
 
     this.initializeSounds();
   }
@@ -190,6 +200,55 @@ export default class AudioManager extends EventEmitter {
     filter.frequency.value = 20000;
   }
 
+  startProgressiveMuffle(duration = 3000, targetFrequency = 100) {
+    if (!this.globalFilter) {
+      const filter = Howler.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 20000;
+      filter.Q.value = 1;
+  
+      Howler.masterGain.disconnect();
+      Howler.masterGain.connect(filter);
+      filter.connect(Howler.ctx.destination);
+  
+      this.globalFilter = filter;
+    }
+  
+    this.progressiveMuffle = {
+      enabled: true,
+      startTime: Date.now(),
+      duration: duration,
+      startFrequency: 20000,
+      targetFrequency: targetFrequency
+    };
+  
+    console.log(`Started progressive muffle over ${duration}ms to ${targetFrequency}Hz`);
+  }
+
+  update() {
+    if (!this.progressiveMuffle.enabled) return;
+  
+    const { startTime, duration, startFrequency, targetFrequency } = this.progressiveMuffle;
+    
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1.0);
+    
+    const eased = progress < 0.5
+      ? 2 * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+    
+    const currentFrequency = startFrequency - (startFrequency - targetFrequency) * eased;
+    
+    if (this.globalFilter) {
+      this.globalFilter.frequency.value = currentFrequency;
+    }
+  
+    if (progress >= 1.0) {
+      this.progressiveMuffle.enabled = false;
+      console.log(`Progressive muffle complete at ${targetFrequency}Hz`);
+    }
+  }
+
   destroy() {
     Object.values(this.filters).forEach((filter) => {
       try {
@@ -199,7 +258,6 @@ export default class AudioManager extends EventEmitter {
       }
     });
 
-    // Clean up sounds
     Object.values(this.sounds).forEach((sound) => {
       sound.stop();
       sound.unload();
