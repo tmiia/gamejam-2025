@@ -68,42 +68,42 @@ export default [
   {
     name: "layer1",
     type: "texture",
-    path: "layersTwo/1.png",
+    path: "layersThree/1.png",
   },
   {
     name: "layer2",
     type: "texture",
-    path: "layersTwo/2.png",
+    path: "layersThree/2.png",
   },
   {
     name: "layer3",
     type: "texture",
-    path: "layersTwo/3.png",
+    path: "layersThree/3.png",
   },
   {
     name: "layer4",
     type: "texture",
-    path: "layersTwo/4.png",
+    path: "layersThree/4.png",
   },
   {
     name: "layer5",
     type: "texture",
-    path: "layersTwo/5.png",
+    path: "layersThree/5.png",
   },
   {
     name: "layer6",
     type: "texture",
-    path: "layersTwo/6.png",
+    path: "layersThree/6.png",
   },
   {
     name: "layer7",
     type: "texture",
-    path: "layersTwo/7.png",
+    path: "layersThree/7.png",
   },
   {
     name: "layer8",
     type: "texture",
-    path: "layersTwo/8.png",
+    path: "layersThree/8.png",
   },
   {
     name: "ghost",

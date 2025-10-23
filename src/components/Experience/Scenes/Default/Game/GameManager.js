@@ -74,6 +74,10 @@ export default class GameManager {
     }
     if (scene.bloodManager) {
       scene.bloodManager.actualDuration = 0;
+      scene.bloodManager.isCriticalState = false;
+    }
+    if (this.experience.postProcessing) {
+      this.experience.postProcessing.stopGlitchEffect();
     }
   }
 
