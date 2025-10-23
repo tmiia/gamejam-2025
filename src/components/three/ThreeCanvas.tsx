@@ -2,10 +2,15 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
+import fall from "../../../public/fall.png";
 import fog from "../../../public/fog.png";
 import imageLoading from "../../../public/loaded2.png";
 import tombe from "../../../public/tombe.png";
 import Experience from "../Experience/Experience";
+
+import BloodBar from "./header/BloodBar";
+import Score from "./header/Score";
+import Tutorial from "./header/Tutorial";
 
 declare global {
   interface Window {
@@ -16,8 +21,6 @@ declare global {
 const ThreeJSExperience = () => {
   const canvasRef = useRef(null);
   const router = useRouter();
-
-  console.log(tombe, fog);
 
   const routerReplace = useCallback(
     (path: string) => {
@@ -100,76 +103,37 @@ const ThreeJSExperience = () => {
         </div>
       </div>
 
-      {/* Tutoriel */}
-      <div
-        id="tutorial"
-        style={{
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 98,
-          pointerEvents: "none",
-          display: "flex",
-          flexDirection: "row",
-          gap: "1rem",
-          alignItems: "flex-start",
-          justifyContent: "center",
-          color: "black",
-          fontSize: "14px",
-        }}
+      <p
+        id="instructions"
+        className="absolute top-1/5 left-1/2 -translate-x-1/2 z-[10000] text-black opacity-0 text-[30px]"
       >
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              gap: "1rem",
-              alignItems: "center",
-              paddingTop: "0.5rem",
-            }}
-          >
-            <Image
-              src={imageLoading}
-              alt="Loading..."
-              width={500}
-              height={500}
-              style={{
-                height: "auto",
-                width: "2rem",
-                aspectRatio: "1 / 1",
-                objectFit: "cover",
-                backgroundColor: "red",
-              }}
-            />
-            <p>Marcher</p>
-          </div>
-        ))}
-      </div>
+        retrouve ta tête avant qu’il ne soit trop tard.
+        <span className="h-full w-[100%] block bg-[#F2F3F5] absolute top-0 right-0 origin-right"></span>
+      </p>
 
-      {/* Score */}
-      <div
-        id="score"
+      <header
         style={{
-          height: "100vh",
+          height: "auto",
           width: "100vw",
           position: "absolute",
           top: 0,
           left: 0,
-          zIndex: 150,
+          zIndex: 99,
           pointerEvents: "none",
           display: "flex",
           flexDirection: "row",
           gap: "1rem",
-          alignItems: "start",
-          justifyContent: "end",
+          alignItems: "center",
+          justifyContent: "space-between",
           color: "black",
           fontSize: "20px",
+          padding: ".5rem 1.25rem",
         }}
       >
-        <p id="scoreNumber">300000</p>
-      </div>
+        <BloodBar />
+        <Tutorial />
+        <Score />
+      </header>
 
       {/* Game Over */}
       <div
@@ -204,8 +168,39 @@ const ThreeJSExperience = () => {
             opacity: 0,
           }}
         />
+        <Image
+          src={fall}
+          id="fallGameOver"
+          alt="fall"
+          style={{
+            position: "absolute",
+            bottom: "0",
+            left: "50%",
+            transform: "translate(-50%, 10%)",
+            width: "50%",
+            objectFit: "cover",
+            opacity: 0,
+          }}
+        />
       </div>
-      <div
+      <video
+        id="endVideo"
+        src="/end.mp4"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100vw",
+          height: "100vh",
+          zIndex: 200,
+          objectFit: "cover",
+          opacity: 0,
+        }}
+        muted
+      ></video>
+
+      {/* <div
         id="gameOver"
         style={{
           height: "100vh",
@@ -219,10 +214,10 @@ const ThreeJSExperience = () => {
           background:
             "radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 0%)",
         }}
-      ></div>
+      ></div> */}
 
       {/* Niveau de sang */}
-      <div
+      {/* <div
         // id="bloodLevel"
         style={{
           height: "1.25rem",
@@ -243,7 +238,7 @@ const ThreeJSExperience = () => {
             backgroundColor: "#dc2626", // équivalent bg-red-600
           }}
         ></span>
-      </div>
+      </div> */}
 
       {/* Canvas */}
       <div

@@ -35,6 +35,7 @@ export default class GameManager {
     };
 
     this.gameOver = document.getElementById("gameOver");
+    this.videoGameOver = document.getElementById("endVideo");
 
     this.storedPositions = {
       end: null,
@@ -59,8 +60,8 @@ export default class GameManager {
     }
 
     this.particles = new Particles(
-      () => this.endGame(),
-      new THREE.Vector3(-position.x, -position.y, -position.z),
+      () => this.ENNNNNNNNNND(),
+      new THREE.Vector3(position.x, position.y, position.z),
       true,
       () => {
         this.particles = null;
@@ -86,6 +87,24 @@ export default class GameManager {
     }
   }
 
+  ENNNNNNNNNND() {
+    this.isEnded = true;
+    // const fog = this.gameOver.querySelector("#fogGameOver");
+    // gsap.to(fog, {
+    //   opacity: 0,
+    //   duration: 0,
+    // });
+
+    gsap.to(this.videoGameOver, {
+      opacity: 1,
+      duration: 0.3,
+      ease: "power3.inOut",
+      onComplete: () => {
+        this.videoGameOver.play();
+      },
+    });
+  }
+
   startGame(position, character) {
     this.position = position;
     if (position) {
@@ -101,6 +120,45 @@ export default class GameManager {
     }
 
     this.tutorial = document.getElementById("tutorial");
+    this.instructions = document.getElementById("instructions");
+
+    gsap.fromTo(
+      this.instructions,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 1,
+        ease: "power3.inOut",
+        delay: 7.5,
+      }
+    );
+
+    const instructionSpan = this.instructions.querySelector("span");
+
+    instructionSpan.style.transformOrigin = "right";
+    gsap.to(instructionSpan, {
+      scaleX: 0,
+      duration: 2,
+      ease: "power3.out",
+      delay: 8.5,
+      onComplete: () => {
+        instructionSpan.style.transformOrigin = "left";
+        gsap.to(this.instructions, {
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          delay: 5,
+        });
+        gsap.to(instructionSpan, {
+          scaleX: 1,
+          duration: 2,
+          ease: "power3.out",
+          delay: 3,
+        });
+      },
+    });
 
     gsap.to(this.tutorial, {
       opacity: 1,
