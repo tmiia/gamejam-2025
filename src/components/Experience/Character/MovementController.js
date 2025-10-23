@@ -10,6 +10,7 @@ export default class MovementController extends EventEmitter {
     this.animationController = character.animationController;
     this.rigidbody = character.rigidbody;
     this.model = character.model;
+    this.modelReflect = character.modelReflect;
     this.physicsWorld = character.physicsWorld;
 
     this.walkSpeed = 10;

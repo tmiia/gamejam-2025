@@ -4,6 +4,7 @@ import BloodParticles from "./CompsGameplay/BloodShaders/BloodParticles.js";
 import Environement from "./Environment.js";
 import BloodManager from "./Game/BloodManager.js";
 import GameManager from "./Game/GameManager.js";
+import ScoreManager from "./Game/ScoreManager.js";
 import Ghost from "./World/Ghost.js";
 import Layers from "./World/Layers.js";
 import Terrain from "./World/Terrain.js";
@@ -58,6 +59,7 @@ export default class DefaultScene extends Scene {
     this.layers = new Layers();
     this.bloodParticles = new BloodParticles();
     this.bloodManager = new BloodManager();
+    this.scoreManager = new ScoreManager();
     this.experience.eventEmitter?.trigger("scene.ready");
   }
 
@@ -69,5 +71,6 @@ export default class DefaultScene extends Scene {
     if (this.gameManager) this.gameManager.update?.();
     if (this.bloodManager) this.bloodManager.update?.();
     if (this.bloodParticles) this.bloodParticles.update();
+    if (this.scoreManager) this.scoreManager.update?.();
   }
 }
