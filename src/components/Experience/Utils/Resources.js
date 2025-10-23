@@ -15,6 +15,8 @@ export default class Resources extends EventEmitter {
     this.toLoad = this.sources.length;
     this.loaded = 0;
 
+    this.loadingBar = document.getElementById("loadingBar");
+
     this.setLoaders();
     this.load();
   }
@@ -56,7 +58,7 @@ export default class Resources extends EventEmitter {
     this.items[source.name] = file;
     this.loaded++;
 
-    console.log(`loading : ${(this.loaded / this.toLoad) * 100} %`);
+    this.loadingBar.style.width = `${(this.loaded / this.toLoad) * 100}%`;
 
     if (this.loaded === this.toLoad) {
       this.trigger("loaded");

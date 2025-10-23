@@ -5,7 +5,7 @@ export default class BloodManager {
     this.experience = new Experience();
 
     this.scene = this.experience.sceneManager.currentScene;
-    this.maxDuration = 100;
+    this.maxDuration = 120;
     this.actualDuration = 0;
     this.bloodMultiplier = 1;
     this.bloodLevel = document.getElementById("bloodLevelSpan");
@@ -42,7 +42,7 @@ export default class BloodManager {
       this.bloodLevel.style.width = bloodPercentage + "%";
       this.scene.bloodParticles.creationInterval = Math.max(
         100,
-        50 - (this.actualDuration / this.maxDuration) * 1000
+        750 - (this.actualDuration / this.maxDuration) * 1000
       );
     } else if (this.scene.gameManager.isEnded === false) {
       this.experience.sceneManager.currentScene.gameManager.endGame();

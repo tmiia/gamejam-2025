@@ -53,7 +53,7 @@ export default class DefaultScene extends Scene {
     this.environement = new Environement();
     this.ghost = new Ghost();
     this.gameManager = new GameManager();
-    this.character = new Character(new THREE.Vector3(-8.311140060424805, 1, 0));
+    this.character = new Character(new THREE.Vector3(-8.311140060424805, 5, 0));
     this.terrain = new Terrain();
     this.layers = new Layers();
     this.bloodParticles = new BloodParticles();

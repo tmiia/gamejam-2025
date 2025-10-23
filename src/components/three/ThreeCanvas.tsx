@@ -1,7 +1,9 @@
 "use client";
 import { useCallback, useEffect, useRef } from "react";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import imageLoading from "../../../public/loaded2.png";
 import Experience from "../Experience/Experience";
 
 declare global {
@@ -11,6 +13,8 @@ declare global {
 }
 
 const ThreeJSExperience = () => {
+  console.log(imageLoading);
+
   const canvasRef = useRef(null);
   const router = useRouter();
 
@@ -47,8 +51,22 @@ const ThreeJSExperience = () => {
     <>
       <div
         id="isLoaded"
-        className="h-screen w-screen absolute top-0 left-0 bg-white z-[100]"
-      ></div>
+        className="h-screen w-screen absolute top-0 left-0 bg-white z-[100] flex flex-col gap-4 items-center justify-center"
+      >
+        <Image
+          src={imageLoading}
+          alt="Loading..."
+          width={500}
+          height={500}
+          className="h-auto w-[28vw] "
+        />
+        <div className="h-4 w-[28vw] bg-[#D9D9D9] flex items-center">
+          <div
+            id="loadingBar"
+            className="h-full bg-black w-0 duration-200 ease-in-out"
+          ></div>
+        </div>
+      </div>
       <div
         id="gameOver"
         className="h-screen w-screen absolute top-0 left-0 z-[101] pointer-events-none opacity-0  "
