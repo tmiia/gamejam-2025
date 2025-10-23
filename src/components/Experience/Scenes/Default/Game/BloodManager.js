@@ -15,8 +15,8 @@ export default class BloodManager {
       this.experience.sceneManager.currentScene.bloodParticles.creationInterva
     );
 
-    // this.postProcessing = this.experience.postProcessing;
-    // console.log("this.bloodLevel", this.postProcessing);
+    this.postProcessing = this.experience.postProcessing;
+    this.isCriticalState = false;
   }
 
   update() {
@@ -44,6 +44,13 @@ export default class BloodManager {
         100,
         750 - (this.actualDuration / this.maxDuration) * 1000
       );
+
+      if (bloodPercentage <= 45 && !this.isCriticalState) {
+        this.isCriticalState = true;
+        if (this.postProcessing) {
+          this.postProcessing.playGlitchEffect();
+        }
+      }
     } else if (this.scene.gameManager.isEnded === false) {
       this.experience.sceneManager.currentScene.gameManager.endGame();
     }
