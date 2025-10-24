@@ -176,8 +176,6 @@ export default class AnimationController {
     )
       return;
 
-    console.log("Checking input to determine animation");
-
     const horizontalInput =
       this.character.characterController.getHorizontalInput();
     const isRunning = this.character.characterController._isRunning;

@@ -227,8 +227,6 @@ export default class Character {
   syncModelPosition() {
     if (!this.rigidbody || !this.model) return;
 
-    console.log("Syncing model position with rigidbody");
-
     const translation = this.rigidbody.translation();
 
     this.model.position.set(

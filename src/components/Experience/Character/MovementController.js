@@ -151,7 +151,6 @@ export default class MovementController extends EventEmitter {
     const currentVel = this.rigidbody.linvel();
 
     if (this.characterController.jumpsRemaining == 1) {
-      console.log("Double Jump!");
       this.isDoubleJumping = true;
     }
 

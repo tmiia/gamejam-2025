@@ -11,8 +11,6 @@ export default class SceneManager {
       default: DefaultScene,
     };
 
-    console.log(this.scenes);
-
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder("SceneManager");
       this.debugFolder.close();
