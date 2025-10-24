@@ -10,7 +10,6 @@ import Resources from "./Utils/Resources.js";
 import Sizes from "./Utils/Sizes.js";
 import Time from "./Utils/Time";
 
-import AudioManager from "./Audio/AudioManager.js";
 import CollisionManager from "./Physics/CollisionManager.js";
 import PhysicsWorld from "./Physics/PhysicsWorld.js";
 import PostProcessingClass from "./PostProcessing/PostProcessingClass.js";
@@ -36,8 +35,7 @@ export default class Experience {
     this.inputManager = new InputManager();
 
     // Audio Manager
-    this.audioManager = new AudioManager();
-    this.audioManager.startProgressiveMuffle(120000, 100);
+    this.audioManager = null;
 
     this.physicsWorld = new PhysicsWorld();
     this.collisionManager = new CollisionManager();

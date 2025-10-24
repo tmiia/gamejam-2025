@@ -28,10 +28,34 @@ export default class GameManager {
     };
 
     this.cameraScenesValues = {
-      start: { zOffset: 10, xOffset: 0, yLookAt: 1, lerpSpeed: 0.025, rotation: 0 },
-      scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025, rotation: 0 },
-      scene2: { zOffset: 20, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025, rotation: 0 },
-      scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025, rotation: 0 },
+      start: {
+        zOffset: 10,
+        xOffset: 0,
+        yLookAt: 1,
+        lerpSpeed: 0.025,
+        rotation: 0,
+      },
+      scene1: {
+        zOffset: 25,
+        xOffset: 5,
+        yLookAt: 2.5,
+        lerpSpeed: 0.025,
+        rotation: 0,
+      },
+      scene2: {
+        zOffset: 20,
+        xOffset: 1.5,
+        yLookAt: -0.35,
+        lerpSpeed: 0.025,
+        rotation: 0,
+      },
+      scene3: {
+        zOffset: 7.5,
+        xOffset: 0,
+        yLookAt: 0,
+        lerpSpeed: 0.025,
+        rotation: 0,
+      },
     };
 
     this.gameOver = document.getElementById("gameOver");
@@ -62,7 +86,7 @@ export default class GameManager {
     this.particles = new Particles(
       () => this.ENNNNNNNNNND(),
       new THREE.Vector3(position.x, position.y, position.z),
-      true,
+      false,
       () => {
         this.particles = null;
       }
@@ -88,6 +112,9 @@ export default class GameManager {
   }
 
   ENNNNNNNNNND() {
+    if (this.experience.audioManager) {
+      this.experience.audioManager.stopAll();
+    }
     this.isEnded = true;
     // const fog = this.gameOver.querySelector("#fogGameOver");
     // gsap.to(fog, {
@@ -98,6 +125,7 @@ export default class GameManager {
     gsap.to(this.videoGameOver, {
       opacity: 1,
       duration: 0.3,
+      delay: 2,
       ease: "power3.inOut",
       onComplete: () => {
         this.videoGameOver.play();
@@ -312,7 +340,7 @@ export default class GameManager {
     this.levelTwo = new Particles(
       () => this.mooveCameraLevel1(),
       new THREE.Vector3(position.x, position.y, position.z),
-      true,
+      false,
       () => {
         this.levelTwo = null;
       }
@@ -355,7 +383,7 @@ export default class GameManager {
     this.crazyzy = new Particles(
       () => this.crazyGhost(),
       new THREE.Vector3(position.x, position.y, position.z),
-      true,
+      false,
       () => {
         this.crazyzy = null;
       }
@@ -387,10 +415,6 @@ export default class GameManager {
     this.isEnded = true;
     this.isStarted = false;
     this.isFalling = isFalling;
-
-    if (this.experience.audioManager) {
-      this.experience.audioManager.stopAll();
-    }
 
     const gradientObj = { percent: 0 };
 
