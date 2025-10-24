@@ -5,7 +5,7 @@ export default class BloodManager {
     this.experience = new Experience();
 
     this.scene = this.experience.sceneManager.currentScene;
-    this.maxDuration = 180;
+    this.maxDuration = 210;
     this.actualDuration = 0;
     this.bloodMultiplier = 1;
     this.bloodLevel = document.getElementById("bloodLevelSpan");

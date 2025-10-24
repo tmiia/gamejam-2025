@@ -86,11 +86,11 @@ export default class MovementController extends EventEmitter {
     }
   }
 
-  handleMovement() {
+  handleMovement(delta) {
     if (!this.rigidbody || !this.characterController) return;
 
     if (this.isPlayingLandingAnimation) {
-      this.applyFriction();
+      this.applyFriction(delta);
       return;
     }
 
@@ -111,20 +111,25 @@ export default class MovementController extends EventEmitter {
 
       this.updateModelRotation(horizontalAxis);
     } else {
-      this.applyFriction();
+      this.applyFriction(delta);
     }
   }
 
-  applyFriction() {
+  applyFriction(delta) {
     if (!this.rigidbody) return;
 
     const currentVel = this.rigidbody.linvel();
     const isGrounded = this.characterController?.getIsGrounded() || false;
 
     const friction = isGrounded ? this.groundFriction : this.airFriction;
+    
+    // Calculate frame-rate independent friction
+    // Convert milliseconds to seconds and apply exponential decay
+    const deltaSeconds = delta / 1000;
+    const frictionFactor = Math.pow(friction, deltaSeconds * 60);
 
     this.rigidbody.setLinvel(
-      new RAPIER.Vector3(currentVel.x * friction, currentVel.y, currentVel.z),
+      new RAPIER.Vector3(currentVel.x * frictionFactor, currentVel.y, currentVel.z),
       true
     );
   }
@@ -176,11 +181,11 @@ export default class MovementController extends EventEmitter {
     );
   }
 
-  update() {
+  update(delta) {
     this.updateJumpForceBasedOnBloodLevel();
     this.syncModelPosition();
     this.checkGrounded();
-    this.handleMovement();
+    this.handleMovement(delta);
   }
 
   destroy() {
