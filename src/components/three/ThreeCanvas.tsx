@@ -121,7 +121,7 @@ const ThreeJSExperience = () => {
             height: "100%",
             width: "100%",
             display: "block",
-            backgroundColor: "#E1E1E2",
+            backgroundColor: "#F2F3F5",
             position: "absolute",
             top: 0,
             right: 0,
@@ -130,7 +130,7 @@ const ThreeJSExperience = () => {
         ></span>
       </p>
 
-      <div
+      {/* <div
         style={{
           position: "absolute",
           top: 0,
@@ -141,7 +141,7 @@ const ThreeJSExperience = () => {
           zIndex: 10,
           background: "radial-gradient(transparent 10%, rgb(0, 0, 0, 35%)100%)",
         }}
-      ></div>
+      ></div> */}
 
       <header
         style={{
