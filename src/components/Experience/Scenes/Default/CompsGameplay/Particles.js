@@ -71,8 +71,6 @@ export default class Particles {
     if (distance == 0) return;
 
     if (distance < minDistance) {
-      console.log(distance, minDistance);
-
       this.deleteGeometry();
       this.functionDistance();
     }

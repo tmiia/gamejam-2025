@@ -10,11 +10,6 @@ export default class BloodManager {
     this.bloodMultiplier = 1;
     this.bloodLevel = document.getElementById("bloodLevelSpan");
 
-    console.log(
-      "this.bloodLevel",
-      this.experience.sceneManager.currentScene.bloodParticles.creationInterva
-    );
-
     this.postProcessing = this.experience.postProcessing;
     this.isCriticalState = false;
   }

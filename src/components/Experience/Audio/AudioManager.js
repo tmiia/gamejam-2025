@@ -196,7 +196,6 @@ export default class AudioManager extends EventEmitter {
             soundNode.disconnect();
             soundNode.connect(filter);
             filter.connect(howlerCtx.destination);
-            console.log(`Applied individual filter to ${soundName}`);
           } catch (e) {
             console.warn(`Could not apply filter to ${soundName}:`, e);
           }
@@ -210,7 +209,6 @@ export default class AudioManager extends EventEmitter {
             soundNode.disconnect();
             soundNode.connect(filter);
             filter.connect(howlerCtx.destination);
-            console.log(`Applied individual filter to ${soundName} (already playing)`);
           } catch (e) {
             console.warn(`Could not apply filter to ${soundName}:`, e);
           }
@@ -258,8 +256,6 @@ export default class AudioManager extends EventEmitter {
       startFrequency: 20000,
       targetFrequency: targetFrequency
     };
-
-    console.log(`Started progressive muffle on ${soundName} over ${duration}ms to ${targetFrequency}Hz`);
   }
 
   setMuffleFrequency(frequency, soundName = 'ambiance') {

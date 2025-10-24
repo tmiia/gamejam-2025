@@ -4,7 +4,6 @@ import Experience from "../Experience.js";
 export default class Scene {
   constructor() {
     this.experience = new Experience();
-    console.log(this.experience);
 
     this.scene = new THREE.Scene();
 

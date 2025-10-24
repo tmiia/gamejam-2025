@@ -107,7 +107,6 @@ export default class Terrain {
     this.bodies = this.collisionManager.createColliderFromModel(
       this.physicalMap
     );
-    console.log(`${this.bodies.length} collider(s) créé(s) pour le terrain`);
   }
 
   destroy() {

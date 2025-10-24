@@ -260,7 +260,6 @@ export default class GameManager {
         });
       },
     });
-    console.log(this.ghost);
   }
 
   endGame() {

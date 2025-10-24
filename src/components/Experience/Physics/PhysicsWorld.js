@@ -21,8 +21,6 @@ export default class PhysicsWorld extends EventEmitter {
 
     this.ready = true;
     this.trigger("ready");
-    console.log("Monde physique initialisé avec Rapier");
-    console.log("Gravité:", gravity);
   }
 
   addRigidBody(shape, position = { x: 0, y: 0, z: 0 }, isDynamic = true) {

@@ -68,7 +68,6 @@ export default class InputManager extends EventEmitter {
     setTimeout(checkGamepad, 100);
 
     window.addEventListener("gamepadconnected", () => {
-      console.log("Gamepad connected");
       checkGamepad();
     });
   }
@@ -94,14 +93,12 @@ export default class InputManager extends EventEmitter {
     }
     
     if (e.key === "m" || e.key === "M") {
-      console.log("🔊 Applying muffle effect to ambiance...");
       if (typeof window !== 'undefined' && window.experience) {
         window.experience.audioManager.applyMuffledEffect('ambiance', 200);
       }
     }
     
     if (e.key === "u" || e.key === "U") {
-      console.log("🔊 Removing muffle effect from ambiance...");
       if (typeof window !== 'undefined' && window.experience) {
         window.experience.audioManager.removeMuffledEffect('ambiance');
       }
@@ -120,14 +117,12 @@ export default class InputManager extends EventEmitter {
   handleKeyDown(e) {
     if (e.key === "a") {
       this.keys.run = true;
-      console.log("run:start");
       
       this.trigger("run:start");
     }
 
     if (e.key === "x") {
       this.keys.jump = true;
-      console.log("jump");
       this.trigger("jump");
     }
   }
