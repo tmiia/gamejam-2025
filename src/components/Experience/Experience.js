@@ -78,6 +78,8 @@ export default class Experience {
   }
 
   update() {
+    const delta = this.time.delta;
+
     if (this.inputManager) {
       this.inputManager.update();
     }
@@ -86,12 +88,12 @@ export default class Experience {
       this.audioManager.update();
     }
 
-    this.sceneManager.update();
+    this.sceneManager.update(delta);
     this.camera.update();
     this.renderer.update(this.sceneManager.currentScene.scene);
 
     if (this.physicsWorld) {
-      this.physicsWorld.update();
+      this.physicsWorld.update(delta);
     }
     if (this.postProcessing) {
       this.postProcessing.update();

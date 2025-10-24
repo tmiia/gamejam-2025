@@ -15,7 +15,6 @@ export default class PhysicsWorld extends EventEmitter {
     const gravity = new RAPIER.Vector3(0, -3.81, 0);
     this.world = new RAPIER.World(gravity);
 
-    this.world.timestep = 1 / 60;
     this.world.maxVelocity = 100;
     this.world.maxAngularVelocity = 50;
 
@@ -57,8 +56,12 @@ export default class PhysicsWorld extends EventEmitter {
     return this.world;
   }
 
-  update() {
+  update(delta) {
     if (this.world) {
+      // Use actual delta time but clamp it to avoid physics instability
+      // Delta is in milliseconds, convert to seconds and clamp between 1/120 and 1/30
+      const deltaSeconds = Math.min(Math.max(delta / 1000, 1 / 120), 1 / 30);
+      this.world.timestep = deltaSeconds;
       this.world.step();
     }
   }

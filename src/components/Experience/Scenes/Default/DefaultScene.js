@@ -63,9 +63,9 @@ export default class DefaultScene extends Scene {
     this.experience.eventEmitter?.trigger("scene.ready");
   }
 
-  update() {
+  update(delta) {
     // if (this.cube) this.cube.update();
-    if (this.character) this.character.update();
+    if (this.character) this.character.update(delta);
     if (this.environement) this.environement.update?.();
     if (this.particles) this.particles.update();
     if (this.gameManager) this.gameManager.update?.();

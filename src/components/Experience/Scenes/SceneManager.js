@@ -36,9 +36,9 @@ export default class SceneManager {
     this.currentScene.init();
   }
 
-  update() {
+  update(delta) {
     if (this.currentScene) {
-      this.currentScene.update();
+      this.currentScene.update(delta);
     }
   }
 }

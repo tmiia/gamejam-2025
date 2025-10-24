@@ -30,7 +30,7 @@ export default class GameManager {
     this.cameraScenesValues = {
       start: { zOffset: 10, xOffset: 0, yLookAt: 1, lerpSpeed: 0.025, rotation: 0 },
       scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025, rotation: 0 },
-      scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025, rotation: -360 },
+      scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025, rotation: 0 },
       scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025, rotation: 0 },
     };
 

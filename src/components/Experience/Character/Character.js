@@ -240,11 +240,16 @@ export default class Character {
     );
   }
 
-  update() {
+  update(delta) {
     if (this.camera && this.model) {
       if (!this.lookAtTarget) {
         this.lookAtTarget = new Vector3();
       }
+
+      // Calculate frame-rate independent lerp factor
+      // Convert milliseconds to seconds and normalize to 60 FPS
+      const deltaSeconds = delta / 1000;
+      const frameRateIndependentLerp = 1 - Math.pow(1 - this.cameraSettings.lerpSpeed, deltaSeconds * 60);
 
       const targetLookAt = new Vector3(
         this.model.position.x + this.cameraSettings.xOffset,
@@ -253,7 +258,7 @@ export default class Character {
         this.model.position.z
       );
 
-      this.lookAtTarget.lerp(targetLookAt, this.cameraSettings.lerpSpeed);
+      this.lookAtTarget.lerp(targetLookAt, frameRateIndependentLerp);
       this.camera.lookAt(this.lookAtTarget);
 
       this.camera.position.lerp(
@@ -262,7 +267,7 @@ export default class Character {
           this.model.position.y * this.cameraSettings.yMultiplier,
           this.model.position.z + this.cameraSettings.zOffset
         ),
-        this.cameraSettings.lerpSpeed
+        frameRateIndependentLerp
       );
 
       // Apply camera rotation (convert degrees to radians)
@@ -270,7 +275,7 @@ export default class Character {
       this.camera.rotation.z = THREE.MathUtils.lerp(
         this.camera.rotation.z,
         targetRotation,
-        this.cameraSettings.lerpSpeed
+        frameRateIndependentLerp
       );
     }
     // this.syncModelPosition();
@@ -287,12 +292,12 @@ export default class Character {
     }
 
     if (this.movementController) {
-      this.movementController.update();
+      this.movementController.update(delta);
     }
 
     if (this.animationController) {
-      const delta = this.experience.time.delta * 0.001;
-      this.animationController.update(delta);
+      const deltaSeconds = delta * 0.001;
+      this.animationController.update(deltaSeconds);
     }
 
     if (
