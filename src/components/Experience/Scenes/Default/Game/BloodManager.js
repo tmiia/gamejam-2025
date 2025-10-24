@@ -5,7 +5,7 @@ export default class BloodManager {
     this.experience = new Experience();
 
     this.scene = this.experience.sceneManager.currentScene;
-    this.maxDuration = 300;
+    this.maxDuration = 150;
     this.actualDuration = 0;
     this.bloodMultiplier = 1;
     this.bloodLevel = document.getElementById("bloodLevelSpan");
@@ -48,11 +48,25 @@ export default class BloodManager {
         750 - (this.actualDuration / this.maxDuration) * 1000
       );
 
+      let muffleFrequency = 20000 - ((100 - bloodPercentage) / 100) * 19900;
+
       if (bloodPercentage <= 45 && !this.isCriticalState) {
         this.isCriticalState = true;
         if (this.postProcessing) {          
           this.postProcessing.playGlitchEffect();
         }
+        if (this.experience.audioManager) {
+          this.experience.audioManager.startTickingSound();
+        }
+      }
+
+      if (this.isCriticalState) {
+        const criticalFrequency = 100 + (bloodPercentage / 45) * 400;
+        muffleFrequency = Math.min(criticalFrequency, muffleFrequency);
+      }
+
+      if (this.experience.audioManager) {
+        this.experience.audioManager.setMuffleFrequency(muffleFrequency);
       }
     } else if (this.scene.gameManager.isEnded === false) {
       this.experience.sceneManager.currentScene.gameManager.endGame();

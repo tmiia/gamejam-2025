@@ -24,13 +24,14 @@ export default class GameManager {
       yLookAt: 0,
       zOffset: 0,
       lerpSpeed: 0.5,
+      rotation: 0,
     };
 
     this.cameraScenesValues = {
-      start: { zOffset: 10, xOffset: 0, yLookAt: 1, lerpSpeed: 0.025 },
-      scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025 },
-      scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025 },
-      scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025 },
+      start: { zOffset: 10, xOffset: 0, yLookAt: 1, lerpSpeed: 0.025, rotation: 0 },
+      scene1: { zOffset: 25, xOffset: 5, yLookAt: 2.5, lerpSpeed: 0.025, rotation: 0 },
+      scene2: { zOffset: 25, xOffset: 1.5, yLookAt: -0.35, lerpSpeed: 0.025, rotation: -360 },
+      scene3: { zOffset: 7.5, xOffset: 0, yLookAt: 0, lerpSpeed: 0.025, rotation: 0 },
     };
 
     this.gameOver = document.getElementById("gameOver");
@@ -79,6 +80,10 @@ export default class GameManager {
     if (this.experience.postProcessing) {
       this.experience.postProcessing.stopGlitchEffect();
     }
+    if (this.experience.audioManager) {
+      this.experience.audioManager.stopTickingSound();
+      this.experience.audioManager.setMuffleFrequency(20000);
+    }
   }
 
   startGame(position, character) {
@@ -123,6 +128,7 @@ export default class GameManager {
       zOffset: this.cameraScenesValues.start.zOffset,
       xOffset: this.cameraScenesValues.start.xOffset,
       yLookAt: this.cameraScenesValues.start.yLookAt,
+      rotation: this.cameraScenesValues.start.rotation,
       duration: 5,
       ease: "power3.inOut",
       delay: 1,
@@ -148,12 +154,13 @@ export default class GameManager {
     });
   }
 
-  mooveCamera(zOffset, xOffset, yLookAt, lerp, duration = 1) {
+  mooveCamera(zOffset, xOffset, yLookAt, lerp, duration = 1, rotation = 0) {
     gsap.to(this.cameraSettings, {
       zOffset: zOffset,
       xOffset: xOffset,
       yLookAt: yLookAt,
       lerpSpeed: lerp,
+      rotation: rotation,
       duration: duration,
       ease: "power3.inOut",
     });
@@ -173,7 +180,8 @@ export default class GameManager {
       this.cameraScenesValues.scene1.xOffset,
       this.cameraScenesValues.scene1.yLookAt,
       this.cameraScenesValues.scene1.lerpSpeed,
-      4.5
+      4.5,
+      this.cameraScenesValues.scene1.rotation
     );
   }
 
@@ -204,7 +212,8 @@ export default class GameManager {
           this.cameraScenesValues.scene2.xOffset,
           this.cameraScenesValues.scene2.yLookAt,
           this.cameraScenesValues.scene2.lerpSpeed,
-          4.5
+          4.5,
+          this.cameraScenesValues.scene2.rotation
         ),
       new THREE.Vector3(position.x, position.y, position.z),
       true,
@@ -254,6 +263,10 @@ export default class GameManager {
     if (!this.isStarted) return;
     this.isEnded = true;
     this.isStarted = false;
+
+    if (this.experience.audioManager) {
+      this.experience.audioManager.stopTickingSound();
+    }
 
     const gradientObj = { percent: 0 };
 

@@ -257,6 +257,14 @@ export default class Character {
         ),
         this.cameraSettings.lerpSpeed
       );
+
+      // Apply camera rotation (convert degrees to radians)
+      const targetRotation = (this.cameraSettings.rotation * Math.PI) / 180;
+      this.camera.rotation.z = THREE.MathUtils.lerp(
+        this.camera.rotation.z,
+        targetRotation,
+        this.cameraSettings.lerpSpeed
+      );
     }
     // this.syncModelPosition();
 

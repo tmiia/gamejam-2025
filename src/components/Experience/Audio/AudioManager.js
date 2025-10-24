@@ -9,15 +9,25 @@ export default class AudioManager extends EventEmitter {
     this.currentWalkSound = null;
     this.isWalkSoundPlaying = false;
     this.filters = {};
+    this.soundFilters = {}; 
 
     this.progressiveMuffle = {
       enabled: false,
-      soundName: null,
+      soundName: 'ambiance',
       startTime: null,
       duration: null,
       startFrequency: 20000,
       targetFrequency: 300,
       currentFrequency: 20000
+    };
+
+    this.tickingAcceleration = {
+      enabled: false,
+      startTime: null,
+      startRate: 1.0,
+      maxRate: 3.0,
+      duration: 10000,
+      isPlaying: false
     };
 
     this.initializeSounds();
@@ -34,7 +44,7 @@ export default class AudioManager extends EventEmitter {
     this.sounds.walk = new Howl({
       src: ["/audio/walk.mp3"],
       loop: true,
-      volume: 0.15,
+      volume: 0.08,
       rate: 1.0,
     });
 
@@ -48,6 +58,13 @@ export default class AudioManager extends EventEmitter {
       src: ["/audio/landing.mp3"],
       loop: false,
       volume: 0.2,
+    });
+
+    this.sounds.ticking = new Howl({
+      src: ["/audio/ticking.mp3"],
+      loop: true,
+      volume: 0.3,
+      rate: 1.0,
     });
   }
 
@@ -151,47 +168,73 @@ export default class AudioManager extends EventEmitter {
     });
   }
 
-  async applyMuffledEffect(soundName, targetFrequency) {
+  createIndividualSoundFilter(soundName) {
     const sound = this.sounds[soundName];
     if (!sound) {
       console.warn(`Sound "${soundName}" not found`);
+      return null;
+    }
+
+    if (this.soundFilters[soundName]) {
+      return this.soundFilters[soundName];
+    }
+
+    try {
+      const howlerCtx = Howler.ctx;
+      
+      const filter = howlerCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 20000;
+      filter.Q.value = 1;
+
+      this.soundFilters[soundName] = filter;
+
+      sound.once('play', () => {
+        const soundNode = sound._sounds[0]?._node;
+        if (soundNode) {
+          try {
+            soundNode.disconnect();
+            soundNode.connect(filter);
+            filter.connect(howlerCtx.destination);
+            console.log(`Applied individual filter to ${soundName}`);
+          } catch (e) {
+            console.warn(`Could not apply filter to ${soundName}:`, e);
+          }
+        }
+      });
+
+      if (sound.playing()) {
+        const soundNode = sound._sounds[0]?._node;
+        if (soundNode) {
+          try {
+            soundNode.disconnect();
+            soundNode.connect(filter);
+            filter.connect(howlerCtx.destination);
+            console.log(`Applied individual filter to ${soundName} (already playing)`);
+          } catch (e) {
+            console.warn(`Could not apply filter to ${soundName}:`, e);
+          }
+        }
+      }
+
+      return filter;
+    } catch (error) {
+      console.error(`Error creating filter for ${soundName}:`, error);
+      return null;
+    }
+  }
+
+  async applyMuffledEffect(soundName, targetFrequency) {
+    const filter = this.createIndividualSoundFilter(soundName);
+    if (!filter) {
       return;
     }
   
-    if (!this.filters[soundName]) {
-      try {
-        const howlerCtx = Howler.ctx;
-        
-        const filter = howlerCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 20000;
-        filter.Q.value = 1;
-  
-        const masterGain = Howler.masterGain;
-        
-        if (masterGain) {
-          try {
-            masterGain.disconnect();
-          } catch (e) {
-            console.warn("Could not disconnect master gain:", e);
-          }
-          
-          masterGain.connect(filter);
-          filter.connect(howlerCtx.destination);
-        }
-  
-        this.filters[soundName] = filter;
-      } catch (error) {
-        console.error("Error creating filter:", error);
-        return;
-      }
-    }
-  
-    this.filters[soundName].frequency.value = targetFrequency;
+    filter.frequency.value = targetFrequency;
   }
 
   removeMuffledEffect(soundName) {
-    const filter = this.filters[soundName];
+    const filter = this.soundFilters[soundName];
     if (!filter) {
       console.warn(`No filter found for sound "${soundName}"`);
       return;
@@ -200,52 +243,95 @@ export default class AudioManager extends EventEmitter {
     filter.frequency.value = 20000;
   }
 
-  startProgressiveMuffle(duration = 900, targetFrequency = 100) {
-    if (!this.globalFilter) {
-      const filter = Howler.ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 20000;
-      filter.Q.value = 1;
-  
-      Howler.masterGain.disconnect();
-      Howler.masterGain.connect(filter);
-      filter.connect(Howler.ctx.destination);
-  
-      this.globalFilter = filter;
+  startProgressiveMuffle(duration = 900, targetFrequency = 100, soundName = 'ambiance') {
+    const filter = this.createIndividualSoundFilter(soundName);
+    if (!filter) {
+      console.warn(`Could not create filter for ${soundName}`);
+      return;
     }
-  
+
     this.progressiveMuffle = {
       enabled: true,
+      soundName: soundName,
       startTime: Date.now(),
       duration: duration,
       startFrequency: 20000,
       targetFrequency: targetFrequency
     };
-  
-    console.log(`Started progressive muffle over ${duration}ms to ${targetFrequency}Hz`);
+
+    console.log(`Started progressive muffle on ${soundName} over ${duration}ms to ${targetFrequency}Hz`);
+  }
+
+  setMuffleFrequency(frequency, soundName = 'ambiance') {
+    const filter = this.createIndividualSoundFilter(soundName);
+    if (!filter) {
+      console.warn(`Could not create filter for ${soundName}`);
+      return;
+    }
+
+    const clampedFrequency = Math.max(100, Math.min(20000, frequency));
+    filter.frequency.value = clampedFrequency;
+    this.progressiveMuffle.currentFrequency = clampedFrequency;
+  }
+
+  startTickingSound() {
+    if (!this.tickingAcceleration.isPlaying && this.sounds.ticking) {
+      this.sounds.ticking.rate(this.tickingAcceleration.startRate);
+      this.sounds.ticking.play();
+      this.tickingAcceleration.isPlaying = true;
+      this.tickingAcceleration.enabled = true;
+      this.tickingAcceleration.startTime = Date.now();
+      console.log('Started ticking sound with progressive acceleration');
+    }
+  }
+
+  stopTickingSound() {
+    if (this.tickingAcceleration.isPlaying && this.sounds.ticking) {
+      this.sounds.ticking.stop();
+      this.tickingAcceleration.isPlaying = false;
+      this.tickingAcceleration.enabled = false;
+      this.tickingAcceleration.startTime = null;
+      console.log('Stopped ticking sound');
+    }
   }
 
   update() {
-    if (!this.progressiveMuffle.enabled) return;
-  
-    const { startTime, duration, startFrequency, targetFrequency } = this.progressiveMuffle;
+    if (this.progressiveMuffle.enabled) {
+      const { startTime, duration, startFrequency, targetFrequency, soundName } = this.progressiveMuffle;
+      
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+      
+      const eased = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      
+      const currentFrequency = startFrequency - (startFrequency - targetFrequency) * eased;
+      
+      const filter = this.soundFilters[soundName];
+      if (filter) {
+        filter.frequency.value = currentFrequency;
+      }
     
-    const elapsed = Date.now() - startTime;
-    const progress = Math.min(elapsed / duration, 1.0);
-    
-    const eased = progress < 0.5
-      ? 2 * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-    
-    const currentFrequency = startFrequency - (startFrequency - targetFrequency) * eased;
-    
-    if (this.globalFilter) {
-      this.globalFilter.frequency.value = currentFrequency;
+      if (progress >= 1.0) {
+        this.progressiveMuffle.enabled = false;
+        console.log(`Progressive muffle complete on ${soundName} at ${targetFrequency}Hz`);
+      }
     }
-  
-    if (progress >= 1.0) {
-      this.progressiveMuffle.enabled = false;
-      console.log(`Progressive muffle complete at ${targetFrequency}Hz`);
+
+    if (this.tickingAcceleration.enabled && this.tickingAcceleration.isPlaying) {
+      const { startTime, duration, startRate, maxRate } = this.tickingAcceleration;
+      
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1.0);
+
+      const eased = Math.pow(progress, 2);
+      
+      const currentRate = startRate + (maxRate - startRate) * eased;
+      
+      if (this.sounds.ticking) {
+        this.sounds.ticking.rate(currentRate);
+      }
     }
   }
 
@@ -258,6 +344,14 @@ export default class AudioManager extends EventEmitter {
       }
     });
 
+    Object.values(this.soundFilters).forEach((filter) => {
+      try {
+        filter.disconnect();
+      } catch (e) {
+        console.warn("Error disconnecting sound filter:", e);
+      }
+    });
+
     Object.values(this.sounds).forEach((sound) => {
       sound.stop();
       sound.unload();
@@ -265,6 +359,7 @@ export default class AudioManager extends EventEmitter {
     
     this.sounds = {};
     this.filters = {};
+    this.soundFilters = {};
   }
 }
 
