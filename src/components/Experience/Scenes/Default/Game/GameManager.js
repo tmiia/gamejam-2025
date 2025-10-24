@@ -206,7 +206,7 @@ export default class GameManager {
     }
 
     this.levelThree = new Particles(
-      () =>
+      () => {
         this.mooveCamera(
           this.cameraScenesValues.scene2.zOffset,
           this.cameraScenesValues.scene2.xOffset,
@@ -214,7 +214,12 @@ export default class GameManager {
           this.cameraScenesValues.scene2.lerpSpeed,
           4.5,
           this.cameraScenesValues.scene2.rotation
-        ),
+        );
+
+        if (this.character && this.character.setReflectionOpacity) {
+          this.character.setReflectionOpacity(0.5);
+        }
+      },
       new THREE.Vector3(position.x, position.y, position.z),
       true,
       () => {

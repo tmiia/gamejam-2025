@@ -27,6 +27,7 @@ export default class Character {
     this.reflectionModel = null;
     this.mapModel = null;
     this.reflectionOffset = 2.05;
+    this.targetReflectionOpacity = 0;
 
     this.raycaster = new THREE.Raycaster();
     this.isGrounded = false;
@@ -78,7 +79,7 @@ export default class Character {
     const reflectionMaterial = new THREE.MeshBasicMaterial({ 
       color: 0x000000,
       transparent: true,
-      opacity: 0.6
+      opacity: 0
     });
     this.reflectionModel.traverse((child) => {
       if (child.isMesh) child.material = reflectionMaterial;
@@ -155,6 +156,10 @@ export default class Character {
     if (mapResource && mapResource.scene) {
       this.mapModel = mapResource.scene;
     }
+  }
+
+  setReflectionOpacity(opacity) {
+    this.targetReflectionOpacity = opacity;
   }
 
   setupAudioListeners() {
@@ -307,7 +312,7 @@ export default class Character {
 
       this.reflectionModel.rotation.copy(this.model.rotation);
       
-      const targetOpacity = this.model.position.y < -1 ? 0 : 0.6;
+      const targetOpacity = this.model.position.y < -1 ? 0 : (this.targetReflectionOpacity !== undefined ? this.targetReflectionOpacity : 0);
       this.reflectionModel.traverse((child) => {
         if (child.isMesh && child.material) {
           child.material.opacity = targetOpacity;
