@@ -12,7 +12,7 @@ export default class PhysicsWorld extends EventEmitter {
   async init() {
     await RAPIER.init();
 
-    const gravity = new RAPIER.Vector3(0, -3.81, 0);
+    const gravity = new RAPIER.Vector3(0, -5, 0);
     this.world = new RAPIER.World(gravity);
 
     this.world.maxVelocity = 100;

@@ -15,8 +15,8 @@ export default class MovementController extends EventEmitter {
 
     this.walkSpeed = 10;
     this.runSpeed = 4;
-    this.normalJumpForce = 0.75;
-    this.criticalJumpForce = 0.45;
+    this.normalJumpForce = 0.85;
+    this.criticalJumpForce = 0.55;
     this.jumpForce = this.normalJumpForce;
     this.doubleJumpForce = 1;
 
