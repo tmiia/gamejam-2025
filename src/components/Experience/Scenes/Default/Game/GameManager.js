@@ -103,6 +103,67 @@ export default class GameManager {
         this.videoGameOver.play();
       },
     });
+    this.videoGameOver.onended = () => {
+      function exitGame() {
+        window.parent.postMessage(
+          { type: "elevator-command", action: "backToElevator" },
+          "*"
+        );
+      }
+
+      exitGame();
+    };
+  }
+
+  jumpScareFunction() {
+    const jumpscareDiv = document.getElementById("jumpScare");
+    const audio = document.getElementById("audio");
+
+    gsap.fromTo(
+      jumpscareDiv,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 0.1,
+        ease: "power3.inOut",
+        onStart: () => {
+          audio.play();
+          audio.volume = 1;
+          audio.currentTime = 2;
+          audio.onended = () => {
+            gsap.to(jumpscareDiv, {
+              opacity: 0,
+              duration: 0.5,
+              ease: "power3.inOut",
+              delay: 0.5,
+            });
+          };
+          console.log(audio);
+        },
+        // onComplete: () => {
+        //   gsap.to(jumpscareDiv, {
+        //     opacity: 0,
+        //     duration: 0.5,
+        //     ease: "power3.inOut",
+        //     delay: 0.5,
+        //     onComplete: () => {
+        //       jumpscareVideo.src = "";
+        //     },
+        //   });
+        // },
+      }
+    );
+  }
+
+  jumpScare(position) {
+    this.jump = new Particles(
+      () => this.jumpScareFunction(),
+      new THREE.Vector3(position.x, position.y, position.z),
+      true,
+      () => {
+        this.jump = null;
+      } //
+    );
   }
 
   startGame(position, character) {
@@ -140,9 +201,9 @@ export default class GameManager {
     instructionSpan.style.transformOrigin = "right";
     gsap.to(instructionSpan, {
       scaleX: 0,
-      duration: 2,
-      ease: "power3.out",
-      delay: 8.5,
+      duration: 3.2,
+      ease: "power3.inOut",
+      delay: 7.5,
       onComplete: () => {
         instructionSpan.style.transformOrigin = "left";
         gsap.to(this.instructions, {
@@ -320,11 +381,12 @@ export default class GameManager {
     });
   }
 
-  endGame() {
+  endGame(isFalling) {
     if (this.isEnded) return;
     if (!this.isStarted) return;
     this.isEnded = true;
     this.isStarted = false;
+    this.isFalling = isFalling;
 
     if (this.experience.audioManager) {
       this.experience.audioManager.stopTickingSound();
@@ -338,35 +400,45 @@ export default class GameManager {
       ease: "power3.inOut",
     });
 
-    const tomb = this.gameOver.querySelector("#tombeGameOver");
-    const fog = this.gameOver.querySelector("#fogGameOver");
+    // const tomb = this.gameOver.querySelector("#tombeGameOver");
+    // const fog = this.gameOver.querySelector("#fogGameOver");
+
+    const deadVideo = this.isFalling
+      ? this.gameOver.querySelector("#deadVideo")
+      : this.gameOver.querySelector("#deadVideo2");
 
     gsap.fromTo(
-      fog,
+      deadVideo,
       {
         opacity: 0,
       },
       {
         opacity: 1,
+        rotateX: this.isFalling ? 0 : 180,
         duration: 2,
         ease: "power3.out",
         delay: 2,
+        onComplete: () => {
+          deadVideo.currentTime = 0;
+
+          deadVideo.play();
+        },
       }
     );
-    gsap.fromTo(
-      tomb,
-      {
-        opacity: 0,
-        y: 50,
-      },
-      {
-        y: 20,
-        opacity: 1,
-        duration: 2,
-        ease: "power3.out",
-        delay: 2,
-      }
-    );
+    // gsap.fromTo(
+    //   tomb,
+    //   {
+    //     opacity: 0,
+    //     y: 50,
+    //   },
+    //   {
+    //     y: 20,
+    //     opacity: 1,
+    //     duration: 2,
+    //     ease: "power3.out",
+    //     delay: 2,
+    //   }
+    // );
     gsap.to(gradientObj, {
       percent: 100,
       duration: 2,
@@ -383,14 +455,14 @@ export default class GameManager {
 
       onComplete: () => {
         this.startGame(null, null);
-        gsap.to(tomb, {
-          opacity: 0,
-          duration: 2,
-          ease: "power3.out",
-          delay: 4,
-        });
+        // gsap.to(tomb, {
+        //   opacity: 0,
+        //   duration: 2,
+        //   ease: "power3.out",
+        //   delay: 4,
+        // });
 
-        gsap.to(fog, {
+        gsap.to(deadVideo, {
           opacity: 0,
           duration: 2,
           ease: "power3.out",
@@ -427,5 +499,6 @@ export default class GameManager {
     if (this.levelTwo) this.levelTwo.update();
     if (this.levelThree) this.levelThree.update();
     if (this.crazyzy) this.crazyzy.update();
+    if (this.jump) this.jump.update();
   }
 }

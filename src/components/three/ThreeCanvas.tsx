@@ -3,14 +3,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import fall from "../../../public/fall.png";
-import fog from "../../../public/fog.png";
-import imageLoading from "../../../public/loaded2.png";
-import tombe from "../../../public/tombe.png";
+import imageLoading from "../../../public/level6.png";
 import Experience from "../Experience/Experience";
 
 import BloodBar from "./header/BloodBar";
 import Score from "./header/Score";
 import Tutorial from "./header/Tutorial";
+import JumpScare from "./JumpScare";
 
 declare global {
   interface Window {
@@ -140,34 +139,38 @@ const ThreeJSExperience = () => {
         className="absolute top-0 left-0 h-screen w-screen z-[101] bg-[#0E0E0E] pointer-events-none opacity-0"
         id="gameOver"
       >
-        <Image
-          src={fog}
-          id="fogGameOver"
-          alt="Game Over"
+        <video
+          id="deadVideo"
+          src="/dead.mp4"
           style={{
             position: "absolute",
-            top: "0",
+            top: "50%",
             left: "50%",
-            transform: "translateX(-50%)",
-            width: "50%",
-            objectFit: "cover",
-            animation: "fog 3s ease-in-out infinite",
-          }}
-        />
-        <Image
-          src={tombe}
-          id="tombeGameOver"
-          alt="Game Over"
-          style={{
-            position: "absolute",
-            bottom: "0",
-            left: "50%",
-            transform: "translate(-50%, 10%)",
-            width: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "100vw",
+            height: "100vh",
+            zIndex: 200,
             objectFit: "cover",
             opacity: 0,
           }}
-        />
+          muted
+        ></video>
+        <video
+          id="deadVideo2"
+          src="/dead.mp4"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "100vw",
+            height: "100vh",
+            zIndex: 200,
+            objectFit: "cover",
+            opacity: 0,
+          }}
+          muted
+        ></video>
         <Image
           src={fall}
           id="fallGameOver"
@@ -183,9 +186,10 @@ const ThreeJSExperience = () => {
           }}
         />
       </div>
+      <JumpScare />
       <video
         id="endVideo"
-        src="/end.mp4"
+        src="/outro.mp4"
         style={{
           position: "absolute",
           top: "50%",

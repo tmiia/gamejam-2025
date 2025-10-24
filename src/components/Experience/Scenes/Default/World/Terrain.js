@@ -69,6 +69,15 @@ export default class Terrain {
           return;
         }
 
+        if (child.name === "SCREAM") {
+          this.experience.sceneManager.currentScene.gameManager.jumpScare(
+            child.getWorldPosition(new THREE.Vector3())
+          );
+          child.visible = false;
+
+          return;
+        }
+
         if (child.name === "START") {
           this.character = this.experience.sceneManager.currentScene.character;
           this.experience.sceneManager.currentScene.gameManager.startGame(

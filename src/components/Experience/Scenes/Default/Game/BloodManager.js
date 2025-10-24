@@ -22,12 +22,15 @@ export default class BloodManager {
         ._isMoving
     ) {
       this.bloodMultiplier = 3;
-    } else if (this.experience.sceneManager.currentScene.character.characterController._isJumping) {
+    } else if (
+      this.experience.sceneManager.currentScene.character.characterController
+        ._isJumping
+    ) {
       this.bloodMultiplier = 12;
     } else {
       this.bloodMultiplier = 1;
     }
-    
+
     if (
       this.actualDuration < this.maxDuration &&
       this.scene.gameManager.isStarted
@@ -47,7 +50,7 @@ export default class BloodManager {
 
       if (bloodPercentage <= 45 && !this.isCriticalState) {
         this.isCriticalState = true;
-        if (this.postProcessing) {          
+        if (this.postProcessing) {
           this.postProcessing.playGlitchEffect();
         }
         if (this.experience.audioManager) {
@@ -64,7 +67,7 @@ export default class BloodManager {
         this.experience.audioManager.setMuffleFrequency(muffleFrequency);
       }
     } else if (this.scene.gameManager.isEnded === false) {
-      this.experience.sceneManager.currentScene.gameManager.endGame();
+      this.experience.sceneManager.currentScene.gameManager.endGame(false);
     }
   }
 }
