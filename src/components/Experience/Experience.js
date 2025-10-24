@@ -4,7 +4,6 @@ import DefaultScene from "./Scenes/Default/DefaultScene";
 import SceneManager from "./Scenes/SceneManager.js";
 
 import InputManager from "./Inputs/InputsManager.js";
-import PostProcessingClass from "./PostProcessing/PostProcessingClass.js";
 import sources from "./sources.js";
 import Debug from "./Utils/Debug.js";
 import Resources from "./Utils/Resources.js";
@@ -46,7 +45,7 @@ export default class Experience {
     this.sceneManager = new SceneManager(this);
     this.sceneManager.setScene(DefaultScene);
     this.renderer = new Renderer();
-    this.postProcessing = new PostProcessingClass();
+    // this.postProcessing = new PostProcessingClass();
 
     // setTimeout(() => {
     //   this.postProcessing.triggerDamageEffect(0.5, 2000);

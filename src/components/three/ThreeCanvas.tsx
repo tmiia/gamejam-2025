@@ -104,11 +104,44 @@ const ThreeJSExperience = () => {
 
       <p
         id="instructions"
-        className="absolute top-1/5 left-1/2 -translate-x-1/2 z-[10000] text-black opacity-0 text-[30px]"
+        style={{
+          position: "absolute",
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 9,
+          color: "black",
+          opacity: 0,
+          fontSize: "30px",
+        }}
       >
-        retrouve ta tête avant qu’il ne soit trop tard.
-        <span className="h-full w-[100%] block bg-[#F2F3F5] absolute top-0 right-0 origin-right"></span>
+        retrouve ta tête avant qu'il ne soit trop tard.
+        <span
+          style={{
+            height: "100%",
+            width: "100%",
+            display: "block",
+            backgroundColor: "#E1E1E2",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            transformOrigin: "right",
+          }}
+        ></span>
       </p>
+
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          width: "100vw",
+          pointerEvents: "none",
+          zIndex: 10,
+          background: "radial-gradient(transparent 10%, rgb(0, 0, 0, 35%)100%)",
+        }}
+      ></div>
 
       <header
         style={{
@@ -136,12 +169,22 @@ const ThreeJSExperience = () => {
 
       {/* Game Over */}
       <div
-        className="absolute top-0 left-0 h-screen w-screen z-[101] bg-[#0E0E0E] pointer-events-none opacity-0"
         id="gameOver"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          width: "100vw",
+          zIndex: 101,
+          backgroundColor: "#0E0E0E",
+          pointerEvents: "none",
+          opacity: 0,
+        }}
       >
         <video
           id="deadVideo"
-          src="/dead.mp4"
+          src="/jump.mp4"
           style={{
             position: "absolute",
             top: "50%",

@@ -213,7 +213,7 @@ export default class GameManager {
           delay: 5,
         });
         gsap.to(instructionSpan, {
-          scaleX: 1,
+          scaleX: 0,
           duration: 2,
           ease: "power3.out",
           delay: 3,
@@ -414,7 +414,6 @@ export default class GameManager {
       },
       {
         opacity: 1,
-        rotateX: this.isFalling ? 0 : 180,
         duration: 2,
         ease: "power3.out",
         delay: 2,
