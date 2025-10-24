@@ -389,7 +389,7 @@ export default class GameManager {
     this.isFalling = isFalling;
 
     if (this.experience.audioManager) {
-      this.experience.audioManager.stopTickingSound();
+      this.experience.audioManager.stopAll();
     }
 
     const gradientObj = { percent: 0 };
