@@ -13,16 +13,27 @@ export default class InputManager extends EventEmitter {
 
     this.joystickValues = {
       joystick1: { x: 0, y: 0 },
+      joystick2: { x: 0, y: 0 },
     };
 
     this.gamepadIndex = null;
     this.deadzone = 0.15; // Zone morte du joystick
+
+    // Axis controller mapping
+    this.axisMapping = {
+      a: 'left',    // lane 0
+      x: 'right',   // lane 1
+      i: 'jump',    // lane 2
+      s: 'run',     // lane 3
+      w: null,      // lane 4 - reserved for future use
+    };
 
     // Bind methods
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleGamepadConnected = this.handleGamepadConnected.bind(this);
     this.handleGamepadDisconnected = this.handleGamepadDisconnected.bind(this);
+    this.handlePostMessage = this.handlePostMessage.bind(this);
 
     // Initialiser les listeners
     if (typeof window !== "undefined") {
@@ -42,7 +53,10 @@ export default class InputManager extends EventEmitter {
       this.handleGamepadDisconnected
     );
 
-    console.log("✅ Input listeners attached (Arrows + ZQSD)");
+    // PostMessage (Axis controller)
+    window.addEventListener("message", this.handlePostMessage);
+
+    console.log("✅ Input listeners attached (Arrows + ZQSD + Axis postMessage)");
   }
 
   handleGamepadConnected(e) {
@@ -135,6 +149,130 @@ export default class InputManager extends EventEmitter {
     }
   }
 
+  handlePostMessage(ev) {
+    const msg = ev.data;
+    
+    // Filter only axis-event messages
+    if (!msg || msg.type !== 'axis-event') return;
+
+    console.log(`🎮 [Axis] Received: ${msg.event}`, msg.payload);
+
+    // Handle keydown/keyup events from Axis controller
+    if (msg.event === 'keydown' || msg.event === 'keyup') {
+      this.handleAxisKeyEvent(msg.event, msg.payload);
+    }
+
+    // Handle joystick quickmove (discrete directions)
+    if (msg.event === 'joystick:quickmove') {
+      this.handleAxisJoystickQuick(msg.payload);
+    }
+
+    // Handle joystick move (analog values)
+    if (msg.event === 'joystick:move') {
+      this.handleAxisJoystickMove(msg.payload);
+    }
+
+    // Handle paste events (if needed in the future)
+    if (msg.event === 'paste') {
+      console.log('📋 Paste event received:', msg.payload.text);
+    }
+  }
+
+  handleAxisKeyEvent(eventType, payload) {
+    const rawKey = (payload?.key || '').toLowerCase();
+    
+    // Parse suffixed key (e.g., "a1" -> base: "a", controllerId: 1)
+    const match = rawKey.match(/^([a-z]+)(\d+)$/);
+    let baseKey = rawKey;
+    let controllerId = payload?.id || 1;
+    
+    if (match) {
+      baseKey = match[1];
+      controllerId = parseInt(match[2], 10);
+    }
+
+    // Map Axis key to game action
+    const action = this.axisMapping[baseKey];
+    if (!action) {
+      console.log(`⚠️ [Axis] Unmapped key: ${baseKey}`);
+      return;
+    }
+
+    const isKeyDown = eventType === 'keydown';
+
+    // Handle the action
+    if (action === 'jump' && isKeyDown) {
+      if (!this.keys.jump) {
+        this.keys.jump = true;
+        console.log(`🦘 Jump (Axis ${baseKey.toUpperCase()}${controllerId})`);
+        this.trigger("jump");
+      }
+    } else if (action === 'jump' && !isKeyDown) {
+      this.keys.jump = false;
+    }
+
+    if (action === 'run' && isKeyDown) {
+      if (!this.keys.run) {
+        this.keys.run = true;
+        console.log(`🏃 Sprint start (Axis ${baseKey.toUpperCase()}${controllerId})`);
+        this.trigger("run:start");
+      }
+    } else if (action === 'run' && !isKeyDown) {
+      this.keys.run = false;
+      console.log("🛑 Sprint end (Axis)");
+      this.trigger("run:end");
+    }
+
+    if (action === 'left') {
+      this.keys.left = isKeyDown;
+    }
+
+    if (action === 'right') {
+      this.keys.right = isKeyDown;
+    }
+  }
+
+  handleAxisJoystickQuick(payload) {
+    const direction = payload?.direction;
+    const joystickId = payload?.joystick || 1;
+    
+    console.log(`🕹️ [Axis] Joystick ${joystickId} quickmove: ${direction}`);
+    
+    // Map directions to temporary key presses
+    // This simulates discrete movement
+    if (direction === 'left') {
+      this.keys.left = true;
+      setTimeout(() => { this.keys.left = false; }, 100);
+    } else if (direction === 'right') {
+      this.keys.right = true;
+      setTimeout(() => { this.keys.right = false; }, 100);
+    }
+  }
+
+  handleAxisJoystickMove(payload) {
+    const position = payload?.position || { x: 0, y: 0 };
+    const joystickId = payload?.joystick || payload?.id || 1;
+    
+    // Apply deadzone
+    const x = Math.abs(position.x) > this.deadzone ? position.x : 0;
+    const y = Math.abs(position.y) > this.deadzone ? position.y : 0;
+
+    // Store values for the appropriate joystick
+    if (joystickId === 1) {
+      this.joystickValues.joystick1.x = x;
+      this.joystickValues.joystick1.y = y;
+    } else if (joystickId === 2) {
+      this.joystickValues.joystick2.x = x;
+      this.joystickValues.joystick2.y = y;
+    }
+
+    // Emit event for other systems to use
+    this.trigger("joystick:move", {
+      id: joystickId,
+      position: { x, y },
+    });
+  }
+
   pollGamepad() {
     if (this.gamepadIndex === null) return;
 
@@ -192,10 +330,26 @@ export default class InputManager extends EventEmitter {
 
   getHorizontalAxis() {
     let axis = 0;
+    
+    // Check joystick1 (gamepad or Axis controller)
     const joystick1X = this.joystickValues.joystick1.x;
-    if (Math.abs(joystick1X) > 0.1) axis = joystick1X;
-    else if (this.keys.left) axis = -1;
-    else if (this.keys.right) axis = 1;
+    if (Math.abs(joystick1X) > 0.1) {
+      axis = joystick1X;
+    }
+    // Check joystick2 (Axis controller only)
+    else {
+      const joystick2X = this.joystickValues.joystick2.x;
+      if (Math.abs(joystick2X) > 0.1) {
+        axis = joystick2X;
+      }
+    }
+    
+    // Fall back to keyboard/button inputs
+    if (axis === 0) {
+      if (this.keys.left) axis = -1;
+      else if (this.keys.right) axis = 1;
+    }
+    
     return axis;
   }
 
@@ -223,6 +377,7 @@ export default class InputManager extends EventEmitter {
         "gamepaddisconnected",
         this.handleGamepadDisconnected
       );
+      window.removeEventListener("message", this.handlePostMessage);
     }
     console.log("✅ Input manager destroyed");
   }
