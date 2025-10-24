@@ -15,7 +15,9 @@ export default class MovementController extends EventEmitter {
 
     this.walkSpeed = 10;
     this.runSpeed = 4;
-    this.jumpForce = 0.7;
+    this.normalJumpForce = 0.75;
+    this.criticalJumpForce = 0.45;
+    this.jumpForce = this.normalJumpForce;
     this.doubleJumpForce = 1;
 
     this.groundFriction = 0.8;
@@ -48,6 +50,16 @@ export default class MovementController extends EventEmitter {
       this.characterController.on("landing", () => {
         this.isPlayingLandingAnimation = true;
       });
+    }
+  }
+
+  updateJumpForceBasedOnBloodLevel() {
+    const bloodManager = this.character?.experience?.sceneManager?.currentScene?.bloodManager;
+    
+    if (bloodManager) {
+      this.jumpForce = bloodManager.isCriticalState 
+        ? this.criticalJumpForce 
+        : this.normalJumpForce;
     }
   }
 
@@ -166,6 +178,7 @@ export default class MovementController extends EventEmitter {
   }
 
   update() {
+    this.updateJumpForceBasedOnBloodLevel();
     this.syncModelPosition();
     this.checkGrounded();
     this.handleMovement();
