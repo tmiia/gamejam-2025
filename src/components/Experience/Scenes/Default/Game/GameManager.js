@@ -35,6 +35,7 @@ export default class GameManager {
     };
 
     this.gameOver = document.getElementById("gameOver");
+    this.videoGameOver = document.getElementById("endVideo");
 
     this.storedPositions = {
       end: null,
@@ -59,8 +60,8 @@ export default class GameManager {
     }
 
     this.particles = new Particles(
-      () => this.endGame(),
-      new THREE.Vector3(-position.x, -position.y, -position.z),
+      () => this.ENNNNNNNNNND(),
+      new THREE.Vector3(position.x, position.y, position.z),
       true,
       () => {
         this.particles = null;
@@ -86,6 +87,85 @@ export default class GameManager {
     }
   }
 
+  ENNNNNNNNNND() {
+    this.isEnded = true;
+    // const fog = this.gameOver.querySelector("#fogGameOver");
+    // gsap.to(fog, {
+    //   opacity: 0,
+    //   duration: 0,
+    // });
+
+    gsap.to(this.videoGameOver, {
+      opacity: 1,
+      duration: 0.3,
+      ease: "power3.inOut",
+      onComplete: () => {
+        this.videoGameOver.play();
+      },
+    });
+    this.videoGameOver.onended = () => {
+      function exitGame() {
+        window.parent.postMessage(
+          { type: "elevator-command", action: "backToElevator" },
+          "*"
+        );
+      }
+
+      exitGame();
+    };
+  }
+
+  jumpScareFunction() {
+    const jumpscareDiv = document.getElementById("jumpScare");
+    const audio = document.getElementById("audio");
+
+    gsap.fromTo(
+      jumpscareDiv,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 0.1,
+        ease: "power3.inOut",
+        onStart: () => {
+          audio.play();
+          audio.volume = 1;
+          audio.currentTime = 2;
+          audio.onended = () => {
+            gsap.to(jumpscareDiv, {
+              opacity: 0,
+              duration: 0.5,
+              ease: "power3.inOut",
+              delay: 0.5,
+            });
+          };
+          console.log(audio);
+        },
+        // onComplete: () => {
+        //   gsap.to(jumpscareDiv, {
+        //     opacity: 0,
+        //     duration: 0.5,
+        //     ease: "power3.inOut",
+        //     delay: 0.5,
+        //     onComplete: () => {
+        //       jumpscareVideo.src = "";
+        //     },
+        //   });
+        // },
+      }
+    );
+  }
+
+  jumpScare(position) {
+    this.jump = new Particles(
+      () => this.jumpScareFunction(),
+      new THREE.Vector3(position.x, position.y, position.z),
+      true,
+      () => {
+        this.jump = null;
+      } //
+    );
+  }
+
   startGame(position, character) {
     this.position = position;
     if (position) {
@@ -101,6 +181,45 @@ export default class GameManager {
     }
 
     this.tutorial = document.getElementById("tutorial");
+    this.instructions = document.getElementById("instructions");
+
+    gsap.fromTo(
+      this.instructions,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 1,
+        ease: "power3.inOut",
+        delay: 7.5,
+      }
+    );
+
+    const instructionSpan = this.instructions.querySelector("span");
+
+    instructionSpan.style.transformOrigin = "right";
+    gsap.to(instructionSpan, {
+      scaleX: 0,
+      duration: 3.2,
+      ease: "power3.inOut",
+      delay: 7.5,
+      onComplete: () => {
+        instructionSpan.style.transformOrigin = "left";
+        gsap.to(this.instructions, {
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          delay: 5,
+        });
+        gsap.to(instructionSpan, {
+          scaleX: 0,
+          duration: 2,
+          ease: "power3.out",
+          delay: 3,
+        });
+      },
+    });
 
     gsap.to(this.tutorial, {
       opacity: 1,
@@ -262,11 +381,12 @@ export default class GameManager {
     });
   }
 
-  endGame() {
+  endGame(isFalling) {
     if (this.isEnded) return;
     if (!this.isStarted) return;
     this.isEnded = true;
     this.isStarted = false;
+    this.isFalling = isFalling;
 
     if (this.experience.audioManager) {
       this.experience.audioManager.stopTickingSound();
@@ -280,6 +400,44 @@ export default class GameManager {
       ease: "power3.inOut",
     });
 
+    // const tomb = this.gameOver.querySelector("#tombeGameOver");
+    // const fog = this.gameOver.querySelector("#fogGameOver");
+
+    const deadVideo = this.isFalling
+      ? this.gameOver.querySelector("#deadVideo")
+      : this.gameOver.querySelector("#deadVideo2");
+
+    gsap.fromTo(
+      deadVideo,
+      {
+        opacity: 0,
+      },
+      {
+        opacity: 1,
+        duration: 2,
+        ease: "power3.out",
+        delay: 2,
+        onComplete: () => {
+          deadVideo.currentTime = 0;
+
+          deadVideo.play();
+        },
+      }
+    );
+    // gsap.fromTo(
+    //   tomb,
+    //   {
+    //     opacity: 0,
+    //     y: 50,
+    //   },
+    //   {
+    //     y: 20,
+    //     opacity: 1,
+    //     duration: 2,
+    //     ease: "power3.out",
+    //     delay: 2,
+    //   }
+    // );
     gsap.to(gradientObj, {
       percent: 100,
       duration: 2,
@@ -290,13 +448,32 @@ export default class GameManager {
         }) 0%, rgba(0,0,0,${gradientObj.percent / 90}) 100%)`;
       },
 
+      // onStart: () => {
+      //   setTimeout(() => {}, 2500);
+      // },
+
       onComplete: () => {
+        this.startGame(null, null);
+        // gsap.to(tomb, {
+        //   opacity: 0,
+        //   duration: 2,
+        //   ease: "power3.out",
+        //   delay: 4,
+        // });
+
+        gsap.to(deadVideo, {
+          opacity: 0,
+          duration: 2,
+          ease: "power3.out",
+          delay: 4,
+        });
+
         gsap.to(this.gameOver, {
           opacity: 0,
-          duration: 5,
-          ease: "power3.inOut",
+          duration: 3,
+          delay: 6,
+          ease: "power3.out",
         });
-        this.startGame(null, null);
       },
     });
 
@@ -321,5 +498,6 @@ export default class GameManager {
     if (this.levelTwo) this.levelTwo.update();
     if (this.levelThree) this.levelThree.update();
     if (this.crazyzy) this.crazyzy.update();
+    if (this.jump) this.jump.update();
   }
 }

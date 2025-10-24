@@ -14,6 +14,7 @@ export default class CollisionManager {
       "CAM_2",
       "GHOST001",
       "GHOST",
+      "SCREAM",
     ];
   }
 

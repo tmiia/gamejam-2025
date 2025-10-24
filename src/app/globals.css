@@ -1,4 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica+SC&display=swap");
 @import "tailwindcss";
+
+/* public/printvetica.otf */
+@font-face {
+  font-family: "Printvetica";
+  src: url("/printvetica.otf") format("opentype");
+}
 
 :root {
   --background: #ffffff;
@@ -25,4 +33,28 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   padding: 0;
   margin: 0;
+}
+
+@keyframes fog {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#instructions {
+  font-family: "IM Fell DW Pica SC", serif;
+  /* font-family: "IM Fell DW Pica", serif; */
+}
+
+#tutorial {
+  font-family: "IM Fell DW Pica", serif;
+}
+#scoreNumber {
+  font-family: "Printvetica", sans-serif;
 }

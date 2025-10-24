@@ -1,11 +1,11 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import * as THREE from "three";
 import { Vector3 } from "three";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import Experience from "../Experience.js";
 import AnimationController from "./AnimationController.js";
 import CharacterController from "./CharacterController.js";
 import MovementController from "./MovementController.js";
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 
 export default class Character {
   constructor(position = new Vector3(0, 0, 0)) {
@@ -60,17 +60,17 @@ export default class Character {
       console.warn("Character model not found in resources");
       return;
     }
-  
+
     this.model = clone(characterModel);
     this.model.scale.set(0.0025, 0.0025, 0.0025);
     this.model.position.copy(this.position);
-  
+
     const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
     this.model.traverse((child) => {
       if (child.isMesh) child.material = blackMaterial;
     });
     this.scene.add(this.model);
-  
+
     this.reflectionModel = clone(this.model);
     this.reflectionModel.scale.copy(this.model.scale);
     this.reflectionModel.scale.y = -0.0025;
@@ -88,9 +88,8 @@ export default class Character {
         child.material = this.reflectionMaterial;
       }
     });
-    
+
     this.scene.add(this.reflectionModel);
-  
   }
 
   setPhysics() {
@@ -304,7 +303,7 @@ export default class Character {
       this.model.position.y < -10 &&
       !this.experience.sceneManager.currentScene.gameManager.isEnded
     ) {
-      this.experience.sceneManager.currentScene.gameManager.endGame();
+      this.experience.sceneManager.currentScene.gameManager.endGame(true);
     }
 
     if (this.debugCollider && this.rigidbody) {
@@ -314,7 +313,8 @@ export default class Character {
 
     if (this.reflectionModel && this.model) {
       this.reflectionModel.position.x = this.model.position.x;
-      this.reflectionModel.position.y = -this.model.position.y - this.reflectionOffset;
+      this.reflectionModel.position.y =
+        -this.model.position.y - this.reflectionOffset;
       this.reflectionModel.position.z = this.model.position.z;
 
       this.reflectionModel.rotation.copy(this.model.rotation);

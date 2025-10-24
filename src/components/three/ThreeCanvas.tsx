@@ -2,8 +2,14 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
-import imageLoading from "../../../public/loaded2.png";
+import fall from "../../../public/fall.png";
+import imageLoading from "../../../public/level6.png";
 import Experience from "../Experience/Experience";
+
+import BloodBar from "./header/BloodBar";
+import Score from "./header/Score";
+import Tutorial from "./header/Tutorial";
+import JumpScare from "./JumpScare";
 
 declare global {
   interface Window {
@@ -96,79 +102,152 @@ const ThreeJSExperience = () => {
         </div>
       </div>
 
-      {/* Tutoriel */}
-      <div
-        id="tutorial"
+      <p
+        id="instructions"
         style={{
-          height: "100vh",
-          width: "100vw",
           position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 98,
-          pointerEvents: "none",
-          display: "flex",
-          flexDirection: "row",
-          gap: "1rem",
-          alignItems: "flex-start",
-          justifyContent: "center",
+          top: "20%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 9,
           color: "black",
-          fontSize: "14px",
+          opacity: 0,
+          fontSize: "30px",
         }}
       >
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              gap: "1rem",
-              alignItems: "center",
-              paddingTop: "0.5rem",
-            }}
-          >
-            <Image
-              src={imageLoading}
-              alt="Loading..."
-              width={500}
-              height={500}
-              style={{
-                height: "auto",
-                width: "2rem",
-                aspectRatio: "1 / 1",
-                objectFit: "cover",
-                backgroundColor: "red",
-              }}
-            />
-            <p>Marcher</p>
-          </div>
-        ))}
-      </div>
+        retrouve ta tête avant qu'il ne soit trop tard.
+        <span
+          style={{
+            height: "100%",
+            width: "100%",
+            display: "block",
+            backgroundColor: "#E1E1E2",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            transformOrigin: "right",
+          }}
+        ></span>
+      </p>
 
-      {/* Score */}
       <div
-        id="score"
         style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
           height: "100vh",
+          width: "100vw",
+          pointerEvents: "none",
+          zIndex: 10,
+          background: "radial-gradient(transparent 10%, rgb(0, 0, 0, 35%)100%)",
+        }}
+      ></div>
+
+      <header
+        style={{
+          height: "auto",
           width: "100vw",
           position: "absolute",
           top: 0,
           left: 0,
-          zIndex: 150,
+          zIndex: 99,
           pointerEvents: "none",
           display: "flex",
           flexDirection: "row",
           gap: "1rem",
-          alignItems: "start",
-          justifyContent: "end",
+          alignItems: "center",
+          justifyContent: "space-between",
           color: "black",
           fontSize: "20px",
+          padding: ".5rem 1.25rem",
         }}
       >
-        <p id="scoreNumber">300000</p>
-      </div>
+        <BloodBar />
+        <Tutorial />
+        <Score />
+      </header>
 
       {/* Game Over */}
       <div
+        id="gameOver"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100vh",
+          width: "100vw",
+          zIndex: 101,
+          backgroundColor: "#0E0E0E",
+          pointerEvents: "none",
+          opacity: 0,
+        }}
+      >
+        <video
+          id="deadVideo"
+          src="/jump.mp4"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "100vw",
+            height: "100vh",
+            zIndex: 200,
+            objectFit: "cover",
+            opacity: 0,
+          }}
+          muted
+        ></video>
+        <video
+          id="deadVideo2"
+          src="/dead.mp4"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "100vw",
+            height: "100vh",
+            zIndex: 200,
+            objectFit: "cover",
+            opacity: 0,
+          }}
+          muted
+        ></video>
+        <Image
+          src={fall}
+          id="fallGameOver"
+          alt="fall"
+          style={{
+            position: "absolute",
+            bottom: "0",
+            left: "50%",
+            transform: "translate(-50%, 10%)",
+            width: "50%",
+            objectFit: "cover",
+            opacity: 0,
+          }}
+        />
+      </div>
+      <JumpScare />
+      <video
+        id="endVideo"
+        src="/outro.mp4"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100vw",
+          height: "100vh",
+          zIndex: 200,
+          objectFit: "cover",
+          opacity: 0,
+        }}
+        muted
+      ></video>
+
+      {/* <div
         id="gameOver"
         style={{
           height: "100vh",
@@ -182,11 +261,11 @@ const ThreeJSExperience = () => {
           background:
             "radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 0%)",
         }}
-      ></div>
+      ></div> */}
 
       {/* Niveau de sang */}
-      <div
-        id="bloodLevel"
+      {/* <div
+        // id="bloodLevel"
         style={{
           height: "1.25rem",
           width: "16rem",
@@ -206,7 +285,7 @@ const ThreeJSExperience = () => {
             backgroundColor: "#dc2626", // équivalent bg-red-600
           }}
         ></span>
-      </div>
+      </div> */}
 
       {/* Canvas */}
       <div
