@@ -196,8 +196,8 @@ const ThreeJSExperience = () => {
             objectFit: "cover",
             opacity: 0,
           }}
-          muted
         ></video>
+
         <video
           id="deadVideo2"
           src="/dead.mp4"
@@ -212,7 +212,6 @@ const ThreeJSExperience = () => {
             objectFit: "cover",
             opacity: 0,
           }}
-          muted
         ></video>
         <Image
           src={fall}
@@ -229,6 +228,21 @@ const ThreeJSExperience = () => {
           }}
         />
       </div>
+      <video
+        id="startVideo"
+        src="/intro.mp4"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100vw",
+          height: "100vh",
+          zIndex: 200,
+          objectFit: "cover",
+          opacity: 0,
+        }}
+      ></video>
       <JumpScare />
       <video
         id="endVideo"
@@ -244,7 +258,6 @@ const ThreeJSExperience = () => {
           objectFit: "cover",
           opacity: 0,
         }}
-        muted
       ></video>
 
       {/* <div

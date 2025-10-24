@@ -1,4 +1,6 @@
+import gsap from "gsap";
 import * as THREE from "three";
+import AudioManager from "../../../Audio/AudioManager.js";
 import Experience from "../../../Experience.js";
 
 export default class Terrain {
@@ -79,12 +81,36 @@ export default class Terrain {
         }
 
         if (child.name === "START") {
-          this.character = this.experience.sceneManager.currentScene.character;
-          this.experience.sceneManager.currentScene.gameManager.startGame(
-            child.getWorldPosition(new THREE.Vector3()),
-            this.character
-          );
-          child.visible = false;
+          const startVideo = document.getElementById("startVideo");
+
+          gsap.to(startVideo, {
+            opacity: 1,
+            duration: 1,
+            onStart: () => {
+              setTimeout(() => {
+                startVideo.play();
+              }, 500);
+            },
+          });
+
+          startVideo.onended = () => {
+            gsap.to(startVideo, {
+              opacity: 0,
+              duration: 1,
+              ease: "power3.out",
+            });
+            this.character =
+              this.experience.sceneManager.currentScene.character;
+            this.experience.sceneManager.currentScene.gameManager.startGame(
+              child.getWorldPosition(new THREE.Vector3()),
+              this.character
+            );
+            child.visible = false;
+
+            this.experience.audioManager = new AudioManager();
+            this.experience.audioManager.startProgressiveMuffle(120000, 100);
+          };
+
           return;
         }
 
