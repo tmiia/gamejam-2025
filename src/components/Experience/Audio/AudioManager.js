@@ -291,6 +291,18 @@ export default class AudioManager extends EventEmitter {
     }
   }
 
+  stopAll() {
+    Object.values(this.sounds).forEach((sound) => {
+      sound.stop();
+    });
+    this.isWalkSoundPlaying = false;
+    this.currentWalkSound = null;
+    this.tickingAcceleration.isPlaying = false;
+    this.tickingAcceleration.enabled = false;
+    this.tickingAcceleration.startTime = null;
+    console.log('Stopped all sounds');
+  }
+
   update() {
     if (this.progressiveMuffle.enabled) {
       const { startTime, duration, startFrequency, targetFrequency, soundName } = this.progressiveMuffle;
