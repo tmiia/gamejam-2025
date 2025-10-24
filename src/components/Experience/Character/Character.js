@@ -28,6 +28,7 @@ export default class Character {
     this.mapModel = null;
     this.reflectionOffset = 2.05;
     this.targetReflectionOpacity = 0;
+    this.reflectionMaterial = null;
 
     this.raycaster = new THREE.Raycaster();
     this.isGrounded = false;
@@ -76,13 +77,16 @@ export default class Character {
     this.reflectionModel.position.copy(this.model.position);
     this.reflectionModel.position.x -= this.reflectionOffset;
     
-    const reflectionMaterial = new THREE.MeshBasicMaterial({ 
+    this.reflectionMaterial = new THREE.MeshBasicMaterial({ 
       color: 0x000000,
       transparent: true,
       opacity: 0
     });
+    
     this.reflectionModel.traverse((child) => {
-      if (child.isMesh) child.material = reflectionMaterial;
+      if (child.isMesh) {
+        child.material = this.reflectionMaterial;
+      }
     });
     
     this.scene.add(this.reflectionModel);
@@ -311,11 +315,9 @@ export default class Character {
       this.reflectionModel.rotation.copy(this.model.rotation);
       
       const targetOpacity = this.model.position.y < -1 ? 0 : (this.targetReflectionOpacity !== undefined ? this.targetReflectionOpacity : 0);
-      this.reflectionModel.traverse((child) => {
-        if (child.isMesh && child.material) {
-          child.material.opacity = targetOpacity;
-        }
-      });
+      if (this.reflectionMaterial) {
+        this.reflectionMaterial.opacity = targetOpacity;
+      }
     }
   }
 
