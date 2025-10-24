@@ -26,7 +26,7 @@ export default class Character {
     this.model = null;
     this.reflectionModel = null;
     this.mapModel = null;
-    this.reflectionOffset = 1.55;
+    this.reflectionOffset = 2.05;
 
     this.raycaster = new THREE.Raycaster();
     this.isGrounded = false;
